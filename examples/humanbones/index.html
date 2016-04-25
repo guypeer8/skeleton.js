@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+<title>Human Bones- SkeletonJS</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div id="container">
+		<header><h2>Human Bones</h2></header>
+		<hr />
+		<div id="human-bones-list"></div>
+	</div>
+</body>
+
+<!-- Bone Template -->
+<template id="bone-template">
+	<div class="bone">
+		<h4>{{ name }}</h4>
+		<p>Area in body: <strong>{{ area }}</strong></p>
+		<p>How many in body: <strong>{{ count }}</strong></p>
+	</div>
+</template>
+
+<script type="text/javascript" src="skeleton.js"></script>
+<script type="text/javascript" src="humanbones.js"></script>
+</html>

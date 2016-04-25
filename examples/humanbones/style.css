@@ -1,0 +1,25 @@
+body {
+	margin: 0;
+	padding: 0;
+}
+header {
+	margin-top: 30px;
+	margin-left: 50px;
+}
+#human-bones-list {
+	margin-top: 20px;
+	margin-left: 50px;
+}
+#human-bones-list .bone {
+	float: left;
+	margin-right: 30px;
+	margin-top: 30px;
+	border: 1px solid black;
+	border-radius: 3px;
+	width: 220px;
+	height: 140px;
+	padding: 15px;
+}
+#human-bones-list .bone h4 {
+	text-decoration: underline;
+}
