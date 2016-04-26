@@ -22,8 +22,10 @@ let RecordModel = Skeleton.Model({
 });
 ```
 
-##### A model must have a 'defaults' field to specify the default values of the model fields.
-##### You can define an 'init' function to be called everytime the model is initialized.
+##### Required fields:
+##### 'defaults': field to specify the default values of the model fields.
+##### Optional fields:
+##### 'init': function to be called everytime the model is initialized.
 ##### You can extend the functionality of a model by defining your own functions.
 
 --- 
@@ -37,9 +39,10 @@ let RecordsList = Skeleton.List({
 });
 ```
 
-##### A list must have a 'model' field to specify the model of each element in the list, 
-##### an 'element' field that specifies the id of the DOM element that the list should be rendered into,
-##### and a 'template' field that is either a string that represents the template or an object with a 
+##### Required fields:
+##### 'model': field to specify the model of each element in the list.
+##### 'element': field that specifies the id of the DOM element that each list item should be rendered into.
+##### 'template': field that is either a string that represents the template or an object with a 
 ##### 'templateId' field that specifies the id of the template in the html document.
 
 ---
@@ -89,7 +92,8 @@ $.getJSON('/artists-records-api-path', (data) => {
   RecordsList.removeAll(); // The data is removed and immediately empties the list container   
 ```     
 
-##### Check out the examples folder and the source code to see more.
+###### Check out the examples folder and the source code to see more.
+###### On npm: https://www.npmjs.com/package/js-skeleton
 
 ---
 ![skeleton.js](http://bestanimations.com/Humans/Skeletons/skeleton-animated-gif-3.gif "Skeleton")
