@@ -26,9 +26,10 @@
 
 <!-- Post Template -->
 <template id="post-template">
-	<div class="post" data-id="{{ id }}">
+	<div class="post" data-id="{{ index }}">
 		<div class="post-header">
 			<span class="float-left">{{ title | upper }}</span>
+			<button class="float-right remove-post" onClick="removePost({{ index }})">x</button>
 			<div class="clear"></div>
 		</div>
 		<div class="post-body">{{ content | capitalize }}</div>
@@ -40,6 +41,6 @@
 	</div>
 </template>
 
-<script type="text/javascript" src="../../skeleton.js"></script>
+<script type="text/javascript" src="../../skeleton-dev.js"></script>
 <script type="text/javascript" src="microblog.js"></script>
 </html>

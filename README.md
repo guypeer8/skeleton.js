@@ -5,7 +5,6 @@
 
 ###### First, create a model:
 ```js
-let recordId = 0; // Maybe you want to keep track of the record by its id 
 
 let RecordModel = Skeleton.Model({
   defaults: {
@@ -16,7 +15,6 @@ let RecordModel = Skeleton.Model({
     sold: 0
   },
   init() {
-    this.set('id', recordId++); // Set unique recordId when initialized
     console.log(`The song ${this.get('song')} by ${this.get('artist')} sold ${this.get('sold')} records.`);
   }
 });
@@ -26,6 +24,8 @@ let RecordModel = Skeleton.Model({
 ##### 'defaults': field to specify the default values of the model fields.
 ##### Optional fields:
 ##### 'init': function to be called everytime the model is initialized.
+##### You can use 'set' passing an object or 2 arguments of key and value,
+##### and 'get', to get values of fields.
 ##### You can extend the functionality of a model by defining your own functions.
 
 --- 
@@ -47,10 +47,10 @@ let RecordsList = Skeleton.List({
 
 ---
 
-###### Now, lets define a tempalte:
+###### Now, lets define a template:
 ```html
 <template id="record-template">
-  <div class="record" data-id="{{ id }}">
+  <div class="record" data-id="{{ index }}">
     <div class="record-head">
       <span class="float-left">Album: {{ album }}</span>
       <span class="float-right">Year: {{ year }}</span>
@@ -69,6 +69,11 @@ let RecordsList = Skeleton.List({
 ###### * capitalize 
 ###### * currency
 ###### * json  
+
+
+###### Moreover, everytime a new model is rendered, it gets an index parameter for free.
+###### Each model rendered has its unique index, and that is very usefull, especially
+###### when you want to remove a model from the list, which I show how to do as we continue.
 
 ---
 
@@ -89,7 +94,7 @@ $.getJSON('/artists-records-api-path', (data) => {
 ---
 ###### To remove all models from the list just type:
 ```js
-  RecordsList.removeAll(); // The data is removed and immediately empties the list container   
+RecordsList.removeAll(); // The data is removed and immediately empties the list container   
 ```     
 
 ###### Check out the examples folder and the source code to see more.

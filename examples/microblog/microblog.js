@@ -1,6 +1,4 @@
-// (function() {
-
-let postId = 0; // post id counter
+(function() {
 
 // Define Post Model
 var PostModel = Skeleton.Model({
@@ -11,7 +9,6 @@ var PostModel = Skeleton.Model({
 		date: new Date().toDateString()
 	},
 	init: function() {
-		this.set('id', postId++);
 		console.log(`A new post by ${this.get('posted_by')}`);
 	}
 });
@@ -64,4 +61,11 @@ function setCount(count) {
 	postsCount.textContent = count;
 }
 
-// })();
+function removePost(index) {
+	PostsList.remove(index);
+	setCount(PostsList.size());
+}
+
+window.removePost = removePost;
+
+})();

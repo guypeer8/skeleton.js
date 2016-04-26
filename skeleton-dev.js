@@ -11,7 +11,7 @@ function Model(attributes) {
 
 	function model(options) {
 
-		var _attrs = Object.assign({}, attributes.defaults) || {};
+		let _attrs = Object.assign({}, attributes.defaults) || {};
 
 		this.get = function(attr) {
 			return _attrs[attr] || null;
@@ -69,10 +69,10 @@ function Collection(attributes) {
 
 		let _collection = [];
 
-		let collectionModel = attributes && attributes.model;
+		let _collectionModel = attributes && attributes.model;
 
 		this.add = function(model) {
-			if(!(model instanceof collectionModel))
+			if(!(model instanceof _collectionModel))
 				throw new Error('A collection must consist of models of same instance');
 			_collection.push(model);
 		}
@@ -150,6 +150,8 @@ function Collection(attributes) {
 
  	const re = /{{\s*(\w+\s*\|?\s*\w+)\s*}}/g;
 
+ 	let _index = -1;
+
  	let _model = attributes && attributes.model;
  	let _element = document.getElementById(attributes && attributes.element);
  	let _template;
@@ -202,7 +204,19 @@ function Collection(attributes) {
  		_updateView();
  	}
 
- 	this.remove = function(options) {
+ 	this.remove = function(index) {
+ 		let collection = this.models();
+ 		for(let i=0; i<collection.length; i++) {
+ 			let model = collection[i];
+ 			if(model.index === index) {
+ 				_collection.remove(i);
+ 				break;
+ 			}
+ 		}
+ 		_updateView();
+ 	}
+
+ 	this.removeByFields = function(options) {
  		_collection.removeByFields(options);
  		_updateView();
  	}
@@ -227,6 +241,7 @@ function Collection(attributes) {
 
  	function _renderTemplate(coll) {
  		let collection = coll || _collection.toJSON();
+ 		collection.forEach(model => model.index = generateIndex()); // generate unique index to each model
  		let tempalteString = '';
  		collection.forEach(model => {
  			tempalteString += _renderModel(model);
@@ -269,6 +284,10 @@ function Collection(attributes) {
  		});
 
  		return temp;
+ 	}
+
+ 	function generateIndex() {
+ 		return _index++;
  	}
 
  }
