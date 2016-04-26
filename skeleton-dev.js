@@ -148,19 +148,20 @@ function Collection(attributes) {
 	if(!(this instanceof List))
 		return new List(attributes);
 
- 	const re = /{{\s*(\w+)\s*}}/g;
+ 	const re = /{{\s*(\w+\s*\|?\s*\w+)\s*}}/g;
 
  	let _model = attributes && attributes.model;
  	let _element = document.getElementById(attributes && attributes.element);
  	let _template;
 
- 	if(typeof(attributes && attributes.template) === 'string')
- 		_template = attributes.template;
- 	else if(typeof(attributes && attributes.template) === 'object') {
- 		if(!attributes.template.templateId)
+ 	let temp = attributes && attributes.template;
+ 	if(typeof(temp) === 'string')
+ 		_template = temp;
+ 	else if(typeof(temp) === 'object') {
+ 		if(!temp.templateId)
  			throw new Error('Template must be a string, or an object with "templateId" field');
  		else
- 			_template = document.getElementById(attributes.template.templateId).innerHTML;
+ 			_template = document.getElementById(temp.templateId).innerHTML;
  	}
 
  	if(!_model)
@@ -168,7 +169,7 @@ function Collection(attributes) {
  	if(!_element)
  		throw new Error('An element must be supplied, provided by its id');
  	if(!_template)
- 		throw new Error('A template must be supplied');
+ 		throw new Error('A template id or string must be supplied');
 
  	let _collection = new (new Collection({ model : _model }));
 
@@ -236,8 +237,37 @@ function Collection(attributes) {
  	function _renderModel(model) {
  		let temp = _template;
  		temp = temp.replace(re, (str,g) => {
+ 			if(g.indexOf('|') !== -1) {
+ 				let parts = g.split('|');
+ 				let txt = parts[0].trim();
+ 				let filter = parts[1].trim();
+ 				let txtToRender = model[txt];
+ 				if(!txtToRender)
+ 					throw new Error('Please check the expression "' + txt + '" you passed in the template');
+ 				if(filter === 'upper')
+ 					return txtToRender.toUpperCase();
+ 				else if(filter === 'lower')
+ 					return txtToRender.toLowerCase();
+ 				else if(filter === 'capitalize') 
+ 					return txtToRender.charAt(0).toUpperCase() + txtToRender.slice(1).toLowerCase();
+ 				else if(filter === 'currency')
+ 					return '$' + txtToRender;
+ 				else if(filter === 'json') {
+ 					try {
+ 						txtToRender = JSON.stringify(txtToRender);
+ 					}
+ 					catch(e) {
+ 						throw new Error('The argument passed can not be stringified to a json string');
+ 					}
+ 					return txtToRender;
+ 				}
+ 				else
+ 					throw new Error('The filter you are using is not supported. Please write to guypeer8@gmail.com to get support to what you need');
+
+ 			}
  			return model[g];
  		});
+
  		return temp;
  	}
 

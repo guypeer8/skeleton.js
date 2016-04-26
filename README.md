@@ -54,25 +54,40 @@ let RecordsList = Skeleton.List({
       <div class="clear"></div>
     </div>
     <div class="record-body">
-      '{{ song }}' is a song by {{ artist }} from the album {{ album }} that sold {{ sold }} records.
+      '{{ song | upper }}' is a song by {{ artist | capitalize }} from the album {{ album }} that sold {{ sold }} records.
     </div>
   </div>
 </template>
 ```
 
+###### Notice that you can use different filters, by pipe (|) -
+###### * upper 
+###### * lower 
+###### * capitalize 
+###### * currency
+###### * json  
+
+---
+
 ###### Now all you need to do is push an object with the default fields to 'RecordsList',
 ###### and it will render the record to the list.
 
 ```js
-RecordsList.push({ artist: 'Prince', song: 'Purple Rain', album: 'Purple Rain', year: 1984, sold: '22 milion'});
+RecordsList.push({ artist: 'prince', song: 'purple Rain', album: 'Purple Rain', year: 1984, sold: '22 million' });
 ```
 
 ###### And maybe you want to push a whole array of objects that came back from an api or db-server:
 ```js
 $.getJSON('/artists-records-api-path', (data) => {
-  RecordsList.pushAll(data); // The data is pushed and immediatly renders   
+  RecordsList.pushAll(data); // The data is pushed and immediately renders   
 });
 ```         
+
+---
+###### To remove all models from the list just type:
+```js
+  RecordsList.removeAll(); // The data is removed and immediately empties the list container   
+```     
 
 ##### Check out the examples folder and the source code to see more.
 

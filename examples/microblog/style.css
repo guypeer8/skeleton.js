@@ -69,6 +69,13 @@ body {
 #posts-list .post .post-header span {
 	font-weight: 700;
 }
+#posts-list .post .post-header .remove-post {
+	border: none;
+    outline: none;
+    border-radius: 50%;
+    padding: 2px 6px;
+    cursor: pointer;
+}
 #posts-list .post .post-body {
 	margin-bottom: 50px;
 }

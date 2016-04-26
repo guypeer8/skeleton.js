@@ -1,4 +1,4 @@
-(function() {
+// (function() {
 
 let postId = 0; // post id counter
 
@@ -39,7 +39,6 @@ postButton.addEventListener('click', function(e) {
 	if(!t || !p || !c)
 		return;
 	PostsList.push({ title: t, posted_by: p, content: c }); // Push a new post to render
-	filterPosts.value = '';
 	setCount(PostsList.size()); // Set List Size
 	cleanInputs();
 });
@@ -57,7 +56,7 @@ filterPosts.addEventListener('keyup', function(e) {
 
 // Clean Post Inputs
 function cleanInputs() {
-	[title.value, posted_by.value, content.value] = ['', '', ''];
+	[title.value, posted_by.value, content.value, filterPosts.value] = ['', '', '', ''];
 }
 
 // Set Posts Count
@@ -65,4 +64,4 @@ function setCount(count) {
 	postsCount.textContent = count;
 }
 
-})();
+// })();
