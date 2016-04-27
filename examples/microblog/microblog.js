@@ -6,7 +6,6 @@ var PostModel = Skeleton.Model({
 		title: '',
 		posted_by: '',
 		content: '',
-		stam: {},
 		date: new Date().toDateString()
 	},
 	init: function() {
