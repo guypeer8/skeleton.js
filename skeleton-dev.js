@@ -148,7 +148,7 @@ function Collection(attributes) {
 	if(!(this instanceof List))
 		return new List(attributes);
 
- 	const re = /{{\s*((\w+\.*\w+)*\s*\|?\s*\w+)\s*}}/g;
+ 	const re = /{{\s*((\w+\.\w+)*\s*\|?\s*\w+)\s*}}/g;
 
  	let _index = -1;
 
