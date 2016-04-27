@@ -59,6 +59,9 @@ let RecordsList = Skeleton.List({
     <div class="record-body">
       '{{ song | upper }}' is a song by {{ artist | capitalize }} from the album {{ album }} that sold {{ sold }} records.
     </div>
+    <div class="record-footer">
+      <button onClick="remove({{ index }})">x</button>
+    </div>
   </div>
 </template>
 ```
@@ -71,7 +74,7 @@ let RecordsList = Skeleton.List({
 ###### * json  
 
 
-###### Moreover, everytime a new model is rendered, it gets an index parameter for free.
+###### Moreover, everytime a new model is rendered, it gets an index parameter generated for free.
 ###### Each model rendered has its unique index, and that is very usefull, especially
 ###### when you want to remove a model from the list, which I show how to do as we continue.
 
@@ -95,7 +98,24 @@ $.getJSON('/artists-records-api-path', (data) => {
 ###### To remove all models from the list just type:
 ```js
 RecordsList.removeAll(); // The data is removed and immediately empties the list container   
-```     
+``` 
+
+---
+###### Now, what if you want to have the ability to remove a single model on a button click ?
+###### Well, pretty simple as well. notice the following in the template:
+```html
+<button onClick="remove({{ index }})">x</button>
+```
+###### Now, you need to define a 'remove' function, and use the built-in functionallity of a skeleton list:
+```js
+window.remove = function(index) {
+  let modelToRemove = RecordsList.remove(index); // This will remove the model from the list and rerender, and it will return the model removed
+  
+  // Now, you can make an ajax call to remove the model from the db-server if you have one,
+  // or use it for any other reason
+}
+```
+
 
 ###### Check out the examples folder and the source code to see more.
 ###### On npm: https://www.npmjs.com/package/js-skeleton

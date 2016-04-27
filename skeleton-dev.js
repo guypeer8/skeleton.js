@@ -206,7 +206,7 @@ function Collection(attributes) {
 
  	this.remove = function(index) {
  		let collection = this.models();
- 		for(let i=0; i<collection.length; i++) {
+ 		for(var i=0; i<collection.length; i++) {
  			let model = collection[i];
  			if(model.index === index) {
  				_collection.remove(i);
@@ -214,6 +214,7 @@ function Collection(attributes) {
  			}
  		}
  		_updateView();
+ 		return collection[i];
  	}
 
  	this.removeByFields = function(options) {
@@ -224,6 +225,15 @@ function Collection(attributes) {
  	this.removeAll = function() {
  		_collection.removeAll();
  		_updateView();
+ 	}
+
+ 	this.get = function(index) {
+  		let collection = this.models();
+ 		for(let i=0; i<collection.length; i++) {
+ 			let model = collection[i];
+ 			if(model.index === index) 
+ 				return model;
+ 		}	
  	}
 
  	this.size = function() {

@@ -1,13 +1,10 @@
 {
   "name": "js-skeleton",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Rendering static lists made as easy as pushing to an array",
   "main": "skeleton.js",
   "directories": {
     "example": "examples"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
