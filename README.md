@@ -79,6 +79,41 @@ let RecordsList = Skeleton.List({
 ###### when you want to remove a model from the list, which I show how to do as we continue.
 
 ---
+###### You can also use nested objects in the template, for example if you have the object:
+```js
+{
+  location: {
+    country: "Spain",
+    city: "Madrid",
+    friends_addresses: {
+      Jose: "Gran Villa 3",
+      Antonio: "La kukaracha 67"
+    }
+  }
+}
+```
+
+###### You can resolve it like this in the template:
+```html
+<template id="abroad-friends-template">
+  <div data-id="{{ index }}">
+    <div class="head">
+      <span class="float-left">{{ location.country | capitalize }}</span>
+      <span class="float-right">{{ location.city | capitalize }}</span>
+      <div class="clear"></div>
+    </div>
+    <div class="body">
+      <span>Jose: {{ location.friends_addresses.Jose | upper }}</span>
+      <span>Antonio: {{ location.friends_addresses.Antonio | upper }}</span>
+    </div>
+    <div class="json">
+      <span>Whole json object: {{ location | json }}</span>
+    </div>
+  </div>
+</template>
+```
+
+---
 
 ###### Now all you need to do is push an object with the default fields to 'RecordsList',
 ###### and it will render the record to the list.

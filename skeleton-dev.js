@@ -148,7 +148,7 @@ function Collection(attributes) {
 	if(!(this instanceof List))
 		return new List(attributes);
 
- 	const re = /{{\s*(\w+\s*\|?\s*\w+)\s*}}/g;
+ 	const re = /{{\s*((\w+\.*\w+)*\s*\|?\s*\w+)\s*}}/g;
 
  	let _index = -1;
 
@@ -266,7 +266,7 @@ function Collection(attributes) {
  				let parts = g.split('|');
  				let txt = parts[0].trim();
  				let filter = parts[1].trim();
- 				let txtToRender = model[txt];
+ 				let txtToRender = resolveNestedObject(model, txt); // resolve nested object
  				if(!txtToRender)
  					throw new Error('Please check the expression "' + txt + '" you passed in the template');
  				if(filter === 'upper')
@@ -290,10 +290,23 @@ function Collection(attributes) {
  					throw new Error('The filter you are using is not supported. Please write to guypeer8@gmail.com to get support to what you need');
 
  			}
- 			return model[g];
+ 			return resolveNestedObject(model, g);
  		});
 
  		return temp;
+ 	}
+
+ 	function resolveNestedObject(model, input) {
+		let nestedObjectArray = input.split('.');
+		if(nestedObjectArray.length === 1)
+			return model[input];
+		else {
+			let txtToRender = model[nestedObjectArray[0].trim()];
+			for(var i=1; i<nestedObjectArray.length; i++) {
+				txtToRender = txtToRender[nestedObjectArray[i].trim()];
+			}
+			return txtToRender;
+		}
  	}
 
  	function generateIndex() {
