@@ -62,6 +62,7 @@ function setCount(count) {
 }
 
 function removePost(index) {
+	PostsList.remove(index);
 	setCount(PostsList.size());
 }
 
