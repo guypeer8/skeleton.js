@@ -154,7 +154,7 @@ window.remove = function(index) {
 ###### If you want to get the model before removing it, you can do it by using 'get':
 ```js
 window.remove = function(index) {
-  let modelToRemove = RecordsList.get(index); // This will return the model ed
+  let modelToRemove = RecordsList.get(index); // This will return the model object
   
   // Now, you can make an ajax call to remove the model from the db-server if you have one,
   // and only after you make sure it succeeds, remove it from the eyes of the user.
