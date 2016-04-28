@@ -328,9 +328,9 @@ function Collection(attributes) {
  	function _renderTemplate(coll) {
  		let collection = coll || _collection.toJSON();
  		collection.forEach(model => model.index = _generateIndex()); // generate unique index to each model
- 		let tempalteString = '';
- 		collection.forEach(model => tempalteString += _renderModel(model));
- 		return tempalteString;
+ 		let templateString = '';
+ 		collection.forEach(model => templateString += _renderModel(model));
+ 		return templateString;
  	}
 
  	function _renderModel(model) {
