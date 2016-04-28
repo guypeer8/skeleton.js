@@ -27,4 +27,6 @@ ajaxGet('http://mysafeinfo.com/api/data?list=humanbones&format=json', function(d
 	BonesList.pushAll(bones); // Push all to list to render
 });
 
+BonesList.subscribe(() => console.log(`Models rendered: ${JSON.stringify(BonesList.models())}`));
+
 })();

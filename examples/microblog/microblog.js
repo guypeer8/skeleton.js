@@ -1,5 +1,9 @@
 (function() {
 
+String.prototype.includes = String.prototype.includes || function(str) {
+	return this.indexOf(str) !== -1;
+}
+
 // Define Post Model
 var PostModel = Skeleton.Model({
 	defaults: {
@@ -41,13 +45,9 @@ postButton.addEventListener('click', function(e) {
  
 // Atach Keyup Listener To Filter Input
 filterPosts.addEventListener('keyup', function(e) {
-	let value = e.target.value;
-	// Filter List By Search Query, Update View Explicitly
-	let filtered = PostsList.models().filter(model => {
-		return model.posted_by.toLowerCase().indexOf(value.toLowerCase()) !== -1;
-	});
-	setCount(filtered.length);
-	PostsList.updateView(filtered);
+	// Filter by 'posted_by' field, when the comperator is 'String.prototype.includes', 
+	// And update the count explicitly.
+	setCount(PostsList.filter({posted_by: e.target.value}, String.prototype.includes).length);
 });
 
 // Subscribe To Push and Remove- Means, Run this function when either there is a push to the list or remove from it

@@ -106,12 +106,22 @@ function Collection(attributes) {
 			return _collection;
 		}
 
-		this.filterToJSON = function(options) {
+		this.filterToJSON = function(options, comperator) {
 			let filteredCollection = this.toJSON();
-			for(let opt in options) {
-				filteredCollection = filteredCollection.filter(modelJSON => {
-					return modelJSON[opt] === options[opt];
-				});
+			if(!comperator) {
+				for(let opt in options) {
+					filteredCollection = filteredCollection.filter(modelJSON => {
+							return modelJSON[opt] === options[opt];
+					});
+				}
+			}
+			else {
+				for(let opt in options) {
+					filteredCollection = filteredCollection.filter(modelJSON => {
+						console.log(comperator.call(modelJSON[opt], options[opt]))
+						return comperator.call(modelJSON[opt], options[opt]);
+					});
+				}
 			}
 			return filteredCollection;			
 		}
@@ -150,7 +160,7 @@ function Collection(attributes) {
 
  	const re = /{{\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g;
 
- 	let _index = -1;
+ 	let _index = 0;
  	let listeners = []; // {type: all/push/remove, listener: function}
 
  	let _model = attributes && attributes.model;
@@ -242,9 +252,10 @@ function Collection(attributes) {
  		return this.models().length;
  	}
 
- 	this.filter = function(options) {
- 		let coll = _collection.filterToJSON(options);
+ 	this.filter = function(options, comperator) {
+ 		let coll = _collection.filterToJSON(options, comperator);
  		_updateView(coll);
+ 		return coll;
  	}
 
  	this.subscribe = function() {
