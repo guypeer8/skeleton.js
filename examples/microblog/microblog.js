@@ -1,8 +1,7 @@
 (function() {
 
-String.prototype.includes = String.prototype.includes || function(str) {
-	return this.indexOf(str) !== -1;
-}
+// Define 'includes'
+String.prototype.includes = String.prototype.includes || function(str) { return this.indexOf(str) !== -1; }
 
 // Define Post Model
 var PostModel = Skeleton.Model({
@@ -24,6 +23,8 @@ var PostsList = Skeleton.List({
  	template: {templateId: 'post-template'} // Post template id
  });
 
+// Define custom pipe filter called 'decorate' to use in the template
+PostsList.addFilter('decorate', (name) => '@' + name);
 
 // Get DOM Nodes
 var title = document.getElementById('title');

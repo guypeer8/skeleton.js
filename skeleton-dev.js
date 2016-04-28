@@ -118,7 +118,6 @@ function Collection(attributes) {
 			else {
 				for(let opt in options) {
 					filteredCollection = filteredCollection.filter(modelJSON => {
-						console.log(comperator.call(modelJSON[opt], options[opt]))
 						return comperator.call(modelJSON[opt], options[opt]);
 					});
 				}
@@ -162,6 +161,7 @@ function Collection(attributes) {
 
  	let _index = 0;
  	let listeners = []; // {type: all/push/remove, listener: function}
+ 	let _customFilters = {}; // {filter_name: function}
 
  	let _model = attributes && attributes.model;
  	let _element = document.getElementById(attributes && attributes.element);
@@ -258,6 +258,14 @@ function Collection(attributes) {
  		return coll;
  	}
 
+ 	this.addFilter = function(filterName, filterCbk) {
+ 		if(typeof(filterName) !== 'string')
+ 			throw new Error('Filter name must be a string');
+ 		if(typeof(filterCbk) !== 'function')
+ 			throw new Error('Filter callback must be a function');
+ 		_customFilters[filterName] = filterCbk;
+ 	}
+
  	this.subscribe = function() {
  		if(arguments.length === 1 && typeof(arguments[0]) === 'function') {
  			listeners.push({ type: 'all', listener: arguments[0] });
@@ -306,42 +314,45 @@ function Collection(attributes) {
  		let temp = _template;
  		temp = temp.replace(re, (str,g) => {
  			if(g.indexOf('|') !== -1) {
- 				let parts = g.split('|');
- 				let txt = parts[0].trim();
- 				let filter = parts[1].trim();
- 				let txtToRender = _resolveNestedObject(model, txt); // resolve nested object
- 				if(!txtToRender)
- 					throw new Error('Please check the expression "' + txt + '" you passed in the template');
- 				if(filter === 'upper') {
- 					return txtToRender.toUpperCase();
- 				}
- 				if(filter === 'lower') {
- 					return txtToRender.toLowerCase();
- 				}
- 				if(filter === 'capitalize') {
- 					return txtToRender.charAt(0).toUpperCase() + txtToRender.slice(1).toLowerCase();
- 				}
- 				if(filter === 'currency') {
- 					return '$' + txtToRender;
- 				}
- 				if(filter === 'json') {
- 					try {
- 						txtToRender = JSON.stringify(txtToRender);
- 					}
- 					catch(e) {
- 						throw new Error('The argument passed can not be stringified to a json string');
- 					}
- 					return txtToRender;
- 				}
- 				else
- 					throw new Error('The filter you are using is not supported. Please write to guypeer8@gmail.com to get support to what you need');
-
+ 				return _filterize(model, g);
  			}
-
  			return _resolveNestedObject(model, g);
  		});
-
  		return temp;
+ 	}
+
+ 	function _filterize(model, g) {
+		let parts = g.split('|');
+		let txt = parts[0].trim();
+		let filter = parts[1].trim();
+		let txtToRender = _resolveNestedObject(model, txt); // resolve nested object
+		if(!txtToRender)
+			throw new Error('Please check the expression "' + txt + '" you passed in the template');
+		if(filter === 'upper') {
+			return txtToRender.toUpperCase();
+		}
+		if(filter === 'lower') {
+			return txtToRender.toLowerCase();
+		}
+		if(filter === 'capitalize') {
+			return txtToRender.charAt(0).toUpperCase() + txtToRender.slice(1).toLowerCase();
+		}
+		if(filter === 'currency') {
+			return '$' + txtToRender;
+		}
+		if(filter === 'json') {
+			try {
+				txtToRender = JSON.stringify(txtToRender);
+			}
+			catch(e) {
+				throw new Error('The argument passed can not be stringified to a json string');
+			}
+			return txtToRender;
+		}
+		if(_customFilters[filter]) {
+			return _customFilters[filter](txtToRender);
+		}
+		throw new Error('The filter you are using does not exist. Please use "addFilter" function to create it.');
  	}
 
  	function _resolveNestedObject(model, input) {
