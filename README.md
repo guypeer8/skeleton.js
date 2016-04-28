@@ -164,9 +164,19 @@ window.remove = function(index) {
 ```
 
 ---
+###### Let's say now, that we want some function to run each time something is pushed to the list or removed from it.
+###### To acheive this, use the 'subscribe' function. You can pass one or two arguments:
+###### A callback function to run on both push and remove events, or both the event and its callback. For example:
+```js
+RecordsList.subscribe(() => alert(`Right now there are ${RecordsList.size()} records in the list!`)); // This will run on both push or remove
+RecordsList.subscribe('push', () => console.log('A push occured! Ahhhahaha')); // This will only run on push
+RecordsList.subscribe('remove', () => console.log('A remove occured! Whahaahha')); // This will only run on remove
+```
 
-###### Check out the examples folder and the source code to see more.
-###### On npm: https://www.npmjs.com/package/js-skeleton
+---
+
+###### Please check out the examples folder and the source code to see more.
+###### Skeleton on npm: https://www.npmjs.com/package/js-skeleton
 
 ---
 ![skeleton.js](http://bestanimations.com/Humans/Skeletons/skeleton-animated-gif-3.gif "Skeleton")

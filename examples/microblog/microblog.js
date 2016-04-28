@@ -36,7 +36,6 @@ postButton.addEventListener('click', function(e) {
 	if(!t || !p || !c)
 		return;
 	PostsList.push({ title: t, posted_by: p, content: c }); // Push a new post to render
-	setCount(PostsList.size()); // Set List Size
 	cleanInputs();
 });
  
@@ -51,6 +50,9 @@ filterPosts.addEventListener('keyup', function(e) {
 	PostsList.updateView(filtered);
 });
 
+// Subscribe To Push and Remove- Means, Run this function when either there is a push to the list or remove from it
+PostsList.subscribe(() => setCount(PostsList.size()));
+
 // Clean Post Inputs
 function cleanInputs() {
 	[title.value, posted_by.value, content.value, filterPosts.value] = ['', '', '', ''];
@@ -63,7 +65,6 @@ function setCount(count) {
 
 function removePost(index) {
 	PostsList.remove(index);
-	setCount(PostsList.size());
 }
 
 window.removePost = removePost;
