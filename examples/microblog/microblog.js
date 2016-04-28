@@ -63,6 +63,7 @@ function setCount(count) {
 	postsCount.textContent = count;
 }
 
+// Remove Post
 function removePost(index) {
 	PostsList.remove(index);
 }

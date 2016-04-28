@@ -253,7 +253,7 @@ function Collection(attributes) {
  		}
  		else if(arguments.length === 2) {
  			let type = arguments[0];
- 			listener = arguments[1];
+ 			let listener = arguments[1];
  			if(type === 'push') {
  				listeners.push({ type: 'push', listener });
  			}
