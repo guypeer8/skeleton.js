@@ -75,8 +75,20 @@ let RecordsList = Skeleton.List({
 
 
 ###### Moreover, everytime a new model is rendered, it gets an index parameter generated for free.
-###### Each model rendered has its unique index, and that is very usefull, especially
-###### when you want to remove a model from the list, which I show how to do as we continue.
+###### Each model rendered has its unique index, and that is very usefull, especially when you
+###### want to remove a model from the list, which I show how to do as we continue.
+
+---
+###### And what about adding your own filters? Yeah, piece of cake:
+```js
+RecordsList.addFilter('helloFirst', function(txt) {
+    return 'Hello! ' + txt;
+});
+```
+###### Now you can use it as a filter in the template:
+```html
+<div>{{ artist | helloFirst }}</div>
+```
 
 ---
 ###### You can also use nested objects in the template, for example if you have the object:

@@ -160,8 +160,31 @@ function Collection(attributes) {
  	const re = /{{\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g;
 
  	let _index = 0;
- 	let listeners = []; // {type: all/push/remove, listener: function}
- 	let _customFilters = {}; // {filter_name: function}
+ 	let _listeners = []; // {type: all/push/remove, listener: function}
+
+ 	let _customFilters = {
+ 		upper: function(txt) {
+ 			return txt.toUpperCase();
+ 		},
+ 		lower: function(txt) {
+ 			return txt.toLowerCase();
+ 		},
+ 		capitalize: function(txt) {
+ 			return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase();
+ 		},
+ 		currency: function(txt) {
+ 			return '$' + txt;
+ 		},
+ 		json: function(txt) {
+ 			try {
+				txt = JSON.stringify(txt);
+			}
+			catch(e) {
+				throw new Error('The argument passed can not be stringified to a json string');
+			}
+			return txt;		
+ 		}
+ 	}; 
 
  	let _model = attributes && attributes.model;
  	let _element = document.getElementById(attributes && attributes.element);
@@ -268,16 +291,16 @@ function Collection(attributes) {
 
  	this.subscribe = function() {
  		if(arguments.length === 1 && typeof(arguments[0]) === 'function') {
- 			listeners.push({ type: 'all', listener: arguments[0] });
+ 			_listeners.push({ type: 'all', listener: arguments[0] });
  		}
  		else if(arguments.length === 2) {
  			let type = arguments[0];
  			let listener = arguments[1];
  			if(type === 'push') {
- 				listeners.push({ type: 'push', listener });
+ 				_listeners.push({ type: 'push', listener });
  			}
  			else if(type === 'remove') {
- 				listeners.push({ type: 'remove', listener });
+ 				_listeners.push({ type: 'remove', listener });
  			}
  			else
  				throw new Error('type of listener must be "push" or "remove"');
@@ -288,13 +311,13 @@ function Collection(attributes) {
 
  	function _notifyListeners(type) {
  		if(type === 'all' || !type) {
- 			listeners.forEach(l => l.listener());
+ 			_listeners.forEach(l => l.listener());
  		}
  		else if(type === 'push') {
- 			listeners.filter(l => l.type !== 'remove').forEach(l => l.listener());
+ 			_listeners.filter(l => l.type !== 'remove').forEach(l => l.listener());
  		}
  		else { // type = 'remove'
- 			listeners.filter(l => l.type !== 'push').forEach(l => l.listener());
+ 			_listeners.filter(l => l.type !== 'push').forEach(l => l.listener());
  		}
  	}
 
@@ -328,27 +351,6 @@ function Collection(attributes) {
 		let txtToRender = _resolveNestedObject(model, txt); // resolve nested object
 		if(!txtToRender)
 			throw new Error('Please check the expression "' + txt + '" you passed in the template');
-		if(filter === 'upper') {
-			return txtToRender.toUpperCase();
-		}
-		if(filter === 'lower') {
-			return txtToRender.toLowerCase();
-		}
-		if(filter === 'capitalize') {
-			return txtToRender.charAt(0).toUpperCase() + txtToRender.slice(1).toLowerCase();
-		}
-		if(filter === 'currency') {
-			return '$' + txtToRender;
-		}
-		if(filter === 'json') {
-			try {
-				txtToRender = JSON.stringify(txtToRender);
-			}
-			catch(e) {
-				throw new Error('The argument passed can not be stringified to a json string');
-			}
-			return txtToRender;
-		}
 		if(_customFilters[filter]) {
 			return _customFilters[filter](txtToRender);
 		}
