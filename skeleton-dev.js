@@ -145,7 +145,12 @@ function Collection(attributes) {
  	const re = /{{\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g;
 
  	let _index = 0;
- 	let _listeners = []; // {type: all/push/remove, listener: function}
+ 	
+ 	let _listeners = { // Each array contains functions to run
+ 		push: [],
+ 		remove: [],
+ 		filter: []
+ 	};
 
  	let _customFilters = {
  		upper: function(txt) {
@@ -205,9 +210,7 @@ function Collection(attributes) {
  	this.updateView = _updateView;
 
  	this.pushAll = function(models) {
- 		models.forEach(model => {
- 			_collection.add(new _model(model));
- 		});
+ 		models.forEach(model => _collection.add(new _model(model)));
  		_updateView();
  		_notifyListeners('push');
  	}
@@ -263,6 +266,7 @@ function Collection(attributes) {
  	this.filter = function(cbk) {
  		let coll = _collection.filterToJSON(cbk);
  		_updateView(coll);
+ 		_notifyListeners('filter', coll);
  		return coll;
  	}
 
@@ -276,33 +280,35 @@ function Collection(attributes) {
 
  	this.subscribe = function() {
  		if(arguments.length === 1 && typeof(arguments[0]) === 'function') {
- 			_listeners.push({ type: 'all', listener: arguments[0] });
+ 			_listeners['push'].push(arguments[0]);
+ 			_listeners['remove'].push(arguments[0]);
  		}
  		else if(arguments.length === 2) {
  			let type = arguments[0];
  			let listener = arguments[1];
- 			if(type === 'push') {
- 				_listeners.push({ type: 'push', listener });
- 			}
- 			else if(type === 'remove') {
- 				_listeners.push({ type: 'remove', listener });
+ 			if(_listeners[type]) {
+ 				_listeners[type].push(listener);
  			}
  			else
- 				throw new Error('type of listener must be "push" or "remove"');
+ 				throw new Error('type of listener must be "push", "remove" or "filter"');
  		}
  		else 
  			throw new Error('You should pass a callback function or a type "push" or "remove" and a callback to subscribe');
  	}
 
- 	function _notifyListeners(type) {
+ 	function _notifyListeners(type, filteredCollection) {
  		if(type === 'all' || !type) {
- 			_listeners.forEach(l => l.listener());
+ 			_listeners.push.forEach(l => l.listener());
+ 			_listeners.remove.forEach(l => l.listener());
  		}
  		else if(type === 'push') {
- 			_listeners.filter(l => l.type !== 'remove').forEach(l => l.listener());
+ 			_listeners.push.forEach(listener => listener());
  		}
- 		else { // type = 'remove'
- 			_listeners.filter(l => l.type !== 'push').forEach(l => l.listener());
+ 		else if(type === 'remove') {
+ 			_listeners.remove.forEach(listener => listener());
+ 		}
+ 		else if(type === 'filter') {
+ 			_listeners.filter.forEach(listener => listener(filteredCollection));
  		}
  	}
 

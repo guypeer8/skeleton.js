@@ -190,7 +190,11 @@ RecordsList.subscribe('remove', () => console.log('A remove occured! Whahaahha')
 ```js
 let filteredRecords = RecordsList.filter((model,i) => Number(model.year) > 1966); // Returns records that were released after 1966
 
-// Now, the view is automatically updated, and you can use the filtered list returned to updated other parts of your app
+// Now, the view is automatically updated, and you can use the filtered list returned to updated other parts of your app,
+// or simply use the 'subscribe' method to listen to whenever the list is filtered like shown underneath
+RecordsList.subscribe('filter', (filteredRecords) => alert(`After filtering, there are ${filteredRecords.length} records in the list!`));
+
+// Notice that the filtered list is passed to the listener and you can use it
 ```
 
 ---

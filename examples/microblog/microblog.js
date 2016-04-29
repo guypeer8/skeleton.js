@@ -47,13 +47,15 @@ postButton.addEventListener('click', function(e) {
 // Atach Keyup Listener To Filter Input
 filterPosts.addEventListener('keyup', function(e) {
 	let inputValue = e.target.value.toLowerCase();
-	// Filter by filterer supplied, notice that the filtered models are returned
-	let filteredModels = PostsList.filter((model) => model.posted_by.toLowerCase().includes(inputValue));
-	setCount(filteredModels.length); // Set count explicitly
+	// Filter by filterer supplied, the filtered models are returned in case you need them
+	PostsList.filter((model) => model.posted_by.toLowerCase().includes(inputValue));
 });
 
 // Subscribe To Push and Remove- Means, Run this function when either there is a push to the list or remove from it
 PostsList.subscribe(() => setCount(PostsList.size()));
+
+// Subscribe To Filtering the Collection- Means, Run this function when 'filter' is called on PostsList
+PostsList.subscribe('filter', (filteredList) => setCount(filteredList.length));
 
 // Clean Post Inputs
 function cleanInputs() {
