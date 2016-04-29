@@ -298,8 +298,8 @@ function Collection(attributes) {
 
  	function _notifyListeners(type, filteredCollection) {
  		if(type === 'all' || !type) {
- 			_listeners.push.forEach(l => l.listener());
- 			_listeners.remove.forEach(l => l.listener());
+ 			_listeners.push.forEach(listener => listener());
+ 			_listeners.remove.forEach(listener => listener());
  		}
  		else if(type === 'push') {
  			_listeners.push.forEach(listener => listener());
