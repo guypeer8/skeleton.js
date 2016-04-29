@@ -46,9 +46,10 @@ postButton.addEventListener('click', function(e) {
  
 // Atach Keyup Listener To Filter Input
 filterPosts.addEventListener('keyup', function(e) {
-	// Filter by 'posted_by' field, when the comperator is 'String.prototype.includes', 
-	// And update the count explicitly.
-	setCount(PostsList.filter({posted_by: e.target.value}, String.prototype.includes).length);
+	let inputValue = e.target.value.toLowerCase();
+	// Filter by filterer supplied, notice that the filtered models are returned
+	let filteredModels = PostsList.filter((model) => model.posted_by.toLowerCase().includes(inputValue));
+	setCount(filteredModels.length); // Set count explicitly
 });
 
 // Subscribe To Push and Remove- Means, Run this function when either there is a push to the list or remove from it

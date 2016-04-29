@@ -106,23 +106,8 @@ function Collection(attributes) {
 			return _collection;
 		}
 
-		this.filterToJSON = function(options, comperator) {
-			let filteredCollection = this.toJSON();
-			if(!comperator) {
-				for(let opt in options) {
-					filteredCollection = filteredCollection.filter(modelJSON => {
-							return modelJSON[opt] === options[opt];
-					});
-				}
-			}
-			else {
-				for(let opt in options) {
-					filteredCollection = filteredCollection.filter(modelJSON => {
-						return comperator.call(modelJSON[opt], options[opt]);
-					});
-				}
-			}
-			return filteredCollection;			
+		this.filterToJSON = function(cbk) {
+			return this.toJSON().filter(cbk);		
 		}
 
 		this.toJSON = function() {
@@ -275,8 +260,8 @@ function Collection(attributes) {
  		return this.models().length;
  	}
 
- 	this.filter = function(options, comperator) {
- 		let coll = _collection.filterToJSON(options, comperator);
+ 	this.filter = function(cbk) {
+ 		let coll = _collection.filterToJSON(cbk);
  		_updateView(coll);
  		return coll;
  	}
