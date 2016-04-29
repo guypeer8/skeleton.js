@@ -186,7 +186,7 @@ RecordsList.subscribe('remove', () => console.log('A remove occured! Whahaahha')
 ```
 
 ---
-####### And what if I want to filter my list? Just use the 'filter' function that comes with Skeleton.List!
+###### And what if I want to filter my list? Just use the 'filter' function that comes with Skeleton.List!
 ```js
 let filteredRecords = RecordsList.filter((model,i) => Number(model.year) > 1966); // Returns records that were released after 1966
 
