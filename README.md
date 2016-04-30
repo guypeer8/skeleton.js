@@ -206,7 +206,7 @@ let unsub = RecordsList.subscribe('push', () => {
   RecordsList.size() === 100 ? unsub() : console.log('A push occured! Ahhhahaha');
 }); 
 
-unsub(); // Thats it, we have unsubscribed! All we did is invoked the function
+// And that's all there is to it! :)
 ```
 
 ---
