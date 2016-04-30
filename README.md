@@ -200,12 +200,13 @@ RecordsList.subscribe('filter', (filteredRecords) => alert(`After filtering, the
 ---
 ###### Now, let's say that after a while we want to unsubscribe from any of our "events". Very easy:
 ```js
-let unsub = RecordsList.subscribe('push', () => console.log('A push occured! Ahhhahaha')); 
-// When we subscribe to an event, an unsubscribe function is returned so we can apply it in later
+// When we subscribe to an event, an unsubscribe function is returned so we can apply it later on.
+// Let's say that after we have 100 records we want to unsubscribe.
+let unsub = RecordsList.subscribe('push', () => {
+  RecordsList.size() === 100 ? unsub() : console.log('A push occured! Ahhhahaha');
+}); 
 
-// To unsubscribe, just invoke the unsubscription function
-unsub(); 
-// Now, we are no longer subscribed to logging 'A push occured! Ahhhahaha' when a push occures
+unsub(); // Thats it, we have unsubscribed! All we did is invoked the function
 ```
 
 ---
