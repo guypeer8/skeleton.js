@@ -21,9 +21,9 @@ let RecordModel = Skeleton.Model({
 ```
 
 ##### Required fields:
-##### **'defaults':** field to specify the default values of the model fields.
+##### **defaults:** field to specify the default values of the model fields.
 ##### Optional fields:
-##### **'init':** function to be called everytime the model is initialized.
+##### **init:** function to be called everytime the model is initialized.
 ##### You can use 'set' passing an object or 2 arguments of key and value,
 ##### and 'get', to get values of fields.
 ##### You can extend the functionality of a model by defining your own functions.
@@ -40,9 +40,9 @@ let RecordsList = Skeleton.List({
 ```
 
 ##### Required fields:
-##### 'model': field to specify the model of each element in the list.
-##### 'element': field that specifies the id of the DOM element that each list item should be rendered into.
-##### 'template': field that is either a string that represents the template or an object with a 
+##### **model:** field to specify the model of each element in the list.
+##### **element:** field that specifies the id of the DOM element that each list item should be rendered into.
+##### **template:** field that is either a string that represents the template or an object with a 
 ##### 'templateId' field that specifies the id of the template in the html document.
 
 ---
