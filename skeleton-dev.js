@@ -114,6 +114,10 @@ function Collection(attributes) {
 			return _collection.map(model => model.toJSON());
 		}
 
+		this.size = function() {
+			return _collection.length;
+		}
+
 		if(attributes && attributes.init)
 			attributes.init.call(this);
 
@@ -260,7 +264,7 @@ function Collection(attributes) {
  	}
 
  	this.size = function() {
- 		return this.models().length;
+ 		return _collection.size();
  	}
 
  	this.filter = function(cbk) {
