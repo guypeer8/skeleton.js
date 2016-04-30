@@ -21,9 +21,9 @@ let RecordModel = Skeleton.Model({
 ```
 
 ##### Required fields:
-##### 'defaults': field to specify the default values of the model fields.
+##### **'defaults':** field to specify the default values of the model fields.
 ##### Optional fields:
-##### 'init': function to be called everytime the model is initialized.
+##### **'init':** function to be called everytime the model is initialized.
 ##### You can use 'set' passing an object or 2 arguments of key and value,
 ##### and 'get', to get values of fields.
 ##### You can extend the functionality of a model by defining your own functions.
