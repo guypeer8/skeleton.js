@@ -198,7 +198,17 @@ RecordsList.subscribe('filter', (filteredRecords) => alert(`After filtering, the
 ```
 
 ---
+###### Now, let's say that after a while we want to unsubscribe from any of our "events". Very easy:
+```js
+let unsub = RecordsList.subscribe('push', () => console.log('A push occured! Ahhhahaha')); 
+// When we subscribe to an event, an unsubscribe function is returned so we can apply it in later
 
+// To unsubscribe, just invoke the unsubscription function
+unsub(); 
+// Now, we are no longer subscribed to logging 'A push occured! Ahhhahaha' when a push occures
+```
+
+---
 ###### Please check out the examples folder and the source code to see more.
 ###### Skeleton on npm: https://www.npmjs.com/package/js-skeleton
 

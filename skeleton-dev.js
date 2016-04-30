@@ -6,8 +6,9 @@ var Skeleton = (function() {
 function Model(attributes) {
 
 	// Make sure initialized
-	if(!(this instanceof Model))
+	if(!(this instanceof Model)) {
 		return new Model(attributes);
+	}
 
 	function model(options) {
 
@@ -18,16 +19,18 @@ function Model(attributes) {
 		}
 
 		this.set = function() {
-			if(arguments.length === 2)
+			if(arguments.length === 2) {
 				_attrs[arguments[0]] = arguments[1];
+			}
 			else if(arguments.length === 1) {
 				let obj = arguments[0];
 				for(let key in obj) {
 					_attrs[key] = obj[key];
 				}
 			}
-			else
+			else {
 				throw new Error('Error on setting a value');
+			}
 		}
 
 		this.toJSON = function() {
@@ -40,8 +43,9 @@ function Model(attributes) {
 		}
 
 		// Call init
-		if(attributes && attributes.init)
+		if(attributes && attributes.init) {
 			attributes.init.call(this);
+		}
 
 	}
 
@@ -62,8 +66,9 @@ function Model(attributes) {
 function Collection(attributes) {
 
 	// Make sure initialized
-	if(!(this instanceof Collection))
+	if(!(this instanceof Collection)) {
 		return new Collection(attributes);
+	}
 
 	function collection(options) {
 
@@ -72,8 +77,9 @@ function Collection(attributes) {
 		let _collectionModel = attributes && attributes.model;
 
 		this.add = function(model) {
-			if(!(model instanceof _collectionModel))
+			if(!(model instanceof _collectionModel)) {
 				throw new Error('A collection must consist of models of same instance');
+			}
 			_collection.push(model);
 		}
 
@@ -118,8 +124,9 @@ function Collection(attributes) {
 			return _collection.length;
 		}
 
-		if(attributes && attributes.init)
+		if(attributes && attributes.init) {
 			attributes.init.call(this);
+		}
 
 		function removeOne(arg) {
 			if(typeof(arg) === 'number') {
@@ -143,8 +150,9 @@ function Collection(attributes) {
  function List(attributes) {
 
  	// Make sure initialized
-	if(!(this instanceof List))
+	if(!(this instanceof List)) {
 		return new List(attributes);
+	}
 
  	const re = /{{\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g;
 
@@ -185,21 +193,27 @@ function Collection(attributes) {
  	let _template;
 
  	let temp = attributes && attributes.template;
- 	if(typeof(temp) === 'string')
+ 	if(typeof(temp) === 'string') {
  		_template = temp;
+ 	}
  	else if(typeof(temp) === 'object') {
- 		if(!temp.templateId)
+ 		if(!temp.templateId) {
  			throw new Error('Template must be a string, or an object with "templateId" field');
- 		else
+ 		}
+ 		else {
  			_template = document.getElementById(temp.templateId).innerHTML;
+ 		}
  	}
 
- 	if(!_model)
+ 	if(!_model) {
  		throw new Error('A model must be supplied');
- 	if(!_element)
+ 	}
+ 	if(!_element) {
  		throw new Error('An element must be supplied, provided by its id');
- 	if(!_template)
+ 	}
+ 	if(!_template) {
  		throw new Error('A template id or string must be supplied');
+ 	}
 
  	let _collection = new (new Collection({ model : _model }));
 
@@ -275,29 +289,47 @@ function Collection(attributes) {
  	}
 
  	this.addFilter = function(filterName, filterCbk) {
- 		if(typeof(filterName) !== 'string')
+ 		if(typeof(filterName) !== 'string') {
  			throw new Error('Filter name must be a string');
- 		if(typeof(filterCbk) !== 'function')
+ 		}
+ 		if(typeof(filterCbk) !== 'function') {
  			throw new Error('Filter callback must be a function');
+ 		}
  		_customFilters[filterName] = filterCbk;
  	}
 
  	this.subscribe = function() {
  		if(arguments.length === 1 && typeof(arguments[0]) === 'function') {
- 			_listeners['push'].push(arguments[0]);
- 			_listeners['remove'].push(arguments[0]);
+ 			let listener = arguments[0];
+ 			_listeners['push'].push(listener);
+ 			_listeners['remove'].push(listener);
+ 			return () => { // unsubscription
+ 				unsubscribe('push', listener);
+ 				unsubscribe('remove', listener);
+ 			}
  		}
  		else if(arguments.length === 2) {
  			let type = arguments[0];
  			let listener = arguments[1];
  			if(_listeners[type]) {
  				_listeners[type].push(listener);
+	 			return () => unsubscribe(type, listener) // unsubscription
  			}
  			else
  				throw new Error('type of listener must be "push", "remove" or "filter"');
  		}
- 		else 
+ 		else {
  			throw new Error('You should pass a callback function or a type "push" or "remove" and a callback to subscribe');
+ 		}
+ 		// Give a way to unsubscribe
+ 		function unsubscribe(type, listener) {
+			for(let i=0; i<_listeners[type].length; i++) {
+				if(_listeners[type][i] === listener) {
+					_listeners[type].splice(i,1);
+					break;
+				}
+			}
+		}
  	}
 
  	function _notifyListeners(type, filteredCollection) {
@@ -313,6 +345,9 @@ function Collection(attributes) {
  		}
  		else if(type === 'filter') {
  			_listeners.filter.forEach(listener => listener(filteredCollection));
+ 		}
+ 		else {
+ 			throw new Error('The type passed is not a possible type');
  		}
  	}
 
@@ -344,8 +379,9 @@ function Collection(attributes) {
 		let txt = parts[0].trim();
 		let filter = parts[1].trim();
 		let txtToRender = _resolveNestedObject(model, txt); // resolve nested object
-		if(!txtToRender)
+		if(!txtToRender) {
 			throw new Error('Please check the expression "' + txt + '" you passed in the template');
+		}
 		if(_customFilters[filter]) {
 			return _customFilters[filter](txtToRender);
 		}
@@ -354,8 +390,9 @@ function Collection(attributes) {
 
  	function _resolveNestedObject(model, input) {
 		let nestedObjectArray = input.split('.');
-		if(nestedObjectArray.length === 1)
+		if(nestedObjectArray.length === 1) {
 			return model[input];
+		}
 		else {
 			let txtToRender = model[nestedObjectArray[0].trim()];
 			for(var i=1; i<nestedObjectArray.length; i++) {
@@ -377,4 +414,3 @@ return {
 }
 
 })();
-
