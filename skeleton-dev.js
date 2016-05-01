@@ -10,6 +10,10 @@ function Model(attributes) {
 		return new Model(attributes);
 	}
 
+	if(!(attributes && attributes.defaults)) {
+		throw new Error('A "defaults" field must be passed');
+	}
+
 	function model(options) {
 
 		let _attrs = Object.assign({}, attributes.defaults) || {};
@@ -315,8 +319,9 @@ function Collection(attributes) {
  				_listeners[type].push(listener);
 	 			return () => unsubscribe(type, listener) // unsubscription
  			}
- 			else
+ 			else {
  				throw new Error('type of listener must be "push", "remove" or "filter"');
+ 			}
  		}
  		else {
  			throw new Error('You should pass a callback function or a type "push" or "remove" and a callback to subscribe');
@@ -333,7 +338,7 @@ function Collection(attributes) {
  	}
 
  	function _notifyListeners(type, filteredCollection) {
- 		if(type === 'all' || !type) {
+ 		if(!type) {
  			_listeners.push.forEach(listener => listener());
  			_listeners.remove.forEach(listener => listener());
  		}
