@@ -159,6 +159,7 @@ function Collection(attributes) {
 	}
 
  	const re = /{{\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g;
+ 	const re_loop = /{{\s*#((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g;
 
  	let _index = 0;
  	
@@ -364,8 +365,34 @@ function Collection(attributes) {
  		let collection = coll || _collection.toJSON();
  		collection.forEach(model => model.index = _generateIndex()); // generate unique index to each model
  		let templateString = '';
- 		collection.forEach(model => templateString += _renderModel(model));
+ 		collection.forEach(model => {
+ 			templateString += _renderLoop(_renderModel(model), model);
+ 		});
  		return templateString;
+ 	}
+
+ 	function _renderLoop(template, model) {
+ 		let el = _htmlToElement(template);
+ 		let el_cloned = el.cloneNode(true);
+ 		let domElements = el_cloned.querySelectorAll('[data-loop]');
+ 		if(!domElements || !domElements.length) // no data-loop
+ 			return template;
+ 		Array.prototype.slice.call(domElements).forEach(dElement => {
+	 		let attr = dElement.getAttribute('data-loop').trim();
+	 		if(!model[attr]) // no attribute in model
+	 			throw new Error(attr + ' attribute does not appear in model');
+	 		let temp = '';
+	 		model[attr].forEach(obj => {
+		 		temp += _elementToHtml(dElement).replace(re_loop, (str,g) => {
+		 			if(g.indexOf('|') !== -1) {
+		 				return _filterize(obj, g);
+		 			}
+		 			return _resolveNestedObject(obj, g);
+		 		});
+	 		});
+	 		el.querySelector('[data-loop=' + attr + ']').innerHTML = temp;
+	 	});
+ 		return _elementToHtml(el);
  	}
 
  	function _renderModel(model) {
@@ -410,6 +437,18 @@ function Collection(attributes) {
  	function _generateIndex() {
  		return _index++;
  	}
+
+ 	function _elementToHtml(el) {
+ 		let div = document.createElement('div');
+ 		div.appendChild(el);
+ 		return div.innerHTML;
+ 	}
+
+ 	function _htmlToElement(html) {
+		let div = document.createElement('div');
+		div.innerHTML = html;
+		return div.firstElementChild;
+	}
 
  }
 

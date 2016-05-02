@@ -38,9 +38,15 @@
 			<span class="float-right">{{ date | lower }}</span>
 			<div class="clear"></div>
 		</div>
+		<div class="post-commenters">
+			<div class="commenter" data-loop="commenters">
+				<span>{{ #name | upper }}</span>
+				<span>{{ #age }}</span>
+			</div>
+		<div>
 	</div>
 </template>
 
-<script type="text/javascript" src="../../skeleton.js"></script>
+<script type="text/javascript" src="../../skeleton-dev.js"></script>
 <script type="text/javascript" src="microblog.js"></script>
 </html>
