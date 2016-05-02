@@ -377,10 +377,14 @@ function Collection(attributes) {
  		let domElements = el_cloned.querySelectorAll('[data-loop]');
  		if(!domElements || !domElements.length) // no data-loop
  			return template;
- 		Array.prototype.slice.call(domElements).forEach(dElement => {
+ 		Array.prototype.slice.call(domElements).forEach((dElement, i) => {
 	 		let attr = dElement.getAttribute('data-loop').trim();
-	 		if(!model[attr]) // no attribute in model
+	 		if(!model[attr]) { // no attribute in model
 	 			throw new Error(attr + ' attribute does not appear in model');
+	 		}
+	 		if(!Array.isArray(model[attr])) {
+	 			throw new Error(attr + '\'s value must be an array');
+	 		}
 	 		let temp = '';
 	 		model[attr].forEach(obj => {
 		 		temp += _elementToHtml(dElement).replace(re_loop, (str,g) => {
@@ -421,6 +425,8 @@ function Collection(attributes) {
  	}
 
  	function _resolveNestedObject(model, input) {
+ 		if(input === 'this')
+ 			return model;
 		let nestedObjectArray = input.split('.');
 		if(nestedObjectArray.length === 1) {
 			return model[input];

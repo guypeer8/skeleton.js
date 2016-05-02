@@ -208,6 +208,68 @@ let unsub = RecordsList.subscribe('push', () => {
 
 // And that's all there is to it! :)
 ```
+---
+###### How to use loops inside the template?
+```html
+<template id="record-template">
+  <div class="record" data-id="{{ index }}">
+    <div class="record-head">
+      <span class="float-left">Album: {{ album }}</span>
+      <span class="float-right">Year: {{ year }}</span>
+      <div class="clear"></div>
+    </div>
+    <div class="record-body">
+      '{{ song | upper }}' is a song by {{ artist | capitalize }} from the album {{ album }} that sold {{ sold }} records.
+    </div>
+    <div class="record-footer">
+      <button onClick="remove({{ index }})">x</button>
+    </div>
+    <div class="selling-shops">
+      <div class="shop" data-loop="shops">
+        <span>{{ #name }}</span>
+        <span>{{ #address }}</span>
+        <span>{{ #this | json }}</span>
+      </div>
+    </div>
+  </div>
+</template>
+```
+
+###### As you can see, you just need to set 'data-loop' attribute to the part you want to loop over.
+###### 'shops' is an array of objects. To resolve the object, use the field name with '#' before the name.
+###### You can use '#this' if you want to resolve what's in the array and not its fields. This is usefull if
+###### your array consists of strings, or if you want to stringify json objects and show them to the user.
+###### Now the records model should look like this:
+```js
+let RecordModel = Skeleton.Model({
+  defaults: {
+    artist: '',
+    song: '',
+    album: '',
+    year: '',
+    sold: 0,
+    shops: []
+  },
+  init() {
+    console.log(`The song ${this.get('song')} by ${this.get('artist')} sold ${this.get('sold')} records.`);
+  }
+});
+```
+###### And pushing to render the template looks like this:
+```js
+RecordsList.push({ 
+  artist: 'queen', 
+  song: 'Bohemian Rhapsody', 
+  album: 'A night at the opera', 
+  year: 1975,
+  sold: '26 million',
+  shops: [
+    {name: 'Disc', address: 'Washington 3'},
+    {name: 'Musik', address: 'Barbara 5'},
+    {name: 'Flow', address: 'Franklin 8'}
+  ]
+});
+```
 
 ---
 ###### Please check out the examples folder and the source code to see more.

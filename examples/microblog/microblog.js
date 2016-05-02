@@ -1,4 +1,4 @@
-
+(function() {
 
 // Define 'includes'
 String.prototype.includes = String.prototype.includes || function(str) { return this.indexOf(str) !== -1; }
@@ -9,8 +9,6 @@ var PostModel = Skeleton.Model({
 		title: '',
 		posted_by: '',
 		content: '',
-		commenters: [],
-		friends:[],
 		date: new Date().toDateString()
 	},
 	init: function() {
@@ -76,3 +74,4 @@ function removePost(index) {
 
 window.removePost = removePost;
 
+})();
