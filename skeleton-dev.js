@@ -373,11 +373,10 @@ function Collection(attributes) {
 
  	function _renderLoop(template, model) {
  		let el = _htmlToElement(template);
- 		let el_cloned = el.cloneNode(true);
- 		let domElements = el_cloned.querySelectorAll('[data-loop]');
+ 		let domElements = _getSiblingsElementsByAttr(el, 'data-loop');
  		if(!domElements || !domElements.length) // no data-loop
  			return template;
- 		Array.prototype.slice.call(domElements).forEach((dElement, i) => {
+ 		domElements.forEach((dElement,i) => {
 	 		let attr = dElement.getAttribute('data-loop').trim();
 	 		if(!model[attr]) { // no attribute in model
 	 			throw new Error(attr + ' attribute does not appear in model');
@@ -387,14 +386,19 @@ function Collection(attributes) {
 	 		}
 	 		let temp = '';
 	 		model[attr].forEach(obj => {
-		 		temp += _elementToHtml(dElement).replace(re_loop, (str,g) => {
+	 			let dElementHtml = _elementToHtml(dElement);
+	 			// Check if there are nested loops and resolve them
+	 			if(dElement.querySelector('[data-loop]')) {
+	 				_renderLoop(dElementHtml, obj);
+	 			}
+		 		temp += dElementHtml.replace(re_loop, (str,g) => {
 		 			if(g.indexOf('|') !== -1) {
 		 				return _filterize(obj, g);
 		 			}
 		 			return _resolveNestedObject(obj, g);
 		 		});
 	 		});
-	 		el.querySelector('[data-loop=' + attr + ']').innerHTML = temp;
+	 		el.innerHTML += temp;
 	 	});
  		return _elementToHtml(el);
  	}
@@ -456,7 +460,29 @@ function Collection(attributes) {
 		return div.firstElementChild;
 	}
 
+	function _getSiblingsElementsByAttr(el, attr) {
+		let queryAttr = '[' + attr + ']';
+		let arr = [];
+		let cloned = el.cloneNode(true);
+		let elByAttr = cloned.querySelector(queryAttr);
+		if(elByAttr) {
+			arr.push(elByAttr);
+			while(elByAttr.nextElementSibling) {
+				elByAttr = elByAttr.nextElementSibling;
+				if(elByAttr.hasAttribute(attr)) {
+					arr.push(elByAttr);
+				}
+			}
+		}
+		return arr;
+	}
+
  }
+
+// Extend array
+Array.prototype.extend = function(arr) {
+	arr.forEach(item => this.push(item));
+}
 
 return {
 	Model,
