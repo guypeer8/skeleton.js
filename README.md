@@ -134,6 +134,13 @@ RecordsList.addFilter('helloFirst', function(txt) {
 RecordsList.push({ artist: 'prince', song: 'purple Rain', album: 'Purple Rain', year: 1984, sold: '22 million' });
 ```
 
+###### And if you want the model to appear first in the list, just use 'unshift' and it will render automatically
+###### at the begining of the list.
+
+```js
+RecordsList.unshift({ artist: 'prince', song: 'purple Rain', album: 'Purple Rain', year: 1984, sold: '22 million' });
+```
+
 ###### And maybe you want to push a whole array of objects that came back from an api or db-server:
 ```js
 $.getJSON('/artists-records-api-path', (data) => {
@@ -184,6 +191,7 @@ RecordsList.subscribe(() => alert(`Right now there are ${RecordsList.size()} rec
 RecordsList.subscribe('push', () => console.log('A push occured! Ahhhahaha')); // This will only run on push
 RecordsList.subscribe('remove', () => console.log('A remove occured! Whahaahha')); // This will only run on remove
 ```
+###### Be aware that 'push' listener also listens to when you call 'unshift' since you push to the begining of the list.
 
 ---
 ###### And what if I want to filter my list? Just use the 'filter' function that comes with Skeleton.List!
@@ -203,7 +211,8 @@ RecordsList.subscribe('filter', (filteredRecords) => alert(`After filtering, the
 // When we subscribe to an event, an unsubscribe function is returned so we can apply it later on.
 // Let's say that after we have 100 records we want to unsubscribe.
 let unsub = RecordsList.subscribe('push', () => {
-  RecordsList.size() === 100 ? unsub() : console.log('A push occured! Ahhhahaha');
+  RecordsList.size() === 100 ? unsub() : console.log('A push occured! Ahhhahaha'); 
+  // 'size' is a function you should call to determine how many models you have in the list
 }); 
 
 // And that's all there is to it! :)

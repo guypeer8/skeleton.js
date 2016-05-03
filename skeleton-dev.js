@@ -87,6 +87,13 @@ function Collection(attributes) {
 			_collection.push(model);
 		}
 
+		this.addFirst = function(model) {
+			if(!(model instanceof _collectionModel)) {
+				throw new Error('A collection must consist of models of same instance');
+			}
+			_collection.unshift(model);			
+		}
+
 		this.removeByFields = function(options) {
 			_collection = _collection.filter(model => {
 				for(let opt in options) {
@@ -239,11 +246,22 @@ function Collection(attributes) {
  	}
 
  	this.push = function(model) {
- 		if(model instanceof _model)
- 			_collection.add(model);
- 		else
- 			_collection.add(new _model(model));
- 		_updateView();
+ 		if(!(model instanceof _model)) {
+ 			model = new _model(model);
+ 		}
+ 		model.set('index', _generateIndex());
+ 		_collection.add(model);
+ 		_updateSingleModelView(model.toJSON(), 'push');
+ 		_notifyListeners('push');
+ 	}
+
+ 	this.unshift = function(model) {
+ 		if(!(model instanceof _model)) {
+ 			model = new _model(model);
+ 		}
+ 		model.set('index', _generateIndex());
+ 		_collection.addFirst(model);
+ 		_updateSingleModelView(model.toJSON(), 'unshift');
  		_notifyListeners('push');
  	}
 
@@ -357,6 +375,18 @@ function Collection(attributes) {
  		}
  	}
 
+ 	function _updateSingleModelView(model, method) {
+ 		if(method === 'push') {
+ 			_element.innerHTML += _renderLoop(_renderModel(model), model);
+ 		}
+ 		else if(method === 'unshift') {
+ 			_element.innerHTML = _renderLoop(_renderModel(model), model) + _element.innerHTML;
+ 		}
+ 		else {
+ 			throw new Error('unknown method passed to "_updateSingleModelView"');
+ 		}
+ 	}
+
  	function _updateView(coll) {
  		_element.innerHTML = _renderTemplate(coll);
  	}
@@ -455,26 +485,6 @@ function Collection(attributes) {
 		let div = document.createElement('div');
 		div.innerHTML = html;
 		return div.firstElementChild;
-	}
-
-	function _getSiblingsElementsByAttr(el, attr) {
-		if(typeof(el) === 'string') {
-			el = _htmlToElement(el);
-		}
-		let queryAttr = '[' + attr + ']';
-		let arr = [];
-		let cloned = el.cloneNode(true);
-		let elByAttr = cloned.querySelector(queryAttr);
-		if(elByAttr) {
-			arr.push(elByAttr);
-			while(elByAttr.nextElementSibling) {
-				elByAttr = elByAttr.nextElementSibling;
-				if(elByAttr.hasAttribute(attr)) {
-					arr.push(elByAttr);
-				}
-			}
-		}
-		return arr;
 	}
 
  }
