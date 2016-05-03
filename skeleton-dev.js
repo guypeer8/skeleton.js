@@ -373,24 +373,21 @@ function Collection(attributes) {
 
  	function _renderLoop(template, model) {
  		let el = _htmlToElement(template);
- 		let domElements = _getSiblingsElementsByAttr(el, 'data-loop');
+ 		let domElements = el.querySelectorAll('[data-loop]');
  		if(!domElements || !domElements.length) // no data-loop
  			return template;
- 		domElements.forEach((dElement,i) => {
+ 		Array.prototype.slice.call(domElements).forEach((dElement,i) => {
 	 		let attr = dElement.getAttribute('data-loop').trim();
-	 		if(!model[attr]) { // no attribute in model
+	 		let arr = model[attr];
+	 		if(!arr) { // no attribute in model
 	 			throw new Error(attr + ' attribute does not appear in model');
 	 		}
-	 		if(!Array.isArray(model[attr])) {
+	 		if(!Array.isArray(arr)) {
 	 			throw new Error(attr + '\'s value must be an array');
 	 		}
+	 		let dElementHtml = _elementToHtml(dElement);
 	 		let temp = '';
-	 		model[attr].forEach(obj => {
-	 			let dElementHtml = _elementToHtml(dElement);
-	 			// Check if there are nested loops and resolve them
-	 			if(dElement.querySelector('[data-loop]')) {
-	 				_renderLoop(dElementHtml, obj);
-	 			}
+	 		arr.forEach(obj => {
 		 		temp += dElementHtml.replace(re_loop, (str,g) => {
 		 			if(g.indexOf('|') !== -1) {
 		 				return _filterize(obj, g);
@@ -398,9 +395,9 @@ function Collection(attributes) {
 		 			return _resolveNestedObject(obj, g);
 		 		});
 	 		});
-	 		el.innerHTML += temp;
+	 		template = template.replace(dElementHtml, temp);
 	 	});
- 		return _elementToHtml(el);
+ 		return template;
  	}
 
  	function _renderModel(model) {
@@ -461,6 +458,9 @@ function Collection(attributes) {
 	}
 
 	function _getSiblingsElementsByAttr(el, attr) {
+		if(typeof(el) === 'string') {
+			el = _htmlToElement(el);
+		}
 		let queryAttr = '[' + attr + ']';
 		let arr = [];
 		let cloned = el.cloneNode(true);
