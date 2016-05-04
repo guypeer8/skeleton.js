@@ -188,10 +188,25 @@ window.remove = function(index) {
 ###### A callback function to run on both push and remove events, or both the event and its callback. For example:
 ```js
 RecordsList.subscribe(() => alert(`Right now there are ${RecordsList.size()} records in the list!`)); // This will run on both push or remove
-RecordsList.subscribe('push', () => console.log('A push occured! Ahhhahaha')); // This will only run on push
-RecordsList.subscribe('remove', () => console.log('A remove occured! Whahaahha')); // This will only run on remove
+RecordsList.subscribe('push', (model) => console.log(`The model ${JSON.stingify(model)} was pushed!`)); // This will only run on push
+RecordsList.subscribe('remove', (model) => console.log(`The model ${JSON.stingify(model)} was removed!`)); // This will only run on remove
 ```
-###### Be aware that 'push' listener also listens to when you call 'unshift' since you push to the begining of the list.
+###### * You can also listen to 'pushAll' and 'removeAll' events.
+###### * Be aware that 'push' listener also listens to when you call 'unshift'.
+###### A common use case when you would want to subscribe to an event would be I/O, for example:
+```js
+RecordsList.subscribe('push', (model) => {
+  $.ajax({
+    type: 'post',
+    dataType: 'json',
+    data: model,
+    url: '/add-model-api',
+    success: () => {
+      console.log('success');
+    }
+  });
+});
+```
 
 ---
 ###### And what if I want to filter my list? Just use the 'filter' function that comes with Skeleton.List!
@@ -279,6 +294,25 @@ RecordsList.push({
   ]
 });
 ```
+
+---
+###### support for easy usage of browser localStorage:
+```js
+// Save complex objects to localStorage
+RecordsList.save({
+  'models': RecordsList.models(),
+  'size': RecordsList.size()
+}); 
+
+// Fetch complex objects from localStorage
+let models = RecordsList.fetch('models');
+let size = RecordsList.fetch('size');
+
+// Clear storage
+RecordsList.clear();
+```
+###### If you use 'save', please use 'fetch' to get back the data, and not 'localStorage.getItem',
+###### since 'save' and 'fetch' take care of stringifying and parsing json.
 
 ---
 ###### Please check out the examples folder and the source code to see more.

@@ -123,6 +123,10 @@ function Collection(attributes) {
 			return _collection;
 		}
 
+		this.sort = function(sorter) {
+			_collection.sort(sorter);
+		}
+
 		this.filterToJSON = function(cbk) {
 			return this.toJSON().filter(cbk);		
 		}
@@ -173,7 +177,9 @@ function Collection(attributes) {
  	let _listeners = { // Each array contains functions to run
  		push: [],
  		remove: [],
- 		filter: []
+ 		filter: [],
+ 		pushAll: [],
+ 		removeAll: []
  	};
 
  	let _customFilters = {
@@ -242,41 +248,49 @@ function Collection(attributes) {
  	this.pushAll = function(models) {
  		models.forEach(model => _collection.add(new _model(model)));
  		_updateView();
- 		_notifyListeners('push');
+ 		_notifyListeners('pushAll', models);
  	}
 
  	this.push = function(model) {
- 		if(!(model instanceof _model)) {
- 			model = new _model(model);
- 		}
- 		model.set('index', _generateIndex());
- 		_collection.add(model);
- 		_updateSingleModelView(model.toJSON(), 'push');
- 		_notifyListeners('push');
+		_addModel(model, 'push');
  	}
 
  	this.unshift = function(model) {
- 		if(!(model instanceof _model)) {
- 			model = new _model(model);
- 		}
- 		model.set('index', _generateIndex());
- 		_collection.addFirst(model);
- 		_updateSingleModelView(model.toJSON(), 'unshift');
- 		_notifyListeners('push');
+ 		_addModel(model, 'unshift');
  	}
 
  	this.remove = function(index) {
  		let collection = this.models();
+ 		let model;
  		for(var i=0; i<collection.length; i++) {
- 			let model = collection[i];
+ 			model = collection[i];
  			if(model.index === index) {
  				_collection.remove(i);
  				break;
  			}
  		}
  		_updateView();
- 		_notifyListeners('remove');
+ 		_notifyListeners('remove', model);
  		return collection[i];
+ 	}
+
+ 	this.lastIndex = function() {
+ 		if(this.size() === 0)
+ 			return;
+ 		return _index-1;
+ 	}
+
+ 	this.firstIndex = function() {
+ 		let indexes = this.models().map(model => model.index);
+ 		if(!indexes.length)
+ 			return;
+ 		let min_index = Infinity;
+ 		indexes.forEach(index => {
+ 			if(index < min_index) {
+ 				min_index = index;
+ 			}
+ 		});
+ 		return min_index;
  	}
 
  	this.removeByFields = function(options) {
@@ -288,7 +302,7 @@ function Collection(attributes) {
  	this.removeAll = function() {
  		_collection.removeAll();
  		_updateView();
- 		_notifyListeners('remove');
+ 		_notifyListeners('removeAll');
  	}
 
  	this.get = function(index) {
@@ -311,6 +325,11 @@ function Collection(attributes) {
  		return coll;
  	}
 
+ 	this.sort = function(sorter) {
+ 		_collection.sort(sorter);
+ 		_updateView();
+ 	}
+
  	this.addFilter = function(filterName, filterCbk) {
  		if(typeof(filterName) !== 'string') {
  			throw new Error('Filter name must be a string');
@@ -319,6 +338,47 @@ function Collection(attributes) {
  			throw new Error('Filter callback must be a function');
  		}
  		_customFilters[filterName] = filterCbk;
+ 	}
+
+ 	this.save = function() {
+ 		if(window.localStorage) {
+	 		if(arguments.length === 2) {
+	 			let key = arguments[0];
+	 			let value = arguments[1];
+	 			if(typeof(key) !== 'string') {
+	 				throw new Error('First item must be a string');
+	 			}
+	 			value = _stringifyValue(value);
+	 			window.localStorage.setItem(key, value);
+	 		}
+	 		else if(arguments.length === 1 && typeof(arguments[0]) === 'object') {
+	 			let pairs = arguments[0];
+	 			for(let key in pairs) {
+	 				let value = pairs[key];
+	 				value = _stringifyValue(value);
+	 				window.localStorage.setItem(key, value);
+	 			}
+	 		}
+	 		else {
+	 			throw new Error('Method save must get key an value, or an object of keys and values');
+	 		}
+	 	}
+ 	}
+
+ 	this.fetch = function(key) {
+ 		if(window.localStorage) {
+ 			let value = window.localStorage.getItem(key);
+ 			if(!value) {
+ 				throw new Error('The key ' + key + ' does not appear in localStorage');
+ 			}
+ 			return _parseValue(value);
+ 		}
+ 	}
+
+ 	this.clear = function() {
+ 		if(window.localStorage) {
+ 			window.localStorage.clear();
+ 		}
  	}
 
  	this.subscribe = function() {
@@ -356,23 +416,45 @@ function Collection(attributes) {
 		}
  	}
 
- 	function _notifyListeners(type, filteredCollection) {
+ 	function _notifyListeners(type, param) {
  		if(!type) {
- 			_listeners.push.forEach(listener => listener());
- 			_listeners.remove.forEach(listener => listener());
+ 			_listeners.push.forEach(listener => listener(param));
+ 			_listeners.remove.forEach(listener => listener(param));
  		}
- 		else if(type === 'push') {
- 			_listeners.push.forEach(listener => listener());
- 		}
- 		else if(type === 'remove') {
- 			_listeners.remove.forEach(listener => listener());
- 		}
- 		else if(type === 'filter') {
- 			_listeners.filter.forEach(listener => listener(filteredCollection));
+ 		else if(_listeners[type]) {
+ 			_listeners[type].forEach(listener => listener(param));
  		}
  		else {
  			throw new Error('The type passed is not a possible type');
  		}
+ 	}
+
+ 	function _stringifyValue(value) {
+		if(Array.isArray(value) || (typeof(value) === 'object' && typeof(value) !== null && typeof(value) !== undefined)) {
+			value = JSON.stringify(value);
+		}
+		return value;
+ 	}
+
+ 	function _parseValue(value) {
+ 		try {
+ 			value = JSON.parse(value);
+ 			return value;	
+ 		}
+ 		catch(e) {
+ 			return value;
+ 		}	
+ 	}
+
+ 	function _addModel(model, method) {
+  		if(!(model instanceof _model)) {
+ 			model = new _model(model);
+ 		}
+ 		let modelJSON = model.toJSON();
+ 		model.set('index', _generateIndex());
+ 		method === 'push' ? _collection.add(model) : _collection.addFirst(model);
+ 		_updateSingleModelView(modelJSON, method);
+ 		_notifyListeners('push', modelJSON);
  	}
 
  	function _updateSingleModelView(model, method) {

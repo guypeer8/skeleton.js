@@ -1,4 +1,4 @@
-// (function() {
+(function() {
 
 // Define 'includes'
 String.prototype.includes = String.prototype.includes || function(str) { return this.indexOf(str) !== -1; }
@@ -9,7 +9,6 @@ var PostModel = Skeleton.Model({
 		title: '',
 		posted_by: '',
 		content: '',
-		commenters: [],
 		date: new Date().toDateString()
 	},
 	init: function() {
@@ -53,7 +52,7 @@ filterPosts.addEventListener('keyup', function(e) {
 });
 
 // Subscribe To Push and Remove- Means, Run this function when either there is a push to the list or remove from it
-PostsList.subscribe(() => setCount(PostsList.size()));
+PostsList.subscribe((model) => setCount(PostsList.size()));
 
 // Subscribe To Filtering the Collection- Means, Run this function when 'filter' is called on PostsList
 PostsList.subscribe('filter', (filteredList) => setCount(filteredList.length));
@@ -75,4 +74,4 @@ function removePost(index) {
 
 window.removePost = removePost;
 
-// })();
+})();
