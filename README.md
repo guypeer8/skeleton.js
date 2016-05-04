@@ -309,17 +309,17 @@ RecordsList.push({
 ###### Another thing built in is an easy support for usage of browser localStorage:
 ```js
 // Save complex objects to localStorage
-Skeleton.utils.save({
+Skeleton.storage.save({
   'models': RecordsList.models(),
   'size': RecordsList.size()
 }); 
 
 // Fetch complex objects from localStorage
-let models = Skeleton.utils.fetch('models');
-let size = Skeleton.utils.fetch('size');
+let models = Skeleton.storage.fetch('models');
+let size = Skeleton.storage.fetch('size');
 
 // Clear storage
-Skeleton.utils.clear();
+Skeleton.storage.clear();
 ```
 ###### If you use 'save', please use 'fetch' to get back the data, and not 'localStorage.getItem',
 ###### since 'save' and 'fetch' take care of stringifying and parsing json.
