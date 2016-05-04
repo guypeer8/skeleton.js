@@ -188,34 +188,42 @@ window.remove = function(index) {
 ###### A callback function to run on both push and remove events, or both the event and its callback. For example:
 ```js
 RecordsList.subscribe(() => alert(`Right now there are ${RecordsList.size()} records in the list!`)); // This will run on both push or remove
-RecordsList.subscribe('push', (model) => console.log(`The model ${JSON.stingify(model)} was pushed!`)); // This will only run on push
-RecordsList.subscribe('remove', (model) => console.log(`The model ${JSON.stingify(model)} was removed!`)); // This will only run on remove
+RecordsList.subscribe('push', (model) => {
+  console.log(`The model ${JSON.stringify(model)} was pushed!`); // This will only run on push
+}); 
+RecordsList.subscribe('remove', (model) => {
+  console.log(`The model ${JSON.stringify(model)} was removed!`); // This will only run on remove
+}); 
 ```
 ###### * You can also listen to 'pushAll' and 'removeAll' events.
 ###### * Be aware that 'push' listener also listens to when you call 'unshift'.
 ###### A common use case when you would want to subscribe to an event would be I/O, for example:
 ```js
 RecordsList.subscribe('push', (model) => {
-  $.ajax({
-    type: 'post',
-    dataType: 'json',
-    data: model,
-    url: '/add-model-api',
-    success: () => {
-      console.log('success');
-    }
-  });
+    $.ajax({
+      type: 'post',
+      dataType: 'json',
+      data: model,
+      url: '/add-model-api',
+      success() {
+        console.log('success');
+      }
+    });
 });
 ```
 
 ---
 ###### And what if I want to filter my list? Just use the 'filter' function that comes with Skeleton.List!
 ```js
-let filteredRecords = RecordsList.filter((model,i) => Number(model.year) > 1966); // Returns records that were released after 1966
+let filteredRecords = RecordsList.filter((model,i) => {
+  return Number(model.year) > 1966; // Returns records that were released after 1966
+});
 
 // Now, the view is automatically updated, and you can use the filtered list returned to updated other parts of your app,
 // or simply use the 'subscribe' method to listen to whenever the list is filtered like shown underneath
-RecordsList.subscribe('filter', (filteredRecords) => alert(`After filtering, there are ${filteredRecords.length} records in the list!`));
+RecordsList.subscribe('filter', (filteredRecords) => {
+  alert(`After filtering, there are ${filteredRecords.length} records in the list!`);
+});
 
 // Notice that the filtered list is passed to the listener and you can use it
 ```
@@ -233,7 +241,7 @@ let unsub = RecordsList.subscribe('push', () => {
 // And that's all there is to it! :)
 ```
 ---
-###### How to use loops inside the template?
+###### Back to templates- How do we use loops inside the template?
 ```html
 <template id="record-template">
   <div class="record" data-id="{{ index }}">
@@ -249,11 +257,13 @@ let unsub = RecordsList.subscribe('push', () => {
       <button onClick="remove({{ index }})">x</button>
     </div>
     <div class="selling-shops">
+      <!-- Here the loop declaration begins -->
       <div class="shop" data-loop="shops">
         <span>{{ #name }}</span>
         <span>{{ #address }}</span>
         <span>{{ #this | json }}</span>
       </div>
+      <!-- Here it ends -->
     </div>
   </div>
 </template>
@@ -272,7 +282,7 @@ let RecordModel = Skeleton.Model({
     album: '',
     year: '',
     sold: 0,
-    shops: []
+    shops: [] // Array of objects or strings
   },
   init() {
     console.log(`The song ${this.get('song')} by ${this.get('artist')} sold ${this.get('sold')} records.`);
@@ -296,7 +306,7 @@ RecordsList.push({
 ```
 
 ---
-###### support for easy usage of browser localStorage:
+###### Another thing built in is an easy support for usage of browser localStorage:
 ```js
 // Save complex objects to localStorage
 RecordsList.save({
