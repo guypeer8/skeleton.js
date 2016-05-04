@@ -340,47 +340,6 @@ function Collection(attributes) {
  		_customFilters[filterName] = filterCbk;
  	}
 
- 	this.save = function() {
- 		if(window.localStorage) {
-	 		if(arguments.length === 2) {
-	 			let key = arguments[0];
-	 			let value = arguments[1];
-	 			if(typeof(key) !== 'string') {
-	 				throw new Error('First item must be a string');
-	 			}
-	 			value = _stringifyValue(value);
-	 			window.localStorage.setItem(key, value);
-	 		}
-	 		else if(arguments.length === 1 && typeof(arguments[0]) === 'object') {
-	 			let pairs = arguments[0];
-	 			for(let key in pairs) {
-	 				let value = pairs[key];
-	 				value = _stringifyValue(value);
-	 				window.localStorage.setItem(key, value);
-	 			}
-	 		}
-	 		else {
-	 			throw new Error('Method save must get key an value, or an object of keys and values');
-	 		}
-	 	}
- 	}
-
- 	this.fetch = function(key) {
- 		if(window.localStorage) {
- 			let value = window.localStorage.getItem(key);
- 			if(!value) {
- 				throw new Error('The key ' + key + ' does not appear in localStorage');
- 			}
- 			return _parseValue(value);
- 		}
- 	}
-
- 	this.clear = function() {
- 		if(window.localStorage) {
- 			window.localStorage.clear();
- 		}
- 	}
-
  	this.subscribe = function() {
  		if(arguments.length === 1 && typeof(arguments[0]) === 'function') {
  			let listener = arguments[0];
@@ -582,3 +541,47 @@ return {
 }
 
 })();
+
+/***********************
+     Skeleton Utils
+ ***********************/
+ Skeleton.utils.save = function() {
+ 	if(window.localStorage) {
+ 		if(arguments.length === 2) {
+ 			let key = arguments[0];
+ 			let value = arguments[1];
+ 			if(typeof(key) !== 'string') {
+ 				throw new Error('First item must be a string');
+ 			}
+ 			value = _stringifyValue(value);
+ 			window.localStorage.setItem(key, value);
+ 		}
+ 		else if(arguments.length === 1 && typeof(arguments[0]) === 'object') {
+ 			let pairs = arguments[0];
+ 			for(let key in pairs) {
+ 				let value = pairs[key];
+ 				value = _stringifyValue(value);
+ 				window.localStorage.setItem(key, value);
+ 			}
+ 		}
+ 		else {
+ 			throw new Error('Method save must get key an value, or an object of keys and values');
+ 		}
+ 	}
+ }
+
+Skeleton.utils.fetch = function(key) {
+ 	if(window.localStorage) {
+ 		let value = window.localStorage.getItem(key);
+ 		if(!value) {
+ 			throw new Error('The key ' + key + ' does not appear in localStorage');
+ 		}
+ 		return _parseValue(value);
+ 	}
+ }
+
+ Skeleton.utils.clear = function() {
+ 	if(window.localStorage) {
+ 		window.localStorage.clear();
+ 	}
+ }
