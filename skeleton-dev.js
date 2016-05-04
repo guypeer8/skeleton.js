@@ -545,7 +545,7 @@ return {
 /***********************
      Skeleton Utils
  ***********************/
- Skeleton.utils.save = function() {
+ Skeleton.storage.save = function() {
  	if(window.localStorage) {
  		if(arguments.length === 2) {
  			let key = arguments[0];
@@ -570,7 +570,7 @@ return {
  	}
  }
 
-Skeleton.utils.fetch = function(key) {
+Skeleton.storage.fetch = function(key) {
  	if(window.localStorage) {
  		let value = window.localStorage.getItem(key);
  		if(!value) {
@@ -580,7 +580,7 @@ Skeleton.utils.fetch = function(key) {
  	}
  }
 
- Skeleton.utils.clear = function() {
+ Skeleton.storage.clear = function() {
  	if(window.localStorage) {
  		window.localStorage.clear();
  	}
