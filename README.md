@@ -158,8 +158,12 @@ RecordsList.removeAll(); // The data is removed and immediately empties the list
 ###### Now, what if you want to have the ability to remove a single model on a button click ?
 ###### Well, pretty simple as well. notice the following in the template:
 ```html
-<button onClick="remove({{ index }})">x</button>
+<div data-id="{{ index }}">
+  <button onClick="remove({{ index }})">x</button>
+</div>
 ```
+###### Please notice that giving the wrapper element of the model a 'data-id' attribute this way is a must, if you
+###### want to have the ability to remove a model from the list.
 ###### Now, you need to define a 'remove' function, and use the built-in functionallity of a skeleton list:
 ```js
 window.remove = function(index) {

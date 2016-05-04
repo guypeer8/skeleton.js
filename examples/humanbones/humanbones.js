@@ -28,7 +28,7 @@ ajaxGet('http://mysafeinfo.com/api/data?list=humanbones&format=json', function(d
 });
 
 BonesList.subscribe('pushAll', (models) => {
-	BonesList.save({ models }); // Save models to localStorage
+	Skeleton.storage.save({ models }); // Save models to localStorage
 	console.log(`Models pushed and saved to localStorage: ${JSON.stringify(models)}`);
 });
 

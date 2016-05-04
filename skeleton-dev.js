@@ -64,101 +64,6 @@ function Model(attributes) {
 }
 
 
-/************
-  Collection
- ************/
-function Collection(attributes) {
-
-	// Make sure initialized
-	if(!(this instanceof Collection)) {
-		return new Collection(attributes);
-	}
-
-	function collection(options) {
-
-		let _collection = [];
-
-		let _collectionModel = attributes && attributes.model;
-
-		this.add = function(model) {
-			if(!(model instanceof _collectionModel)) {
-				throw new Error('A collection must consist of models of same instance');
-			}
-			_collection.push(model);
-		}
-
-		this.addFirst = function(model) {
-			if(!(model instanceof _collectionModel)) {
-				throw new Error('A collection must consist of models of same instance');
-			}
-			_collection.unshift(model);			
-		}
-
-		this.removeByFields = function(options) {
-			_collection = _collection.filter(model => {
-				for(let opt in options) {
-					if(model.get(opt) !== options[opt])
-						return true;
-				}
-				return false;
-			});
-		}
-
-		this.remove = function() {
-			if(arguments.length === 1) {
-				removeOne(arguments[0]);
-			}
-			else {
-				for(let i=0; i<arguments.length; i++) {
-					removeOne(arguments[i]);
-				}
-			}
-		}
-
-		this.removeAll = function() {
-			_collection = [];
-		}
-
-		this.models = function() {
-			return _collection;
-		}
-
-		this.sort = function(sorter) {
-			_collection.sort(sorter);
-		}
-
-		this.filterToJSON = function(cbk) {
-			return this.toJSON().filter(cbk);		
-		}
-
-		this.toJSON = function() {
-			return _collection.map(model => model.toJSON());
-		}
-
-		this.size = function() {
-			return _collection.length;
-		}
-
-		if(attributes && attributes.init) {
-			attributes.init.call(this);
-		}
-
-		function removeOne(arg) {
-			if(typeof(arg) === 'number') {
-				_collection.splice(arg,1);
-			}
-			else {
-				_collection = _collection.filter(model => model !== arg);
-			}
-		}
-
-	}
-
-	return collection;
-
-}
-
-
 /********
    View
  ********/
@@ -233,22 +138,27 @@ function Collection(attributes) {
  		throw new Error('A template id or string must be supplied');
  	}
 
- 	let _collection = new (new Collection({ model : _model }));
+ 	let self = this;
 
+ 	let _collection = {}; // {index: model}
+
+ 	// get collection of model types
  	this.getCollection = function() {
- 		return _collection;
+ 		return Object.keys(_collection).map(index => _collection[index]);
  	}
 
+ 	// get collection of objects
  	this.models = function() {
- 		return _collection.toJSON();
+ 		return this.getCollection().map(model => model.toJSON());
  	}
-
- 	this.updateView = _updateView;
 
  	this.pushAll = function(models) {
- 		models.forEach(model => _collection.add(new _model(model)));
- 		_updateView();
- 		_notifyListeners('pushAll', models);
+ 		models.forEach(model => {
+ 			model.index = _generateIndex();
+ 			_collection[model.index] = new _model(model);
+ 		});
+ 		_element.innerHTML += _renderTemplate();
+ 		_notifyListeners('pushAll', this.models());
  	}
 
  	this.push = function(model) {
@@ -260,23 +170,20 @@ function Collection(attributes) {
  	}
 
  	this.remove = function(index) {
- 		let collection = this.models();
- 		let model;
- 		for(var i=0; i<collection.length; i++) {
- 			model = collection[i];
- 			if(model.index === index) {
- 				_collection.remove(i);
- 				break;
- 			}
+ 		if(!_collection[index]) {
+ 			return;
  		}
- 		_updateView();
+ 		let model = _collection[index];
+ 		delete _collection[index];
+ 		_removeModelAndRender(index);
  		_notifyListeners('remove', model);
- 		return collection[i];
+ 		return model;
  	}
 
  	this.lastIndex = function() {
- 		if(this.size() === 0)
- 			return;
+ 		if(this.size() === 0) {
+ 			return -1;
+ 		}
  		return _index-1;
  	}
 
@@ -293,40 +200,37 @@ function Collection(attributes) {
  		return min_index;
  	}
 
- 	this.removeByFields = function(options) {
- 		_collection.removeByFields(options);
- 		_updateView();
- 		_notifyListeners('remove');
- 	}
-
  	this.removeAll = function() {
- 		_collection.removeAll();
- 		_updateView();
+ 		_collection = {};
+ 		_element.innerHTML = '';
  		_notifyListeners('removeAll');
  	}
 
  	this.get = function(index) {
-  		let collection = this.models();
- 		for(let i=0; i<collection.length; i++) {
- 			let model = collection[i];
- 			if(model.index === index) 
- 				return model;
- 		}	
+  		if(!_collection[index]) {
+  			return null;
+  		}
+  		return _collection[index];
  	}
 
  	this.size = function() {
- 		return _collection.size();
+ 		return this.getCollection().length;
  	}
 
  	this.filter = function(cbk) {
- 		let coll = _collection.filterToJSON(cbk);
- 		_updateView(coll);
+ 		let coll = this.models().filter(cbk);
+ 		_element.innerHTML = _renderTemplate(coll);
  		_notifyListeners('filter', coll);
  		return coll;
  	}
 
  	this.sort = function(sorter) {
- 		_collection.sort(sorter);
+ 		sorter = sorter || function(a,b){return a.index - b.index;};
+ 		let sortedCollection = {};
+ 		this.models().sort(sorter).forEach(model => {
+ 			sortedCollection[model.index] = _collection[model.index];
+ 		});
+ 		_collection = sortedCollection;
  		_updateView();
  	}
 
@@ -375,6 +279,9 @@ function Collection(attributes) {
 		}
  	}
 
+ 	/****************************
+ 	    List Private Functions
+ 	 ***************************/
  	function _notifyListeners(type, param) {
  		if(!type) {
  			_listeners.push.forEach(listener => listener(param));
@@ -388,53 +295,38 @@ function Collection(attributes) {
  		}
  	}
 
- 	function _stringifyValue(value) {
-		if(Array.isArray(value) || (typeof(value) === 'object' && typeof(value) !== null && typeof(value) !== undefined)) {
-			value = JSON.stringify(value);
-		}
-		return value;
- 	}
-
- 	function _parseValue(value) {
- 		try {
- 			value = JSON.parse(value);
- 			return value;	
- 		}
- 		catch(e) {
- 			return value;
- 		}	
- 	}
-
  	function _addModel(model, method) {
   		if(!(model instanceof _model)) {
  			model = new _model(model);
  		}
+ 		let index = _generateIndex();
+ 		model.set('index', index);
  		let modelJSON = model.toJSON();
- 		model.set('index', _generateIndex());
- 		method === 'push' ? _collection.add(model) : _collection.addFirst(model);
+ 		_collection[index] = model;
  		_updateSingleModelView(modelJSON, method);
  		_notifyListeners('push', modelJSON);
  	}
 
  	function _updateSingleModelView(model, method) {
+ 		let el = _htmlToElement(_renderLoop(_renderModel(model), model));
  		if(method === 'push') {
- 			_element.innerHTML += _renderLoop(_renderModel(model), model);
+ 			_element.appendChild(el);
  		}
  		else if(method === 'unshift') {
- 			_element.innerHTML = _renderLoop(_renderModel(model), model) + _element.innerHTML;
+ 			_element.insertBefore(el, _element.childNodes[0]);
  		}
  		else {
  			throw new Error('unknown method passed to "_updateSingleModelView"');
  		}
  	}
 
- 	function _updateView(coll) {
- 		_element.innerHTML = _renderTemplate(coll);
+ 	function _removeModelAndRender(index) {
+ 		let attr = '[data-id="' + index + '"]';
+ 		_element.querySelector(attr).remove();
  	}
 
  	function _renderTemplate(coll) {
- 		let collection = coll || _collection.toJSON();
- 		collection.forEach(model => model.index = _generateIndex()); // generate unique index to each model
+ 		let collection = coll || self.models();
  		let templateString = '';
  		collection.forEach(model => {
  			templateString += _renderLoop(_renderModel(model), model);
@@ -535,53 +427,83 @@ Array.prototype.extend = function(arr) {
 	arr.forEach(item => this.push(item));
 }
 
+/***************************************
+    Skeleton Storage Helper Functions
+ ***************************************/
+function _stringifyValue(value) {
+	try {
+		value = JSON.stringify(value);
+		return value;	
+	}
+	catch(e) {
+		return value;
+	}	
+}
+
+function _parseValue(value) {
+	try {
+		value = JSON.parse(value);
+		return value;	
+	}
+	catch(e) {
+		return value;
+	}	
+}
+
+/***********************
+    Skeleton Storage
+ ***********************/
+let storage = {
+	save() {
+	 	if(window.localStorage) {
+	 		if(arguments.length === 2) {
+	 			let key = arguments[0];
+	 			let value = arguments[1];
+	 			if(typeof(key) !== 'string') {
+	 				throw new Error('First item must be a string');
+	 			}
+	 			value = _stringifyValue(value);
+	 			window.localStorage.setItem(key, value);
+	 		}
+	 		else if(arguments.length === 1 && typeof(arguments[0]) === 'object') {
+	 			let pairs = arguments[0];
+	 			for(let key in pairs) {
+	 				let value = pairs[key];
+	 				value = _stringifyValue(value);
+	 				window.localStorage.setItem(key, value);
+	 			}
+	 		}
+	 		else {
+	 			throw new Error('Method save must get key an value, or an object of keys and values');
+	 		}
+	 	}
+	 },
+
+	fetch(key) {
+	 	if(window.localStorage) {
+	 		let value = window.localStorage.getItem(key);
+	 		if(!value) {
+	 			throw new Error('The key ' + key + ' does not appear in localStorage');
+	 		}
+	 		return _parseValue(value);
+	 	}
+	 },
+
+	clear() {
+	 	if(window.localStorage) {
+	 		window.localStorage.clear();
+	 	}
+	}
+}
+
+/************
+    Return
+ ************/
 return {
 	Model,
-	List
+	List,
+	storage
 }
 
 })();
 
-/***********************
-     Skeleton Utils
- ***********************/
- Skeleton.storage.save = function() {
- 	if(window.localStorage) {
- 		if(arguments.length === 2) {
- 			let key = arguments[0];
- 			let value = arguments[1];
- 			if(typeof(key) !== 'string') {
- 				throw new Error('First item must be a string');
- 			}
- 			value = _stringifyValue(value);
- 			window.localStorage.setItem(key, value);
- 		}
- 		else if(arguments.length === 1 && typeof(arguments[0]) === 'object') {
- 			let pairs = arguments[0];
- 			for(let key in pairs) {
- 				let value = pairs[key];
- 				value = _stringifyValue(value);
- 				window.localStorage.setItem(key, value);
- 			}
- 		}
- 		else {
- 			throw new Error('Method save must get key an value, or an object of keys and values');
- 		}
- 	}
- }
-
-Skeleton.storage.fetch = function(key) {
- 	if(window.localStorage) {
- 		let value = window.localStorage.getItem(key);
- 		if(!value) {
- 			throw new Error('The key ' + key + ' does not appear in localStorage');
- 		}
- 		return _parseValue(value);
- 	}
- }
-
- Skeleton.storage.clear = function() {
- 	if(window.localStorage) {
- 		window.localStorage.clear();
- 	}
- }
