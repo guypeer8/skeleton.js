@@ -14,6 +14,7 @@ function Model(attributes) {
 		throw new Error('A "defaults" field must be passed');
 	}
 
+	// model class
 	function model(options) {
 
 		let _attrs = Object.assign({}, attributes.defaults) || {};
@@ -37,23 +38,24 @@ function Model(attributes) {
 			}
 		}
 
+		// get json representation of the model
 		this.toJSON = function() {
 			return _attrs;
 		}
 
-		// Set attributes
+		// set attributes
 		for(let opt in options) {
 			this.set(opt, options[opt]);
 		}
 
-		// Call init
+		// call init
 		if(attributes && attributes.init) {
 			attributes.init.call(this);
 		}
 
 	}
 
-	// Set additional methods to model
+	// set additional methods to model
 	for(let attr in attributes) {
 		if(attr !== 'init' && attr !== 'defaults') {
 			model.prototype[attr] = attributes[attr];
@@ -64,9 +66,9 @@ function Model(attributes) {
 }
 
 
-/********
-   View
- ********/
+/**********
+    View
+ **********/
  function List(attributes) {
 
  	// Make sure initialized
@@ -74,7 +76,7 @@ function Model(attributes) {
 		return new List(attributes);
 	}
 
- 	const re = /{{\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g;
+ 	const re = /{{\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g; 
  	const re_loop = /{{\s*#\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g;
 
  	let _index = 0;
@@ -152,6 +154,8 @@ function Model(attributes) {
  		return Object.keys(_collection).map(index => _collection[index].toJSON());
  	}
 
+ 	// append array of objects that
+ 	// represent models to the list
  	this.pushAll = function(models) {
  		models.forEach(model => {
  			model.index = _generateIndex();
@@ -161,14 +165,17 @@ function Model(attributes) {
  		_notifyListeners('pushAll', this.models());
  	}
 
+ 	// push to end of the list
  	this.push = function(model) {
 		_addModel(model, 'push');
  	}
 
+ 	// push to begining of the list
  	this.unshift = function(model) {
  		_addModel(model, 'unshift');
  	}
 
+ 	// remove single model and return it
  	this.remove = function(index) {
  		if(!_collection[index]) {
  			return;
@@ -180,6 +187,7 @@ function Model(attributes) {
  		return model;
  	}
 
+ 	// get max index
  	this.lastIndex = function() {
  		if(this.size() === 0) {
  			return -1;
@@ -187,8 +195,9 @@ function Model(attributes) {
  		return _index-1;
  	}
 
+ 	// get min index
  	this.firstIndex = function() {
- 		let indexes = this.models().map(model => model.index);
+ 		let indexes = Object.keys(_collection);
  		if(!indexes.length)
  			return;
  		let min_index = Infinity;
@@ -200,23 +209,27 @@ function Model(attributes) {
  		return min_index;
  	}
 
+ 	// clear list and notify listeners
  	this.removeAll = function() {
  		_collection = {};
  		_element.innerHTML = '';
  		_notifyListeners('removeAll');
  	}
 
+ 	// get model object by index
  	this.get = function(index) {
   		if(!_collection[index]) {
   			return null;
   		}
-  		return _collection[index];
+  		return _collection[index].toJSON();
  	}
 
+ 	// get number of models in the list
  	this.size = function() {
- 		return this.getCollection().length;
+ 		return Object.keys(_collection).length;
  	}
 
+ 	// filter models and render
  	this.filter = function(cbk) {
  		let coll = this.models().filter(cbk);
  		_element.innerHTML = _renderTemplate(coll);
@@ -224,6 +237,7 @@ function Model(attributes) {
  		return coll;
  	}
 
+ 	// sort models and render
  	this.sort = function(sorter) {
  		sorter = sorter || function(a,b){return a.index - b.index;};
  		let sortedCollection = {};
@@ -231,9 +245,10 @@ function Model(attributes) {
  			sortedCollection[model.index] = _collection[model.index];
  		});
  		_collection = sortedCollection;
- 		_updateView();
+ 		_element.innerHTML = _renderTemplate();
  	}
 
+ 	// add filter to be used by pipe in the template
  	this.addFilter = function(filterName, filterCbk) {
  		if(typeof(filterName) !== 'string') {
  			throw new Error('Filter name must be a string');
@@ -244,6 +259,7 @@ function Model(attributes) {
  		_customFilters[filterName] = filterCbk;
  	}
 
+ 	// subscribe to event
  	this.subscribe = function() {
  		if(arguments.length === 1 && typeof(arguments[0]) === 'function') {
  			let listener = arguments[0];
@@ -422,11 +438,6 @@ function Model(attributes) {
 
  }
 
-// Extend array
-Array.prototype.extend = function(arr) {
-	arr.forEach(item => this.push(item));
-}
-
 /***************************************
     Skeleton Storage Helper Functions
  ***************************************/
@@ -483,7 +494,7 @@ let storage = {
 	 	if(window.localStorage) {
 	 		let value = window.localStorage.getItem(key);
 	 		if(!value) {
-	 			throw new Error('The key ' + key + ' does not appear in localStorage');
+	 			return null;
 	 		}
 	 		return _parseValue(value);
 	 	}

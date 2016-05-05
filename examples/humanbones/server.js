@@ -20,7 +20,7 @@ var server = http.createServer(function(req,res) {
 
 	else if(req.url === '/skeleton.js') {
 		res.writeHead(200, {'Content-Type':'text/javascript'});
-		res.end(fs.readFileSync('../../skeleton.js', 'utf-8'));
+		res.end(fs.readFileSync('../../skeleton-dev.js', 'utf-8'));
 	}
 
 	else
