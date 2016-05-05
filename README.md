@@ -5,8 +5,9 @@
 ### Please notice there is a significant change in how you remove a model from the list.
 #### To remove a model, it must have a 'data-id' attribute on the wrapper element as shown as you continue reading. 
 #### This is done so Skeleton would performe much faster.
+---
 
-###### First, create a model:
+###### Let's start. First, create a model:
 ```js
 
 let RecordModel = Skeleton.Model({
@@ -324,18 +325,20 @@ RecordsList.push({
 </div>
 ```
 ```js
-// The 'people' array looks something like this:
+// The 'people' array is an array of objects that looks something like this:
 {
   people: [
-    name: '',
-    friends: {
-      best: {
-        name: '',
-        age: ''
-      },
-      good: {
-        name: '',
-        age: ''
+    {
+      name: '',
+      friends: {
+        best: {
+          name: '',
+          age: ''
+        },
+        good: {
+          name: '',
+          age: ''
+        }
       }
     }
   ]

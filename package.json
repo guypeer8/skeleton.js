@@ -1,6 +1,6 @@
 {
   "name": "js-skeleton",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Rendering static lists made as easy as pushing to an array",
   "main": "skeleton.js",
   "directories": {

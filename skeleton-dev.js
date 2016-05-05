@@ -149,7 +149,7 @@ function Model(attributes) {
 
  	// get collection of objects
  	this.models = function() {
- 		return this.getCollection().map(model => model.toJSON());
+ 		return Object.keys(_collection).map(index => _collection[index].toJSON());
  	}
 
  	this.pushAll = function(models) {
