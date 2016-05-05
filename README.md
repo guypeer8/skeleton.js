@@ -3,8 +3,8 @@
 
 ---
 #### Please notice there is a significant change in how you remove a model from the list.
-To remove a model, it must have a 'data-id' attribute on the wrapper element as shown
-as you continue reading. This is done so Skeleton would performe much faster.
+##### To remove a model, it must have a 'data-id' attribute on the wrapper element as shown as you continue reading. 
+##### This is done so Skeleton would performe much faster.
 
 ###### First, create a model:
 ```js
