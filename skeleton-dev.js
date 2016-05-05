@@ -75,7 +75,7 @@ function Model(attributes) {
 	}
 
  	const re = /{{\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g;
- 	const re_loop = /{{\s*#((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g;
+ 	const re_loop = /{{\s*#\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g;
 
  	let _index = 0;
  	

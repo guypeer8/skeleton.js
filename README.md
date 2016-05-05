@@ -2,6 +2,9 @@
 #### Skeleton makes rendering static lists (add/remove model) very easy.
 
 ---
+### Please notice there is a significant change in how you remove a model from the list.
+### To remove a model, it must have a 'data-id' attribute on the wrapper element as shown
+### as you continue reading. This is done so Skeleton would performe much faster.
 
 ###### First, create a model:
 ```js
@@ -307,6 +310,36 @@ RecordsList.push({
     {name: 'Flow', address: 'Franklin 8'}
   ]
 });
+```
+###### You can use nested objects in a loop like this:
+```html
+<div data-loop="people">
+  <p>{{ #name | capitalize }}</p>
+  <h2>Best Friend:</h2>
+  <p>{{ #friends.best.name | upper }}</p>
+  <p>{{ #friends.best.age }}</p>
+  <h3>Good Friend:</h3>
+  <p>{{ #friends.good.name | lower }}</p>
+  <p>{{ #friends.good.age }}</p>
+</div>
+```
+```js
+// The 'people' array looks something like this:
+{
+  people: [
+    name: '',
+    friends: {
+      best: {
+        name: '',
+        age: ''
+      },
+      good: {
+        name: '',
+        age: ''
+      }
+    }
+  ]
+}
 ```
 
 ---
