@@ -87,7 +87,8 @@ function Model(attributes) {
  		filter: [],
  		sort: [],
  		pushAll: [],
- 		removeAll: []
+ 		removeAll: [],
+ 		edit: []
  	};
 
  	let _customFilters = {
@@ -247,13 +248,29 @@ function Model(attributes) {
  			sortedCollection[model.index] = _collection[model.index];
  		});
  		_collection = sortedCollection;
- 		_element.innerHTML = _renderTemplate();
+ 		_element.innerHTML = _renderTemplate(); // render
  		_notifyListeners('sort', sorted);
  	}
 
  	// go over models
  	this.forEach = function(cbk) {
  		this.models().forEach(cbk);
+ 	}
+
+ 	// edit a field in the model and replace it in the list
+ 	this.edit = function(index, options) {
+ 		if(!options) {
+ 			return;
+ 		}
+ 		let model = _collection[index];
+ 		for(let key in options) {
+ 			model.set(key, options[key]);
+ 		}
+ 		let modelJSON = model.toJSON();
+ 		let html = _renderLoop(_renderModel(modelJSON), modelJSON);
+ 		let newEl = _htmlToElement(html);
+ 		_replaceModel(index, newEl); // render
+ 		_notifyListeners('edit', modelJSON);
  	}
 
  	// add filter to be used by pipe in the template
@@ -287,7 +304,7 @@ function Model(attributes) {
 	 					_listeners[t].push(listener);		
 	 				}	
 	 				else {
-	 					throw new Error('type ' + t + ' is not a possible type. possible types: "push", "remove", "filter", "sort", "pushAll", "removeAll"');
+	 					throw new Error('type ' + t + ' is not a possible type. possible types: "push", "remove", "filter", "sort", "edit", "pushAll", "removeAll"');
 	 				}	
  				});
  				return () => type.forEach(t => unsubscribe(t, listener)) // unsubscription
@@ -297,7 +314,7 @@ function Model(attributes) {
 	 				_listeners[type].push(listener);
 		 			return () => unsubscribe(type, listener) // unsubscription
 	 			}
- 				throw new Error('type ' + type + ' is not a possible type. possible types: "push", "remove", "filter", "sort", "pushAll", "removeAll"');	
+ 				throw new Error('type ' + type + ' is not a possible type. possible types: "push", "remove", "filter", "sort", "edit", "pushAll", "removeAll"');	
  			}
  		}
  		else {
@@ -340,6 +357,15 @@ function Model(attributes) {
  		_collection[index] = model;
  		_updateSingleModelView(modelJSON, method);
  		_notifyListeners('push', modelJSON);
+ 	}
+
+ 	function _replaceModel(index, newEl) {
+ 		let attr = '[data-id="' + index + '"]';
+ 		let el = _element.querySelector(attr);
+ 		if(!el) {
+ 			throw new Error('Make sure your you set a "data-id" attribute to each model');
+ 		}
+ 		_element.replaceChild(newEl, el);
  	}
 
  	function _updateSingleModelView(model, method) {

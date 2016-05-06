@@ -1,10 +1,11 @@
-## skeleton.js
-#### Skeleton makes rendering static lists (add/remove model) very easy.
+## Skeleton.js
+#### Skeleton makes rendering lists (add/remove/edit model) very easy.
 
 ---
 ### Please notice there is a significant change in how you remove a model from the list.
 #### To remove a model, it must have a 'data-id' attribute on the wrapper element as shown as you continue reading. 
 #### This is done so Skeleton would performe much faster.
+#### Another new feature is the ability to edit and subscribe to editing a model as shown in this short(but full) documentation.
 ---
 
 ###### Let's start. First, create a model:
@@ -188,12 +189,23 @@ window.remove = (index) => {
 }
 ```
 ---
+###### Similarly you can edit a model:
+```js
+window.edit = (index, options) { // function exposed to window object for user interaction
+    RecordsList.edit(index, options); // built in functionallity of skeleton
+}
+
+// example usage
+edit(2, { year: 1980, sold: 23000000 }); // edit 3rd model in the list, change and render specified fields
+```
+
+---
 ###### You can also iterate over the models like this:
 ```js
 // If record sold less than 5 million, remove it from the list
 RecordsList.forEach((record,idx) => {
     if(record.sold < 5000000) {
-      remove(record.index); // The record is removed from the view
+        remove(record.index); // The record is removed from the view
     }
 });
 ```
@@ -211,26 +223,47 @@ RecordsList.subscribe('remove', (model) => {
     console.log(`The model ${JSON.stringify(model)} was removed!`); // This will only run on remove
 }); 
 ```
-###### * You can also listen to 'pushAll', 'removeAll', 'push', 'remove', 'filter' and 'sort' events.
+###### * You can also listen to 'pushAll', 'removeAll', 'push', 'remove', 'filter', 'edit' and 'sort' events.
 ###### * Be aware that 'push' listener also listens to when you call 'unshift'.
 ###### * If you only pass a callback function, the affected events will be 'push' and 'remove'.
 ###### * You can pass array of events if you have a function to run on all of them.
 ```js
-// A common use case when you would want to subscribe to an event would be I/O, for example
+/* A common use case when you would want to subscribe to an event would be I/O, for example: */
+
+// add model to db
 RecordsList.subscribe('push', (model) => {
     $.ajax({
-      type: 'post',
-      dataType: 'json',
-      data: model,
-      url: '/add-model-api',
-      success() {
-        console.log('success');
-      }
+        type: 'post',
+        dataType: 'json',
+        data: model,
+        url: '/add-model-api',
+        success() {
+          console.log('success');
+        },
+        error() {
+          console.log('error');
+        }
+    });
+});
+
+// edit model on db
+RecordsList.subscribe('edit', (model) => {
+    $.ajax({
+        type: 'post',
+        dataType: 'json',
+        data: model,
+        url: '/edit-model-api',
+        success() {
+          console.log('success');
+        },
+        error() {
+          console.log('error');
+        }
     });
 });
 
 // An example of many events subscribing to the same function
-RecordsList.subscribe(['push','pushAll','remove','filter','sort'], () => {
+RecordsList.subscribe(['push','pushAll','remove','filter','sort','edit'], () => {
     console.log('I work hard since many events are subscribed to me!');
 });
 ```
@@ -238,8 +271,7 @@ RecordsList.subscribe(['push','pushAll','remove','filter','sort'], () => {
 ---
 ###### How do I subscribe to filtering the list? Easy!
 ```js
-let filteredRecords = RecordsList.filter((model,i) => {
-    return Number(model.year) > 1966; // Returns records that were released after 1966
+let filteredRecords = RecordsList.filter(model => model.year > 1966); // Returns records that were released after 1966
 });
 
 // Now, the view is automatically updated, and you can use the filtered list returned to updated other parts of your app,
