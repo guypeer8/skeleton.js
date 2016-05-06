@@ -166,8 +166,8 @@ RecordsList.removeAll(); // The data is removed and immediately empties the list
 </div>
 ```
 ###### Please notice that giving the wrapper element of the model a 'data-id' attribute this way is a must, if you
-###### want to have the ability to remove a model from the list.
-###### Now, you need to define a 'remove' function, and use the built-in functionallity of a skeleton list:
+###### want to have the ability to remove/edit a model of the list.
+###### Now, you need to define a 'remove'/'edit' function, and use the built-in functionallity of a skeleton list:
 ```js
 window.remove = function(index) {
     let modelToRemove = RecordsList.remove(index); // This will remove the model from the list and rerender, and it will return the model removed
@@ -191,7 +191,7 @@ window.remove = (index) => {
 ---
 ###### Similarly you can edit a model:
 ```js
-window.edit = (index, options) { // function exposed to window object for user interaction
+window.edit = (index, options) => { // function exposed to window object for user interaction
     RecordsList.edit(index, options); // built in functionallity of skeleton
 }
 
