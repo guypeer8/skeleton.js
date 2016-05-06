@@ -1,4 +1,4 @@
-## Skeleton.js
+![skeleton](https://cloud.githubusercontent.com/assets/13187428/15070947/ab961d1a-1390-11e6-93ae-36b56482e673.png)
 #### Skeleton makes rendering lists (add/remove/edit model) very easy.
 
 ---
