@@ -2,12 +2,6 @@
 #### Skeleton makes rendering lists (add/remove/edit model) very easy.
 
 ---
-### Please notice there is a significant change in how you remove a model from the list.
-#### To remove a model, it must have a 'data-id' attribute on the wrapper element as shown as you continue reading. 
-#### This is done so Skeleton would performe much faster.
-#### Another new feature is the ability to edit and subscribe to editing a model as shown in this short(but full) documentation.
----
-
 ###### Let's start. First, create a model:
 ```js
 
@@ -34,7 +28,6 @@ let RecordModel = Skeleton.Model({
 ##### You can extend the functionality of a model by defining your own functions.
 
 --- 
-
 ###### Next, create a list:
 ```js
 let RecordsList = Skeleton.List({
@@ -51,7 +44,6 @@ let RecordsList = Skeleton.List({
 ##### 'templateId' field that specifies the id of the template in the html document.
 
 ---
-
 ###### Now, lets define a template:
 ```html
 <template id="record-template">
@@ -272,7 +264,6 @@ RecordsList.subscribe(['push','pushAll','remove','filter','sort','edit'], () => 
 ###### How do I subscribe to filtering the list? Easy!
 ```js
 let filteredRecords = RecordsList.filter(model => model.year > 1966); // Returns records that were released after 1966
-});
 
 // Now, the view is automatically updated, and you can use the filtered list returned to updated other parts of your app,
 // or simply use the 'subscribe' method to listen to whenever the list is filtered like shown underneath
