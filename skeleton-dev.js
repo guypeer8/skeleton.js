@@ -85,6 +85,7 @@ function Model(attributes) {
  		push: [],
  		remove: [],
  		filter: [],
+ 		sort: [],
  		pushAll: [],
  		removeAll: []
  	};
@@ -240,12 +241,19 @@ function Model(attributes) {
  	// sort models and render
  	this.sort = function(sorter) {
  		sorter = sorter || function(a,b){return a.index - b.index;};
+ 		let sorted = this.models().sort(sorter);
  		let sortedCollection = {};
- 		this.models().sort(sorter).forEach(model => {
+ 		sorted.forEach(model => {
  			sortedCollection[model.index] = _collection[model.index];
  		});
  		_collection = sortedCollection;
  		_element.innerHTML = _renderTemplate();
+ 		_notifyListeners('sort', sorted);
+ 	}
+
+ 	// go over models
+ 	this.forEach = function(cbk) {
+ 		this.models().forEach(cbk);
  	}
 
  	// add filter to be used by pipe in the template
@@ -273,12 +281,23 @@ function Model(attributes) {
  		else if(arguments.length === 2) {
  			let type = arguments[0];
  			let listener = arguments[1];
- 			if(_listeners[type]) {
- 				_listeners[type].push(listener);
-	 			return () => unsubscribe(type, listener) // unsubscription
+ 			if(Array.isArray(type)) {
+ 				type.forEach(t => {
+	 	 			if(_listeners[t]) {
+	 					_listeners[t].push(listener);		
+	 				}	
+	 				else {
+	 					throw new Error('type ' + t + ' is not a possible type. possible types: "push", "remove", "filter", "sort", "pushAll", "removeAll"');
+	 				}	
+ 				});
+ 				return () => type.forEach(t => unsubscribe(t, listener)) // unsubscription
  			}
  			else {
- 				throw new Error('type of listener must be "push", "remove" or "filter"');
+	 			if(_listeners[type]) {
+	 				_listeners[type].push(listener);
+		 			return () => unsubscribe(type, listener) // unsubscription
+	 			}
+ 				throw new Error('type ' + type + ' is not a possible type. possible types: "push", "remove", "filter", "sort", "pushAll", "removeAll"');	
  			}
  		}
  		else {
@@ -338,7 +357,11 @@ function Model(attributes) {
 
  	function _removeModelAndRender(index) {
  		let attr = '[data-id="' + index + '"]';
- 		_element.querySelector(attr).remove();
+ 		let el = _element.querySelector(attr);
+ 		if(!el) {
+ 			throw new Error('Make sure your you set a "data-id" attribute to each model');
+ 		}
+ 		el.remove();
  	}
 
  	function _renderTemplate(coll) {

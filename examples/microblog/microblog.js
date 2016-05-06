@@ -1,4 +1,4 @@
-(function() {
+// (function() {
 
 // Define 'includes'
 String.prototype.includes = String.prototype.includes || function(str) { return this.indexOf(str) !== -1; }
@@ -47,31 +47,16 @@ postButton.addEventListener('click', function(e) {
 // Atach Keyup Listener To Filter Input
 filterPosts.addEventListener('keyup', function(e) {
 	let inputValue = e.target.value.toLowerCase();
-	// Filter by filterer supplied, the filtered models are returned in case you need them
-	PostsList.filter((model) => model.posted_by.toLowerCase().includes(inputValue));
+	PostsList.filter((model) => model.posted_by.toLowerCase().includes(inputValue)); // Filter by filterer supplied, the filtered models are returned in case you need them
 });
 
-// Subscribe To Push and Remove- Means, Run this function when either there is a push to the list or remove from it
-PostsList.subscribe((model) => setCount(PostsList.size()));
+PostsList.subscribe((model) => setCount(PostsList.size())); // Subscribe To Push and Remove- Means, Run this function when either there is a push to the list or remove from it
+PostsList.subscribe('filter', (filteredList) => setCount(filteredList.length)); // Subscribe To Filtering the Collection- Means, Run this function when 'filter' is called on PostsList
 
-// Subscribe To Filtering the Collection- Means, Run this function when 'filter' is called on PostsList
-PostsList.subscribe('filter', (filteredList) => setCount(filteredList.length));
-
-// Clean Post Inputs
-function cleanInputs() {
-	[title.value, posted_by.value, content.value, filterPosts.value] = ['', '', '', ''];
-}
-
-// Set Posts Count
-function setCount(count) {
-	postsCount.textContent = count;
-}
-
-// Remove Post
-function removePost(index) {
-	PostsList.remove(index);
-}
+const cleanInputs = () =>  [title.value, posted_by.value, content.value, filterPosts.value] = ['', '', '', ''] // Clean Post Inputs
+const setCount = (count) => postsCount.textContent = count // Set Posts Count
+const removePost = (index) => PostsList.remove(index) // Remove Post
 
 window.removePost = removePost;
 
-})();
+// })();

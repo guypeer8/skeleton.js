@@ -135,14 +135,14 @@ RecordsList.addFilter('helloFirst', function(txt) {
 ###### and it will render the record to the list.
 
 ```js
-RecordsList.push({ artist: 'prince', song: 'purple Rain', album: 'Purple Rain', year: 1984, sold: '22 million' });
+RecordsList.push({ artist: 'prince', song: 'purple Rain', album: 'Purple Rain', year: 1984, sold: 22000000 });
 ```
 
 ###### And if you want the model to appear first in the list, just use 'unshift' and it will render automatically
 ###### at the begining of the list.
 
 ```js
-RecordsList.unshift({ artist: 'prince', song: 'purple Rain', album: 'Purple Rain', year: 1984, sold: '22 million' });
+RecordsList.unshift({ artist: 'prince', song: 'purple Rain', album: 'Purple Rain', year: 1984, sold: 22000000 });
 ```
 
 ###### And maybe you want to push a whole array of objects that came back from an api or db-server:
@@ -189,6 +189,16 @@ window.remove = function(index) {
   RecordsList.remove(index);
 }
 ```
+---
+###### You can also iterate over the models like this:
+```js
+// If record sold less than 5 million, remove it from the list
+RecordsList.forEach((record,idx) => {
+    if(record.sold < 5000000) {
+      remove(record.index); // The record is removed from the view
+    }
+});
+```
 
 ---
 ###### Let's say now, that we want some function to run each time something is pushed to the list or removed from it.
@@ -203,10 +213,12 @@ RecordsList.subscribe('remove', (model) => {
   console.log(`The model ${JSON.stringify(model)} was removed!`); // This will only run on remove
 }); 
 ```
-###### * You can also listen to 'pushAll' and 'removeAll' events.
+###### * You can also listen to 'pushAll', 'removeAll', 'push', 'remove', 'filter' and 'sort' events.
 ###### * Be aware that 'push' listener also listens to when you call 'unshift'.
-###### A common use case when you would want to subscribe to an event would be I/O, for example:
+###### * If you only pass a callback function, the affected events will be 'push' and 'remove'.
+###### * You can pass array of events if you have a function to run on all of them.
 ```js
+// A common use case when you would want to subscribe to an event would be I/O, for example
 RecordsList.subscribe('push', (model) => {
     $.ajax({
       type: 'post',
@@ -218,10 +230,15 @@ RecordsList.subscribe('push', (model) => {
       }
     });
 });
+
+// An example of many events subscribing to the same function
+RecordsList.subscribe(['push','pushAll','remove','filter','sort'], () => {
+  console.log('I work hard since many events are subscribed to me!');
+});
 ```
 
 ---
-###### And what if I want to filter my list? Just use the 'filter' function that comes with Skeleton.List!
+###### How do I subscribe to filtering the list? Easy!
 ```js
 let filteredRecords = RecordsList.filter((model,i) => {
   return Number(model.year) > 1966; // Returns records that were released after 1966
@@ -232,9 +249,8 @@ let filteredRecords = RecordsList.filter((model,i) => {
 RecordsList.subscribe('filter', (filteredRecords) => {
   alert(`After filtering, there are ${filteredRecords.length} records in the list!`);
 });
-
-// Notice that the filtered list is passed to the listener and you can use it
 ```
+###### Notice that the filtered list is passed to the listener and you can use it
 
 ---
 ###### Now, let's say that after a while we want to unsubscribe from any of our "events". Very easy:
@@ -304,7 +320,7 @@ RecordsList.push({
   song: 'Bohemian Rhapsody', 
   album: 'A night at the opera', 
   year: 1975,
-  sold: '26 million',
+  sold: 26000000,
   shops: [
     {name: 'Disc', address: 'Washington 3'},
     {name: 'Musik', address: 'Barbara 5'},
