@@ -11,16 +11,16 @@
 ```js
 
 let RecordModel = Skeleton.Model({
-  defaults: {
-    artist: '',
-    song: '',
-    album: '',
-    year: '',
-    sold: 0
-  },
-  init() {
-    console.log(`The song ${this.get('song')} by ${this.get('artist')} sold ${this.get('sold')} records.`);
-  }
+    defaults: {
+      artist: '',
+      song: '',
+      album: '',
+      year: '',
+      sold: 0
+    },
+    init() {
+      console.log(`The song ${this.get('song')} by ${this.get('artist')} sold ${this.get('sold')} records.`);
+    }
 });
 ```
 
@@ -37,9 +37,9 @@ let RecordModel = Skeleton.Model({
 ###### Next, create a list:
 ```js
 let RecordsList = Skeleton.List({
-  model: RecordModel,
-  element: 'records',
-  template: {templateId: 'record-template'} 
+    model: RecordModel,
+    element: 'records',
+    template: {templateId: 'record-template'} 
 });
 ```
 
@@ -85,9 +85,7 @@ let RecordsList = Skeleton.List({
 ---
 ###### And what about adding your own filters? Yeah, piece of cake:
 ```js
-RecordsList.addFilter('helloFirst', function(txt) {
-    return 'Hello! ' + txt;
-});
+RecordsList.addFilter('helloFirst', (txt) => `Hello ${txt}`);
 ```
 ###### Now you can use it as a filter in the template:
 ```html
@@ -148,7 +146,7 @@ RecordsList.unshift({ artist: 'prince', song: 'purple Rain', album: 'Purple Rain
 ###### And maybe you want to push a whole array of objects that came back from an api or db-server:
 ```js
 $.getJSON('/artists-records-api-path', (data) => {
-  RecordsList.pushAll(data); // The data is pushed and immediately renders   
+    RecordsList.pushAll(data); // The data is pushed and immediately renders   
 });
 ```         
 
@@ -171,22 +169,22 @@ RecordsList.removeAll(); // The data is removed and immediately empties the list
 ###### Now, you need to define a 'remove' function, and use the built-in functionallity of a skeleton list:
 ```js
 window.remove = function(index) {
-  let modelToRemove = RecordsList.remove(index); // This will remove the model from the list and rerender, and it will return the model removed
-  
-  // Now, you can make an ajax call to remove the model from the db-server if you have one,
-  // or use it for any other reason.
+    let modelToRemove = RecordsList.remove(index); // This will remove the model from the list and rerender, and it will return the model removed
+    
+    // Now, you can make an ajax call to remove the model from the db-server if you have one,
+    // or use it for any other reason.
 }
 ```
 
 ###### If you want to get the model before removing it, you can do it by using 'get':
 ```js
-window.remove = function(index) {
-  let modelToRemove = RecordsList.get(index); // This will return the model object
-  
-  // Now, you can make an ajax call to remove the model from the db-server if you have one,
-  // and only after you make sure it succeeds, remove it from the eyes of the user.
+window.remove = (index) => {
+    let modelToRemove = RecordsList.get(index); // This will return the model object
+    
+    // Now, you can make an ajax call to remove the model from the db-server if you have one,
+    // and only after you make sure it succeeds, remove it from the eyes of the user.
 
-  RecordsList.remove(index);
+    RecordsList.remove(index);
 }
 ```
 ---
@@ -207,10 +205,10 @@ RecordsList.forEach((record,idx) => {
 ```js
 RecordsList.subscribe(() => alert(`Right now there are ${RecordsList.size()} records in the list!`)); // This will run on both push or remove
 RecordsList.subscribe('push', (model) => {
-  console.log(`The model ${JSON.stringify(model)} was pushed!`); // This will only run on push
+    console.log(`The model ${JSON.stringify(model)} was pushed!`); // This will only run on push
 }); 
 RecordsList.subscribe('remove', (model) => {
-  console.log(`The model ${JSON.stringify(model)} was removed!`); // This will only run on remove
+    console.log(`The model ${JSON.stringify(model)} was removed!`); // This will only run on remove
 }); 
 ```
 ###### * You can also listen to 'pushAll', 'removeAll', 'push', 'remove', 'filter' and 'sort' events.
@@ -233,7 +231,7 @@ RecordsList.subscribe('push', (model) => {
 
 // An example of many events subscribing to the same function
 RecordsList.subscribe(['push','pushAll','remove','filter','sort'], () => {
-  console.log('I work hard since many events are subscribed to me!');
+    console.log('I work hard since many events are subscribed to me!');
 });
 ```
 
@@ -241,13 +239,13 @@ RecordsList.subscribe(['push','pushAll','remove','filter','sort'], () => {
 ###### How do I subscribe to filtering the list? Easy!
 ```js
 let filteredRecords = RecordsList.filter((model,i) => {
-  return Number(model.year) > 1966; // Returns records that were released after 1966
+    return Number(model.year) > 1966; // Returns records that were released after 1966
 });
 
 // Now, the view is automatically updated, and you can use the filtered list returned to updated other parts of your app,
 // or simply use the 'subscribe' method to listen to whenever the list is filtered like shown underneath
 RecordsList.subscribe('filter', (filteredRecords) => {
-  alert(`After filtering, there are ${filteredRecords.length} records in the list!`);
+    alert(`After filtering, there are ${filteredRecords.length} records in the list!`);
 });
 ```
 ###### Notice that the filtered list is passed to the listener and you can use it
@@ -258,8 +256,8 @@ RecordsList.subscribe('filter', (filteredRecords) => {
 // When we subscribe to an event, an unsubscribe function is returned so we can apply it later on.
 // Let's say that after we have 100 records we want to unsubscribe.
 let unsub = RecordsList.subscribe('push', () => {
-  RecordsList.size() === 100 ? unsub() : console.log('A push occured! Ahhhahaha'); 
-  // 'size' is a function you should call to determine how many models you have in the list
+    RecordsList.size() === 100 ? unsub() : console.log('A push occured! Ahhhahaha'); 
+    // 'size' is a function you should call to determine how many models you have in the list
 }); 
 
 // And that's all there is to it! :)
@@ -300,32 +298,32 @@ let unsub = RecordsList.subscribe('push', () => {
 ###### Now the records model should look like this:
 ```js
 let RecordModel = Skeleton.Model({
-  defaults: {
-    artist: '',
-    song: '',
-    album: '',
-    year: '',
-    sold: 0,
-    shops: [] // Array of objects or strings
-  },
-  init() {
-    console.log(`The song ${this.get('song')} by ${this.get('artist')} sold ${this.get('sold')} records.`);
-  }
+    defaults: {
+      artist: '',
+      song: '',
+      album: '',
+      year: '',
+      sold: 0,
+      shops: [] // Array of objects or strings
+    },
+    init() {
+      console.log(`The song ${this.get('song')} by ${this.get('artist')} sold ${this.get('sold')} records.`);
+    }
 });
 ```
 ###### And pushing to render the template looks like this:
 ```js
 RecordsList.push({ 
-  artist: 'queen', 
-  song: 'Bohemian Rhapsody', 
-  album: 'A night at the opera', 
-  year: 1975,
-  sold: 26000000,
-  shops: [
-    {name: 'Disc', address: 'Washington 3'},
-    {name: 'Musik', address: 'Barbara 5'},
-    {name: 'Flow', address: 'Franklin 8'}
-  ]
+    artist: 'queen', 
+    song: 'Bohemian Rhapsody', 
+    album: 'A night at the opera', 
+    year: 1975,
+    sold: 26000000,
+    shops: [
+      {name: 'Disc', address: 'Washington 3'},
+      {name: 'Musik', address: 'Barbara 5'},
+      {name: 'Flow', address: 'Franklin 8'}
+    ]
 });
 ```
 ###### You can use nested objects in a loop like this:
@@ -366,8 +364,8 @@ RecordsList.push({
 ```js
 // Save complex objects to localStorage
 Skeleton.storage.save({
-  'models': RecordsList.models(),
-  'size': RecordsList.size()
+    models: RecordsList.models(),
+    size: RecordsList.size()
 }); 
 
 // Fetch complex objects from localStorage

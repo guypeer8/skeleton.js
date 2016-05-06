@@ -1,4 +1,4 @@
-// (function() {
+(function() {
 
 // Define 'includes'
 String.prototype.includes = String.prototype.includes || function(str) { return this.indexOf(str) !== -1; }
@@ -59,4 +59,4 @@ const removePost = (index) => PostsList.remove(index) // Remove Post
 
 window.removePost = removePost;
 
-// })();
+})();
