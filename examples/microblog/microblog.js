@@ -23,10 +23,10 @@ var PostsList = Skeleton.List({
  	template: {templateId: 'post-template'} // Post template id
  });
 
-// Define custom pipe filter called 'decorate' to use in the template
+// Add custom pipe filter called 'decorate' to use in the template
 PostsList.addFilter('decorate', (name) => '@' + name);
 
-// Define form
+// Take care of submiting post-form
 Skeleton.form({
 	name: 'post-form',
 	inputs: {
@@ -45,17 +45,18 @@ Skeleton.form({
 	}
 });
 
+// Take care of filtering posts
 Skeleton.input('filter-posts', (e) => {
 	let filterValue = Skeleton.input.get('filter-posts');
 	PostsList.filter(model => model.posted_by.toLowerCase().includes(filterValue));
 });
 
-var postsCount = document.getElementById('posts-count');
-
 // Subscribe to events
 PostsList.subscribe(model => setCount(PostsList.size())); // Subscribe To Push and Remove- Means, Run this function when either there is a push to the list or remove from it
 PostsList.subscribe('filter', (filteredList) => setCount(filteredList.length)); // Subscribe To Filtering the Collection- Means, Run this function when 'filter' is called on PostsList
 
+// Helper functions
+var postsCount = document.getElementById('posts-count');
 const setCount = (count) => postsCount.textContent = count // Set Posts Count
 const removePost = (index) => PostsList.remove(index) // Remove Post
 

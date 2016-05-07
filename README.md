@@ -47,19 +47,19 @@ let RecordsList = Skeleton.List({
 ###### Now, lets define a template:
 ```html
 <template id="record-template">
-  <div class="record" data-id="{{ index }}">
-    <div class="record-head">
-      <span class="float-left">Album: {{ album }}</span>
-      <span class="float-right">Year: {{ year }}</span>
-      <div class="clear"></div>
+    <div class="record" data-id="{{ index }}">
+        <div class="record-head">
+            <span class="float-left">Album: {{ album }}</span>
+            <span class="float-right">Year: {{ year }}</span>
+            <div class="clear"></div>
+        </div>
+        <div class="record-body">
+            '{{ song | upper }}' is a song by {{ artist | capitalize }} from the album {{ album }} that sold {{ sold }} records.
+        </div>
+        <div class="record-footer">
+            <button onClick="remove({{ index }})">x</button>
+        </div>
     </div>
-    <div class="record-body">
-      '{{ song | upper }}' is a song by {{ artist | capitalize }} from the album {{ album }} that sold {{ sold }} records.
-    </div>
-    <div class="record-footer">
-      <button onClick="remove({{ index }})">x</button>
-    </div>
-  </div>
 </template>
 ```
 
@@ -89,34 +89,34 @@ RecordsList.addFilter('helloFirst', (txt) => `Hello ${txt}`);
 ###### You can also use nested objects in the template, for example if you have the object:
 ```js
 {
-  location: {
-    country: "Spain",
-    city: "Madrid",
-    friends_addresses: {
-      Jose: "Gran Villa 3",
-      Antonio: "La kukaracha 67"
+    location: {
+        country: "Spain",
+        city: "Madrid",
+        friends_addresses: {
+            Jose: "Gran Villa 3",
+            Antonio: "La kukaracha 67"
+        }
     }
-  }
 }
 ```
 
 ###### You can resolve it like this in the template:
 ```html
 <template id="abroad-friends-template">
-  <div data-id="{{ index }}">
-    <div class="head">
-      <span class="float-left">{{ location.country | capitalize }}</span>
-      <span class="float-right">{{ location.city | capitalize }}</span>
-      <div class="clear"></div>
+    <div data-id="{{ index }}">
+        <div class="head">
+            <span class="float-left">{{ location.country | capitalize }}</span>
+            <span class="float-right">{{ location.city | capitalize }}</span>
+            <div class="clear"></div>
+        </div>
+        <div class="body">
+            <span>Jose: {{ location.friends_addresses.Jose | upper }}</span>
+            <span>Antonio: {{ location.friends_addresses.Antonio | upper }}</span>
+        </div>
+        <div class="json">
+            <span>Whole json object: {{ location | json }}</span>
+        </div>
     </div>
-    <div class="body">
-      <span>Jose: {{ location.friends_addresses.Jose | upper }}</span>
-      <span>Antonio: {{ location.friends_addresses.Antonio | upper }}</span>
-    </div>
-    <div class="json">
-      <span>Whole json object: {{ location | json }}</span>
-    </div>
-  </div>
 </template>
 ```
 
@@ -154,7 +154,7 @@ RecordsList.removeAll(); // The data is removed and immediately empties the list
 ###### Well, pretty simple as well. notice the following in the template:
 ```html
 <div data-id="{{ index }}">
-  <button onClick="remove({{ index }})">x</button>
+    <button onClick="remove({{ index }})">x</button>
 </div>
 ```
 ###### Please notice that giving the wrapper element of the model a 'data-id' attribute this way is a must, if you
@@ -289,28 +289,28 @@ let unsub = RecordsList.subscribe('push', () => {
 ###### Back to templates- How do we use loops inside the template?
 ```html
 <template id="record-template">
-  <div class="record" data-id="{{ index }}">
-    <div class="record-head">
-      <span class="float-left">Album: {{ album }}</span>
-      <span class="float-right">Year: {{ year }}</span>
-      <div class="clear"></div>
+    <div class="record" data-id="{{ index }}">
+        <div class="record-head">
+            <span class="float-left">Album: {{ album }}</span>
+            <span class="float-right">Year: {{ year }}</span>
+            <div class="clear"></div>
+        </div>
+        <div class="record-body">
+            '{{ song | upper }}' is a song by {{ artist | capitalize }} from the album {{ album }} that sold {{ sold }} records.
+        </div>
+        <div class="record-footer">
+            <button onClick="remove({{ index }})">x</button>
+        </div>
+        <div class="selling-shops">
+          <!-- Here the loop declaration begins -->
+          <div class="shop" data-loop="shops">
+              <span>{{ #name }}</span>
+              <span>{{ #address }}</span>
+              <span>{{ #this | json }}</span>
+          </div>
+          <!-- Here it ends -->
+        </div>
     </div>
-    <div class="record-body">
-      '{{ song | upper }}' is a song by {{ artist | capitalize }} from the album {{ album }} that sold {{ sold }} records.
-    </div>
-    <div class="record-footer">
-      <button onClick="remove({{ index }})">x</button>
-    </div>
-    <div class="selling-shops">
-      <!-- Here the loop declaration begins -->
-      <div class="shop" data-loop="shops">
-        <span>{{ #name }}</span>
-        <span>{{ #address }}</span>
-        <span>{{ #this | json }}</span>
-      </div>
-      <!-- Here it ends -->
-    </div>
-  </div>
 </template>
 ```
 
@@ -322,15 +322,15 @@ let unsub = RecordsList.subscribe('push', () => {
 ```js
 let RecordModel = Skeleton.Model({
     defaults: {
-      artist: '',
-      song: '',
-      album: '',
-      year: '',
-      sold: 0,
-      shops: [] // Array of objects or strings
+        artist: '',
+        song: '',
+        album: '',
+        year: '',
+        sold: 0,
+        shops: [] // Array of objects or strings
     },
     init() {
-      console.log(`The song ${this.get('song')} by ${this.get('artist')} sold ${this.get('sold')} records.`);
+        console.log(`The song ${this.get('song')} by ${this.get('artist')} sold ${this.get('sold')} records.`);
     }
 });
 ```
@@ -352,13 +352,13 @@ RecordsList.push({
 ###### You can use nested objects in a loop like this:
 ```html
 <div data-loop="people">
-  <p>{{ #name | capitalize }}</p>
-  <h2>Best Friend:</h2>
-  <p>{{ #friends.best.name | upper }}</p>
-  <p>{{ #friends.best.age }}</p>
-  <h3>Good Friend:</h3>
-  <p>{{ #friends.good.name | lower }}</p>
-  <p>{{ #friends.good.age }}</p>
+    <p>{{ #name | capitalize }}</p>
+    <h2>Best Friend:</h2>
+    <p>{{ #friends.best.name | upper }}</p>
+    <p>{{ #friends.best.age }}</p>
+    <h3>Good Friend:</h3>
+    <p>{{ #friends.good.name | lower }}</p>
+    <p>{{ #friends.good.age }}</p>
 </div>
 ```
 ```js
@@ -408,11 +408,11 @@ Skeleton.storage.clear();
 ```html
 <!-- This is a form to submit a record to the list -->
 <form name="record-form">
-    <input type="text" id="record-album" />
-    <input type="text" id="record-artist" />
-    <input type="text" id="record-song" />
-    <input type="text" id="record-year" />
-    <input type="text" id="record-sold" />
+    <input type="text" placeholder="album name" id="record-album" />
+    <input type="text" placeholder="artist name" id="record-artist" />
+    <input type="text" placeholder="song name" id="record-song" />
+    <input type="number" min="1920" max="2017" id="record-year" />
+    <input type="number" min="0" id="record-sold" />
     <button type="submit" id="record-submit">Add Record</button>
 </form>
 ```
@@ -434,10 +434,10 @@ Skeleton.form({
             album: this.album.value,
             artist: this.artist.value,
             song: this.song.value,
-            year: this.year.value,
-            sold: this.sold.value
+            year: Number(this.year.value),
+            sold: Number(this.sold.value)
         });
-        Skeleton.form.clear(this.name); // Clear form's input and textarea fields
+        Skeleton.form.clear(this.name); // clear form's input and textarea fields
     }
 });
 ```
