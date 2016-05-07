@@ -364,26 +364,26 @@ RecordsList.push({
 ```js
 // The 'people' array is an array of objects that looks something like this:
 {
-  people: [
-    {
-      name: '',
-      friends: {
-        best: {
-          name: '',
-          age: ''
-        },
-        good: {
-          name: '',
-          age: ''
+    people: [
+        {
+            name: '',
+            friends: {
+                best: {
+                    name: '',
+                    age: ''
+                },
+                good: {
+                    name: '',
+                    age: ''
+                }
+            }
         }
-      }
-    }
-  ]
+    ]
 }
 ```
 
 ---
-###### Another thing built in is an easy support for usage of browser localStorage:
+###### Another thing built-in is an easy support for usage of browser localStorage:
 ```js
 // Save complex objects to localStorage
 Skeleton.storage.save({
@@ -421,25 +421,27 @@ Skeleton.storage.clear();
 ```js
 Skeleton.form({
     name: 'record-form',
-    album: 'record-album',
-    artist: 'record-artist',
-    song: 'record-song',
-    year: 'record-year',
-    sold: 'record-sold',
+    inputs: {
+        album: 'record-album',
+        artist: 'record-artist',
+        song: 'record-song',
+        year: 'record-year',
+        sold: 'record-sold'
+    },
     submit: 'record-submit',
     onSubmit(e) {
         RecordsList.push({
             album: this.album.value,
-            artist: this.arstist.value,
+            artist: this.artist.value,
             song: this.song.value,
             year: this.year.value,
             sold: this.sold.value
         });
-        Skeleton.form.clear(this.name); // Clear form's input fields
+        Skeleton.form.clear(this.name); // Clear form's input and textarea fields
     }
 });
 ```
-###### 'name', 'submit' and 'onSubmit' fields are required. The 'e.preventDefault()' is called automatically,
+###### 'name', 'submit' and 'onSubmit' fields are required. 'e.preventDefault()' is called automatically,
 ###### to prevent the default browser behavior and let you use an ajax call instead which is the standart today.
 
 ---

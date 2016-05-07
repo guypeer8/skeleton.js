@@ -611,9 +611,10 @@ function form(options) {
 	}
 	let formObj = {};
 	formObj.name = options.name;
-	for(let key in options) {
-		if(key !== 'submit' && key !== 'onSubmit' && key !== 'name') {
-			let id = options[key];
+	let inputs = options.inputs;
+	if(inputs) {
+		for(let key in inputs) {
+			let id = inputs[key];
 			let el = form.querySelector(`#${id}`);
 			if(!el) {
 				throw new Error('No element with id ' + id);

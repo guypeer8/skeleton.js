@@ -1,4 +1,4 @@
-// (function() {
+(function() {
 
 // Define 'includes'
 String.prototype.includes = String.prototype.includes || function(str) { return this.indexOf(str) !== -1; }
@@ -29,9 +29,11 @@ PostsList.addFilter('decorate', (name) => '@' + name);
 // Define form
 Skeleton.form({
 	name: 'post-form',
-	title: 'post-title',
-	posted_by: 'post-posted_by',
-	content: 'post-content',
+	inputs: {
+		title: 'post-title',
+		posted_by: 'post-posted_by',
+		content: 'post-content'
+	},
 	submit: 'post-button',
 	onSubmit(e) {
 		let [title, posted_by, content] = [this.title.value, this.posted_by.value, this.content.value];
@@ -59,4 +61,4 @@ const removePost = (index) => PostsList.remove(index) // Remove Post
 
 window.removePost = removePost;
 
-// })();
+})();
