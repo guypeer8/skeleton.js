@@ -443,6 +443,8 @@ Skeleton.form({
 ```
 ###### 'name', 'submit' and 'onSubmit' fields are required. 'e.preventDefault()' is called automatically,
 ###### to prevent the default browser behavior and let you use an ajax call instead which is the standart today.
+
+---
 ###### Now what if you just need an easy input element support?
 ```html
 <input type="text" placeholder="Search Artist" id="search-artist" />
