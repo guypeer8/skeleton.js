@@ -556,13 +556,113 @@ let storage = {
 	}
 }
 
+/***********************
+    Skeleton Observe
+ ***********************/
+let inputObservables = {}; // {id: element}
+let formObservables = {}; // {name: observablesObject}
+
+function input(id, cbk, evt='keyup') {
+	let el = document.getElementById(id);
+	if(!el) {
+		throw new Error(`The id '${id}' does not match any dom element`);
+	}
+	if(el.nodeName !== 'INPUT' && el.nodeName !== 'TEXTAREA') {
+		throw new Error(`The id '${id}' must match an input or textarea element`);
+	}
+	inputObservables[id] = el;
+	if(cbk) {
+		el.addEventListener(evt, cbk);
+	}
+}
+input.get = (id) => {
+	let el = inputObservables[id];
+	if(!el) {
+		throw new Error(`The id '${id}' was not set to be observed. Please use the 'observe' function`);
+	}
+	return el.value;
+}
+
+input.set = (id, val) => {
+	let el = inputObservables[id];
+	if(!el) {
+		throw new Error(`The id '${id}' was not set to be observed. Please use the 'observe' function`);
+	}
+	el.value = val;
+}
+
+input.clear = (id) => {
+	if(id) {
+		inputObservables[id].value = '';
+	}
+	else {
+		Object.keys(inputObservables).forEach(id => input.set(id, ''));
+	}
+}
+
+function form(options) {
+	if(!options.name) {
+		throw new Error('observe.form must recieve a "name" field with the form\'s name');
+	}
+	let name = options.name;
+	let form = document.querySelector(`form[name='${name}']`);
+	if(!form) {
+		throw new Error('No form element with name ' + name);
+	}
+	let formObj = {};
+	formObj.name = options.name;
+	for(let key in options) {
+		if(key !== 'submit' && key !== 'onSubmit' && key !== 'name') {
+			let id = options[key];
+			let el = form.querySelector(`#${id}`);
+			if(!el) {
+				throw new Error('No element with id ' + id);
+			}
+			if(el.nodeName !== 'INPUT' && el.nodeName !== 'TEXTAREA') {
+				throw new Error(`The id '${id}' must match an input or textarea element`);
+			}
+			formObj[key] = el;
+		}
+	}
+	if(!options.submit) {
+		throw new Error('submit button id must be supplied');
+	}
+	if(!options.onSubmit) {
+		throw new Error('onSubmit method must be supplied');
+	}
+	let submitButton = document.getElementById(options.submit);
+	if(!submitButton) {
+		throw new Error('Id passed as submit button id does not exist');
+	}
+	formObservables[name] = formObj; // set form to form observables
+	submitButton.addEventListener('click', (e) => {
+		e.preventDefault();
+		options.onSubmit.call(formObservables[name], e);
+	});
+}
+
+form.clear = (name) => {
+	let obs = formObservables[name];
+	if(!obs) {
+		throw new Error(`The name ${name} is not recognized as a form name`);
+	}
+	for(let key in obs) {
+		let el = obs[key];
+		if(el.nodeName && (el.nodeName === 'INPUT' || el.nodeName === 'TEXTAREA')) {
+			el.value = '';
+		}
+	}
+}
+
 /************
     Return
  ************/
 return {
 	Model,
 	List,
-	storage
+	storage,
+	form, 
+	input
 }
 
 })();

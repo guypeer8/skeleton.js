@@ -1,4 +1,4 @@
-(function() {
+// (function() {
 
 // Define 'includes'
 String.prototype.includes = String.prototype.includes || function(str) { return this.indexOf(str) !== -1; }
@@ -26,37 +26,37 @@ var PostsList = Skeleton.List({
 // Define custom pipe filter called 'decorate' to use in the template
 PostsList.addFilter('decorate', (name) => '@' + name);
 
-// Get DOM Nodes
-var title = document.getElementById('title');
-var posted_by = document.getElementById('posted_by');
-var content = document.getElementById('content');
-var postButton = document.getElementById('post-button');
+// Define form
+Skeleton.form({
+	name: 'post-form',
+	title: 'post-title',
+	posted_by: 'post-posted_by',
+	content: 'post-content',
+	submit: 'post-button',
+	onSubmit(e) {
+		let [title, posted_by, content] = [this.title.value, this.posted_by.value, this.content.value];
+		if(!title || !posted_by || !content)
+			return;
+		PostsList.push({ title, posted_by, content }); // Push a new post to render
+		Skeleton.form.clear(this.name); // built in function
+		Skeleton.input.clear('filter-posts');
+	}
+});
+
+Skeleton.input('filter-posts', (e) => {
+	let filterValue = Skeleton.input.get('filter-posts');
+	PostsList.filter(model => model.posted_by.toLowerCase().includes(filterValue));
+});
+
 var postsCount = document.getElementById('posts-count');
-var filterPosts = document.getElementById('filter-posts');
 
-// Attach Post Button Click Listener
-postButton.addEventListener('click', function(e) {
-	e.preventDefault();
-	let [t, p, c] = [title.value, posted_by.value, content.value];
-	if(!t || !p || !c)
-		return;
-	PostsList.push({ title: t, posted_by: p, content: c }); // Push a new post to render
-	cleanInputs();
-});
- 
-// Atach Keyup Listener To Filter Input
-filterPosts.addEventListener('keyup', function(e) {
-	let inputValue = e.target.value.toLowerCase();
-	PostsList.filter((model) => model.posted_by.toLowerCase().includes(inputValue)); // Filter by filterer supplied, the filtered models are returned in case you need them
-});
-
-PostsList.subscribe((model) => setCount(PostsList.size())); // Subscribe To Push and Remove- Means, Run this function when either there is a push to the list or remove from it
+// Subscribe to events
+PostsList.subscribe(model => setCount(PostsList.size())); // Subscribe To Push and Remove- Means, Run this function when either there is a push to the list or remove from it
 PostsList.subscribe('filter', (filteredList) => setCount(filteredList.length)); // Subscribe To Filtering the Collection- Means, Run this function when 'filter' is called on PostsList
 
-const cleanInputs = () =>  [title.value, posted_by.value, content.value, filterPosts.value] = ['', '', '', ''] // Clean Post Inputs
 const setCount = (count) => postsCount.textContent = count // Set Posts Count
 const removePost = (index) => PostsList.remove(index) // Remove Post
 
 window.removePost = removePost;
 
-})();
+// })();
