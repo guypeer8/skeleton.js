@@ -556,9 +556,9 @@ let storage = {
 	}
 }
 
-/***********************
-    Skeleton Observe
- ***********************/
+/*************************
+    Skeleton Form/Input
+ ************************/
 let inputObservables = {}; // {id: element}
 let formObservables = {}; // {name: observablesObject}
 
@@ -578,7 +578,7 @@ function input(id, cbk, evt='keyup') {
 input.get = (id) => {
 	let el = inputObservables[id];
 	if(!el) {
-		throw new Error(`The id '${id}' was not set to be observed. Please use the 'observe' function`);
+		throw new Error(`The id '${id}' was not set to be cached. Please use the 'input' function first`);
 	}
 	return el.value;
 }
@@ -586,7 +586,7 @@ input.get = (id) => {
 input.set = (id, val) => {
 	let el = inputObservables[id];
 	if(!el) {
-		throw new Error(`The id '${id}' was not set to be observed. Please use the 'observe' function`);
+		throw new Error(`The id '${id}' was not set to be cached. Please use the 'input' function first`);
 	}
 	el.value = val;
 }

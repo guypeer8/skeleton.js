@@ -402,6 +402,47 @@ Skeleton.storage.clear();
 ###### since 'save' and 'fetch' take care of stringifying and parsing json.
 
 ---
+###### Another very conveninet built-in is form and input cache support. You never have to use it,
+###### but you should when you need it, since it gives the code a better structure and makes it
+###### faster and easier to understand.
+```html
+<!-- This is a form to submit a record to the list -->
+<form name="record-form">
+    <input type="text" id="record-album" />
+    <input type="text" id="record-artist" />
+    <input type="text" id="record-song" />
+    <input type="text" id="record-year" />
+    <input type="text" id="record-sold" />
+    <button type="submit" id="record-submit">Add Record</button>
+</form>
+```
+###### Now, instead of taking the DOM elements, you can use 'Skeleton.form' to do it for you,
+###### cache the elements and give your form a readable structure.
+```js
+Skeleton.form({
+    name: 'record-form',
+    album: 'record-album',
+    artist: 'record-artist',
+    song: 'record-song',
+    year: 'record-year',
+    sold: 'record-sold',
+    submit: 'record-submit',
+    onSubmit(e) {
+        RecordsList.push({
+            album: this.album.value,
+            artist: this.arstist.value,
+            song: this.song.value,
+            year: this.year.value,
+            sold: this.sold.value
+        });
+        Skeleton.form.clear(this.name); // Clear form's input fields
+    }
+});
+```
+###### 'name', 'submit' and 'onSubmit' fields are required. The 'e.preventDefault()' is called automatically,
+###### to prevent the default browser behavior and let you use an ajax call instead which is the standart today.
+
+---
 ###### Please check out the examples folder and the source code to see more.
 ###### Skeleton on npm: https://www.npmjs.com/package/js-skeleton
 
