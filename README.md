@@ -443,10 +443,42 @@ Skeleton.form({
 ```
 ###### 'name', 'submit' and 'onSubmit' fields are required. 'e.preventDefault()' is called automatically,
 ###### to prevent the default browser behavior and let you use an ajax call instead which is the standart today.
+###### Now what if you just need an easy input element support?
+```html
+<input type="text" placeholder="Search Artist" id="search-artist" />
+```
+```js
+// Just type this, and the input element will be cached
+Skeleton.input('search-artist');
+
+// If you want to get the input value:
+let value = Skeleton.input.get('search-artist');
+
+// If you want to set a value:
+Skeleton.input.set('search-artist', 'I am a new input value!');
+
+// If you want to clear the input:
+Skeleton.input.clear('search-artist');
+
+// If you want to clear all input values you have cached:
+Skeleton.input.clear(); // call without parameters
+```
+###### You can also define a listener function like you would with 'addEventListener',
+###### and an event to listen to. By default, the event is 'keyup'.
+```js
+Skeleton.input('search-artist', (evt) => {
+    console.log(evt.target.value === Skeleton.input.get('search-artist')); // true 
+});
+
+// If you want to listen to other event, for example change, just pass it as a third parameter:
+Skeleton.input('search-artist', (evt) => console.log('I log on change!'), 'change');
+```
 
 ---
 ###### Please check out the examples folder and the source code to see more.
 ###### Skeleton on npm: https://www.npmjs.com/package/js-skeleton
+###### If you are using Skeleton.js in production, I'll be glad if you let me
+###### know on guypeer8@gmail.com, with or without a review. Have fun! :)
 
 ---
 ![skeleton.js](http://bestanimations.com/Humans/Skeletons/skeleton-animated-gif-3.gif "Skeleton")
