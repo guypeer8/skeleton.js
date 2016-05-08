@@ -92,19 +92,19 @@ function Model(attributes) {
  	};
 
  	let _customFilters = {
- 		upper: function(txt) {
+ 		upper(txt) {
  			return txt.toUpperCase();
  		},
- 		lower: function(txt) {
+ 		lower(txt) {
  			return txt.toLowerCase();
  		},
- 		capitalize: function(txt) {
+ 		capitalize(txt) {
  			return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase();
  		},
- 		currency: function(txt) {
+ 		currency(txt) {
  			return '$' + txt;
  		},
- 		json: function(txt) {
+ 		json(txt) {
  			try {
 				txt = JSON.stringify(txt);
 			}
@@ -602,7 +602,7 @@ input.clear = (id) => {
 
 function form(options) {
 	if(!options.name) {
-		throw new Error('observe.form must recieve a "name" field with the form\'s name');
+		throw new Error('Skeleton.form must recieve a "name" field with the form\'s name');
 	}
 	let name = options.name;
 	let form = document.querySelector(`form[name='${name}']`);
@@ -626,10 +626,10 @@ function form(options) {
 		}
 	}
 	if(!options.submit) {
-		throw new Error('submit button id must be supplied');
+		throw new Error('"submit" button id must be supplied');
 	}
 	if(!options.onSubmit) {
-		throw new Error('onSubmit method must be supplied');
+		throw new Error('"onSubmit" method must be supplied');
 	}
 	let submitButton = document.getElementById(options.submit);
 	if(!submitButton) {
@@ -655,6 +655,29 @@ form.clear = (name) => {
 	}
 }
 
+/********************
+    Skeleton Bind
+ ********************/
+function bind(textNodeId, inputElementId, cbkFunc, evt='keyup') {
+	let txtNode = document.getElementById(textNodeId);
+	if(!txtNode) {
+		throw new Error(textNodeId + ' id does not match any element');
+	}
+	return {
+		to(inputElementId) {
+			let inputNode = document.getElementById(inputElementId);
+			if(!inputNode || !(inputNode.nodeName === 'INPUT' || inputNode.nodeName === 'TEXTAREA')) {
+				throw new Error(inputElementId + ' id does not match any element or the element it matches is not input or textarea element');
+			}	
+			return {
+				exec(cbkFunc, evt='keyup') {
+					inputNode.addEventListener(evt, (e) => txtNode.textContent = cbkFunc(e.target.value));
+				}
+			}
+		}
+	}
+}
+
 /************
     Return
  ************/
@@ -663,7 +686,8 @@ return {
 	List,
 	storage,
 	form, 
-	input
+	input,
+	bind
 }
 
 })();

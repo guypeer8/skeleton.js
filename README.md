@@ -475,6 +475,20 @@ Skeleton.input('search-artist', (evt) => {
 // If you want to listen to other event, for example change, just pass it as a third parameter:
 Skeleton.input('search-artist', (evt) => console.log('I log on change!'), 'change');
 ```
+---
+###### You can also bind a DOM node to an input or text area element, so the node will
+###### be automatically updated by the input value.
+```html
+<input type="text" id="my-input" />
+<p id="my-text"></p>
+```
+###### Now let's use the 'Skeleton.bind' function:
+```js
+Skeleton.bind('my-text').to('my-input').exec((value => `My text is updated whenever ${value} updates!`));
+
+// By default, the event is 'keyup'. You can change it by passing your desired event to 'exec':
+Skeleton.bind('my-text').to('my-input').exec((value => `My text is updated whenever ${value} changes!`), 'change');
+```
 
 ---
 ###### Please check out the examples folder and the source code to see more.

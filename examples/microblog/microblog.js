@@ -46,13 +46,10 @@ Skeleton.form({
 });
 
 // Take care of filtering posts
-Skeleton.input('filter-posts', (e) => {
-	let filterValue = Skeleton.input.get('filter-posts');
-	PostsList.filter(model => model.posted_by.toLowerCase().includes(filterValue));
-});
+Skeleton.input('filter-posts', (e) => PostsList.filter(model => model.posted_by.toLowerCase().includes(e.target.value.toLowerCase())));
 
 // Subscribe to events
-PostsList.subscribe(model => setCount(PostsList.size())); // Subscribe To Push and Remove- Means, Run this function when either there is a push to the list or remove from it
+PostsList.subscribe(['push', 'remove', 'pushAll', 'removeAll'], model => setCount(PostsList.size())); // Subscribe To Push and Remove- Means, Run this function when either there is a push to the list or remove from it
 PostsList.subscribe('filter', (filteredList) => setCount(filteredList.length)); // Subscribe To Filtering the Collection- Means, Run this function when 'filter' is called on PostsList
 
 // Helper functions
