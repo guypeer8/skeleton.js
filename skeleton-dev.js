@@ -201,14 +201,8 @@ function Model(attributes) {
  	this.firstIndex = function() {
  		let indexes = Object.keys(_collection);
  		if(!indexes.length)
- 			return;
- 		let min_index = Infinity;
- 		indexes.forEach(index => {
- 			if(index < min_index) {
- 				min_index = index;
- 			}
- 		});
- 		return min_index;
+ 			return -1;
+ 		return Math.min.apply(null, indexes);
  	}
 
  	// clear list and notify listeners
@@ -658,20 +652,36 @@ form.clear = (name) => {
 /********************
     Skeleton Bind
  ********************/
-function bind(textNodeId, inputElementId, cbkFunc, evt='keyup') {
+function bind(textNodeId) {
 	let txtNode = document.getElementById(textNodeId);
 	if(!txtNode) {
 		throw new Error(textNodeId + ' id does not match any element');
 	}
 	return {
-		to(inputElementId) {
-			let inputNode = document.getElementById(inputElementId);
-			if(!inputNode || !(inputNode.nodeName === 'INPUT' || inputNode.nodeName === 'TEXTAREA')) {
-				throw new Error(inputElementId + ' id does not match any element or the element it matches is not input or textarea element');
-			}	
+		to() {
+			let ids = Array.prototype.slice.call(arguments);
+			let inputElements = ids.map(inputElementId => {
+				let inputNode = document.getElementById(inputElementId);
+				if(!inputNode || !(inputNode.nodeName === 'INPUT' || inputNode.nodeName === 'TEXTAREA')) {
+					throw new Error(inputElementId + ' id does not match any element or the element it matches is not input or textarea element');
+				}	
+				return inputNode;
+			});
 			return {
 				exec(cbkFunc, evt='keyup') {
-					inputNode.addEventListener(evt, (e) => txtNode.textContent = cbkFunc(e.target.value));
+					for(let i=0; i<inputElements.length; i++) {
+						let inputNode = inputElements[i];
+						inputNode.addEventListener(evt, (e) => {
+							let values = inputElements.map(el => {
+								let value = el.value;
+								if(!value) {
+									return '';
+								}
+								return value;
+							});
+							txtNode.textContent = cbkFunc.apply(null, values);
+						});
+					}
 				}
 			}
 		}
