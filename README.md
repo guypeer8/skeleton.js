@@ -207,12 +207,19 @@ RecordsList.forEach((record,idx) => {
 ###### To acheive this, use the 'subscribe' function. You can pass one or two arguments:
 ###### A callback function to run on both push and remove events, or both the event and its callback. For example:
 ```js
-RecordsList.subscribe(() => alert(`Right now there are ${RecordsList.size()} records in the list!`)); // This will run on both push or remove
-RecordsList.subscribe('push', (model) => {
-    console.log(`The model ${JSON.stringify(model)} was pushed!`); // This will only run on push
+// This will run on both push or remove
+RecordsList.subscribe(() => {
+    alert(`Right now there are ${RecordsList.size()} records in the list!`);
 }); 
+
+// This will only run on push
+RecordsList.subscribe('push', (model) => {
+    console.log(`The model ${JSON.stringify(model)} was pushed!`); 
+}); 
+
+// This will only run on remove
 RecordsList.subscribe('remove', (model) => {
-    console.log(`The model ${JSON.stringify(model)} was removed!`); // This will only run on remove
+    console.log(`The model ${JSON.stringify(model)} was removed!`); 
 }); 
 ```
 ###### * You can also listen to 'pushAll', 'removeAll', 'push', 'remove', 'filter', 'edit' and 'sort' events.
@@ -354,11 +361,15 @@ RecordsList.push({
 <div data-loop="people">
     <p>{{ #name | capitalize }}</p>
     <h2>Best Friend:</h2>
-    <p>{{ #friends.best.name | upper }}</p>
-    <p>{{ #friends.best.age }}</p>
+    <div>
+        <p>{{ #friends.best.name | upper }}</p>
+        <p>{{ #friends.best.age }}</p>
+    </div>
     <h3>Good Friend:</h3>
-    <p>{{ #friends.good.name | lower }}</p>
-    <p>{{ #friends.good.age }}</p>
+    <div>
+        <p>{{ #friends.good.name | lower }}</p>
+        <p>{{ #friends.good.age }}</p>
+    </div>
 </div>
 ```
 ```js
