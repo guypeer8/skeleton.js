@@ -242,8 +242,9 @@ function Model(attributes) {
  			sortedCollection[model.index] = _collection[model.index];
  		});
  		_collection = sortedCollection;
- 		_element.innerHTML = _renderTemplate(); // render
+ 		_element.innerHTML = _renderTemplate(sorted); // render
  		_notifyListeners('sort', sorted);
+ 		return sorted;
  	}
 
  	// go over models

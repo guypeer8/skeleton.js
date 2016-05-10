@@ -392,6 +392,25 @@ RecordsList.push({
     ]
 }
 ```
+---
+###### And sorting your list is also supported. The sorting works as it would work in plain
+###### javascript. If you want to sort by the artist name for example:
+```js
+RecordsList.sort((a,b) => {
+    if(a.artist > b.artist)
+        return 1;
+    if(a.artist < b.artist)
+        return -1;
+    return 0; 
+});
+```
+###### The view automagically rerenders, and the collection is returned as an array of objects.
+###### And, you can subscribe to 'sort' event.
+```js
+RecordsList.subscribe('sort', (sorted) => {
+    alert(`The sorted array is ${JSON.stringify(sorted)}`); 
+});
+```
 
 ---
 ###### Another thing built-in is an easy support for usage of browser localStorage:
