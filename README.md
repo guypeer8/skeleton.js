@@ -63,7 +63,7 @@ let RecordsList = Skeleton.List({
 </template>
 ```
 
-###### Notice that you can use different filters, by pipe (|) -
+###### Notice that you can use different filters, by pipe | -
 ###### * upper 
 ###### * lower 
 ###### * capitalize 
@@ -161,7 +161,7 @@ RecordsList.removeAll(); // The data is removed and immediately empties the list
 ###### want to have the ability to remove/edit a model of the list.
 ###### Now, you need to define a 'remove'/'edit' function, and use the built-in functionallity of a skeleton list:
 ```js
-window.remove = function(index) {
+window.remove = (index) => {
     let modelToRemove = RecordsList.remove(index); // This will remove the model from the list and rerender, and it will return the model removed
     
     // Now, you can make an ajax call to remove the model from the db-server if you have one,
@@ -396,13 +396,15 @@ RecordsList.push({
 ###### And sorting your list is also supported. The sorting works as it would work in plain
 ###### javascript. If you want to sort by the artist name for example:
 ```js
-RecordsList.sort((a,b) => {
+const comperator = (a,b) => {
     if(a.artist > b.artist)
         return 1;
     if(a.artist < b.artist)
         return -1;
     return 0; 
-});
+}
+
+RecordsList.sort(comperator); // pass comperator function to 'sort' method
 ```
 ###### The view automagically rerenders, and the collection is returned as an array of objects.
 ###### And, you can subscribe to 'sort' event.
@@ -473,6 +475,34 @@ Skeleton.form({
 ```
 ###### 'name', 'submit' and 'onSubmit' fields are required. 'e.preventDefault()' is called automatically,
 ###### to prevent the default browser behavior and let you use an ajax call instead which is the standart today.
+##### The 'submit' field can be an id of a submit button, or an object with 'input' and 'keyCode' fields, if
+##### you want the 'onSubmit' function to invoke on a specific key press like 'enter' key, which has the key code 13.
+##### example:
+```html
+<form name="friends-form">
+    <input type="text" placeholder="friend name" id="friend-field" />
+</form>
+```
+###### Now, we want the name to be submmited when 'enter' is pressed:
+```js
+Skeleton.form({
+    name: 'friends-form',
+    inputs: {
+        friend: 'friend-field'
+    },
+    submit: {
+        input: 'friend',
+        keyCode: 13 // 'enter' key code
+    },
+    onSubmit(e) {
+        let friend = this.friend.value;
+        if(!friend)
+            return;
+        FriendsList.push({ friend });
+        Skeleton.form.clear(this.name); // clear form's input and textarea fields
+    }
+});
+```
 
 ---
 ###### Now what if you just need an easy input element support?

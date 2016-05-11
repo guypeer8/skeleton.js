@@ -621,20 +621,37 @@ function form(options) {
 		}
 	}
 	if(!options.submit) {
-		throw new Error('"submit" button id must be supplied');
+		throw new Error('"submit" button id or event key code and input field must be supplied');
 	}
 	if(!options.onSubmit) {
 		throw new Error('"onSubmit" method must be supplied');
 	}
-	let submitButton = document.getElementById(options.submit);
-	if(!submitButton) {
-		throw new Error('Id passed as submit button id does not exist');
-	}
 	formObservables[name] = formObj; // set form to form observables
-	submitButton.addEventListener('click', (e) => {
-		e.preventDefault();
-		options.onSubmit.call(formObservables[name], e);
-	});
+	if(options.submit.input && options.submit.keyCode) {
+		let inputField = options.submit.input;
+		let keyCode = options.submit.keyCode;
+		if(!inputField) {
+			throw new Error('Please supply input element to trigger submit event on by its field');
+		}
+		if(!keyCode) {
+			throw new Error('Please supply keyCode to fire event on');
+		}
+		formObservables[name][inputField].addEventListener('keydown', (e) => {
+			if(e.keyCode === keyCode) {
+				options.onSubmit.call(formObservables[name], e);
+			}
+		});
+	}
+	else {
+		let submitButton = document.getElementById(options.submit);
+		if(!submitButton) {
+			throw new Error('Id passed as submit button id does not exist');
+		}
+		submitButton.addEventListener('click', (e) => {
+			e.preventDefault();
+			options.onSubmit.call(formObservables[name], e);
+		});
+	}
 }
 
 form.clear = (name) => {
