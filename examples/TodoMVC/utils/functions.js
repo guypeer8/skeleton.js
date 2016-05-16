@@ -23,7 +23,7 @@ window.filterTodos = (type) => {
 	}
 	else { // type = 'completed'
 		TodosList.filter(todo => todo.isCompleted);
-		styleFilter('completed')
+		styleFilter('completed');
 	}
 }
 
@@ -48,20 +48,19 @@ window.updateSize = () => {
 } 
 
 // Style on choosing filter
-var filterAll = document.getElementById('filter-all');
-var filterActive = document.getElementById('filter-active');
-var filterCompleted = document.getElementById('filter-completed');
+var filters = {
+	all: document.getElementById('filter-all'),
+	active: document.getElementById('filter-active'),
+	completed: document.getElementById('filter-completed')
+}
+
 function styleFilter(filter) {
-	[filterAll, filterActive, filterCompleted].forEach(el => el.style.fontStyle = 'normal');
-	if(filter === 'all') {
-		filterAll.style.fontStyle = 'italic';
-	}
-	else if(filter === 'active') {
-		filterActive.style.fontStyle = 'italic';
-	}
-	else {
-		filterCompleted.style.fontStyle = 'italic';
-	}
+	Object.keys(filters).forEach(fltr => {
+		if(fltr === filter) {
+			return filters[fltr].style.fontStyle = 'italic';
+		}
+		return filters[fltr].style.fontStyle = 'normal';
+	});
 }
 
 })();
