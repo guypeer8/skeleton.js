@@ -413,6 +413,40 @@ RecordsList.subscribe('sort', (sorted) => {
     alert(`The sorted array is ${JSON.stringify(sorted)}`); 
 });
 ```
+---
+###### If you want to check and uncheck a checkbox in a template, use 'data-checked' attribute.
+###### Then you can edit the template when it changes, to rerender:
+```html
+<template id="food-template">
+    <div data-id="{{ index }}">
+        <input type="checkbox" data-checked="isLiked" onChange="toggleFood({{ index }})" />
+        <span class="food">{{ food }}</span>
+    </div>
+</template>
+```
+###### And the list and model:
+```js
+// model
+let FoodModel = Skeleton.Model({
+    defaults: {
+        food: '',
+        isLiked: false
+    }
+});
+
+// list
+let FoodList = Skeleton.List({
+    model: FoodModel,
+    element: 'food-list',
+    template: {templateId: 'food-template'} 
+});
+
+// on checkbox change
+window.toggleFood = function(index) {
+    let isLiked = !FoodList.get(index).isLiked;
+    FoodList.edit(index, { isLiked }); // rerenders the model
+}
+```
 
 ---
 ###### Another thing built-in is an easy support for usage of browser localStorage:

@@ -11,7 +11,7 @@ function Model(attributes) {
 	}
 
 	if(!(attributes && attributes.defaults)) {
-		throw new Error('A "defaults" field must be passed');
+		throw new Error('A "defaults" field must be passed') ;
 	}
 
 	// model class
@@ -77,6 +77,7 @@ function Model(attributes) {
 	}
 
  	const re = /{{\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g; 
+ 	const re_exp = /{{\s*(\w+)*\s*\?\s*\w+\s*:\s*\w+\s*}}/g; 
  	const re_loop = /{{\s*#\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g;
 
  	let _index = 0;
@@ -380,7 +381,7 @@ function Model(attributes) {
  		let attr = '[data-id="' + index + '"]';
  		let el = _element.querySelector(attr);
  		if(!el) {
- 			throw new Error('Make sure your you set a "data-id" attribute to each model');
+ 			return;
  		}
  		el.remove();
  	}
@@ -395,7 +396,10 @@ function Model(attributes) {
  	}
 
  	function _renderLoop(template, model) {
- 		let el = _htmlToElement(template);
+ 		let el;
+ 		if(typeof(template) === 'string') {
+ 			el = _htmlToElement(template);
+ 		}
  		let domElements = el.querySelectorAll('[data-loop]');
  		if(!domElements || !domElements.length) // no data-loop
  			return template;
@@ -431,6 +435,7 @@ function Model(attributes) {
  			}
  			return _resolveNestedObject(model, g);
  		});
+ 		temp = _evaluateChecked(model, temp);
  		return temp;
  	}
 
@@ -446,6 +451,27 @@ function Model(attributes) {
 			return _customFilters[filter](txtToRender);
 		}
 		throw new Error('The filter you are using does not exist. Please use "addFilter" function to create it.');
+ 	}
+
+ 	function _evaluateChecked(model, template) {
+ 		let element = _htmlToElement(template);
+ 		let checked = element.querySelectorAll('[data-checked]');
+ 		if(!checked || !checked.length) {
+ 			return template;
+ 		}
+ 		Array.prototype.slice.call(checked).forEach(el => {
+ 			let expression = el.getAttribute('data-checked').trim();
+ 			let isChecked = model[expression] ? true : false;
+ 			if(isChecked) {
+ 				el.setAttribute('checked', 'checked');
+ 			}
+ 			else {
+ 				if(el.getAttribute('checked')) {
+ 					el.removeAttribute('checked');
+ 				}
+ 			}
+ 		});
+ 		return _elementToHtml(element);
  	}
 
  	function _resolveNestedObject(model, input) {
@@ -638,6 +664,7 @@ function form(options) {
 		}
 		formObservables[name][inputField].addEventListener('keydown', (e) => {
 			if(e.keyCode === keyCode) {
+				e.preventDefault();
 				options.onSubmit.call(formObservables[name], e);
 			}
 		});
