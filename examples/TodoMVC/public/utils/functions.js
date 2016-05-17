@@ -25,6 +25,7 @@ window.filterTodos = (type) => {
 		TodosList.filter(todo => todo.isCompleted);
 		styleFilter('completed');
 	}
+	Skeleton.storage.save({ filter: type });
 }
 
 // Clear Completed
