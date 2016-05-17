@@ -1,6 +1,6 @@
 {
   "name": "js-skeleton",
-  "version": "3.3.3",
+  "version": "3.4.0",
   "description": "Rendering static lists made as easy as pushing to an array",
   "main": "skeleton.js",
   "directories": {
@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/guypeer8/skeleton.js/issues"
   },
-  "homepage": "https://github.com/guypeer8/skeleton.js#readme"
+  "homepage": "https://github.com/guypeer8/skeleton.js#readme",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
 }

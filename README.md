@@ -447,6 +447,34 @@ window.toggleFood = function(index) {
     FoodList.edit(index, { isLiked }); // rerenders the model
 }
 ```
+---
+###### Today in the world of single page applications, a client side is a must. Skeleton provides
+###### an efficient easy-to-use router. Here is how you can use it, pretending we sell products online:
+```js
+const router = Skeleton.Router(); // initialized router
+// set paths and handler functions
+router.path('/music', () => renderTemplate('music'));
+router.path('/books', () => renderTemplate('books'));
+router.path('/clothes', () => renderTemplate('clothes'));
+router.path('/plants', () => renderTemplate('plants'));
+```
+###### Now we need to tell when to visit each route:
+```html
+<ul class="menu">
+    <li onClick="router.visit('/music')">Music</li>
+    <li onClick="router.visit('/books')">Books</li>
+    <li onClick="router.visit('/clothes')">Fashion</li>
+    <li onClick="router.visit('/plants')">Garden</li>
+</ul>
+```
+###### The 'renderTemplate' function should be defined as you want. Usually you would want to
+###### show and hide templates.
+##### If you want to pass parameters to the router, as in the server-side nodejs 'express' framework,
+##### You can do it this way:
+```js
+router.path('/guy/:lastname/was/:where', (params) => renderTemplate(params.lastname, params.where));
+router.visit('/guy/peer/was/here'); // params = {lastname:'peer',where:'here'}
+```
 
 ---
 ###### Another thing built-in is an easy support for usage of browser localStorage:

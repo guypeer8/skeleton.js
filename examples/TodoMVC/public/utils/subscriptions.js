@@ -1,17 +1,13 @@
 // Subscriptions
 TodosList.subscribe('filter', (filteredModels) => {
 	let filter;
-	if(TodosList.size() === filteredModels.length) {
-		filter = 'all';
+	if(filteredModels.length) {
+		filter = filteredModels[0].isCompleted ? 'completed' : 'active';
 	}
 	else {
-		if(filteredModels.length) {
-			filter = filteredModels[0].isCompleted ? 'completed' : 'active';
-		}
-		else {
-			filter = TodosList.models()[0].isCompleted ? 'active' : 'completed';
-		}
+		filter = TodosList.models()[0].isCompleted ? 'active' : 'completed';
 	}
+	console.log(filter)
 	Skeleton.storage.save({ filter });
 });
 
