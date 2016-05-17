@@ -448,8 +448,8 @@ window.toggleFood = function(index) {
 }
 ```
 ---
-###### Today in the world of single page applications, a client side is a must. Skeleton provides
-###### an efficient easy-to-use router. Here is how you can use it, pretending we sell products online:
+###### Today in the world of single page applications, a client side router is a must. Skeleton provides
+###### an efficient and easy-to-use router. Here is how you can use it, pretending we sell products online:
 ```js
 const router = Skeleton.Router(); // initialized router
 // set paths and handler functions
