@@ -513,42 +513,47 @@ function Model(attributes) {
   *******************/
 function Router() {
 
+	/*************************
+	   Make sure initialized
+	 *************************/
 	if(!(this instanceof Router)) {
 		return new Router();
 	}
 
-	if(!window)
+	if(!window) {
 		throw new Error('I only run on the browser!');
-	window.onpopstate = function() {
+	}
+
+	window.onpopstate = () => {
 		return pathUpdated();
 	}
 
-	var params = {};
-	var handlers = {};	
+	let params = {};
+	let handlers = {};	
 
-	var pathUpdated = function() {
-		var handler;
-		var match = 0;
-		var path = location.pathname;
-		var parts = path.split('/').slice(1);
+	const pathUpdated = () => {
+		let handler;
+		let match = 0;
+		let path = location.pathname;
+		let parts = path.split('/').slice(1); // get array of pathname parts
 
-		for(route in handlers) {
-			if(match == 1)
+		for(let route in handlers) {
+			if(match === 1) {
 				break;
-			
+			}
 			handler = handlers[route];
 			route = route.split(',');
-			if(route.length != parts.length) {
+			if(route.length !== parts.length) {
 				continue;
 			}
-			for(var i=0; i<route.length; i++) {
-				var r = route[i];
-				if(r[0] == ':') {
+			for(let i=0; i<route.length; i++) {
+				let r = route[i];
+				if(r.charAt(0) == ':') {
 					match = 1;
 					params[r.slice(1)] = parts[i];
 				}
 				else {
-					if(r == parts[i]) {
+					if(r === parts[i]) {
 						match = 1;
 						continue;
 					}
@@ -562,10 +567,12 @@ function Router() {
 			}
 		}
 
-		if(!handler)
+		if(!handler) {
 			throw new Error('No handler set for this route!');
-		handler(params);
-		return params = {};
+		}
+
+		handler.call(null, params);
+		params = {};
 	}
 
 	this.path = function(destination, handler) {
