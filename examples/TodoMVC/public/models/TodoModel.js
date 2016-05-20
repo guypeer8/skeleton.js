@@ -1,6 +1,7 @@
 let TodoModel = Skeleton.Model({
 	defaults: {
 		text: '',
-		isCompleted: false
+		isCompleted: false,
+		isEditing: false
 	}
 });

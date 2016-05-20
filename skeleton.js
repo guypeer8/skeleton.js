@@ -436,6 +436,8 @@ function Model(attributes) {
  			return _resolveNestedObject(model, g);
  		});
  		temp = _evaluateChecked(model, temp);
+ 		temp = _evaluateHide(model, temp);
+ 		temp = _evaluateShow(model, temp);
  		return temp;
  	}
 
@@ -469,6 +471,44 @@ function Model(attributes) {
  				if(el.getAttribute('checked')) {
  					el.removeAttribute('checked');
  				}
+ 			}
+ 		});
+ 		return _elementToHtml(element);
+ 	}
+
+ 	function _evaluateHide(model, template) {
+ 		let element = _htmlToElement(template);
+ 		let hidden = element.querySelectorAll('[data-hide]');
+ 		if(!hidden || !hidden.length) {
+ 			return template;
+ 		}
+ 		Array.prototype.slice.call(hidden).forEach(el => {
+ 			let expression = el.getAttribute('data-hide').trim();
+ 			let shouldHide = model[expression] ? true : false;
+ 			if(shouldHide) {
+ 				el.style.display = 'none';
+ 			}
+ 			else {
+ 				el.style.display = '';
+ 			}
+ 		});
+ 		return _elementToHtml(element);
+ 	}
+
+ 	function _evaluateShow(model, template) {
+ 		let element = _htmlToElement(template);
+ 		let shown = element.querySelectorAll('[data-show]');
+ 		if(!shown || !shown.length) {
+ 			return template;
+ 		}
+ 		Array.prototype.slice.call(shown).forEach(el => {
+ 			let expression = el.getAttribute('data-show').trim();
+ 			let shouldShow = model[expression] ? true : false;
+ 			if(shouldShow) {
+ 				el.style.display = '';
+ 			}
+ 			else {
+ 				el.style.display = 'none';
  			}
  		});
  		return _elementToHtml(element);

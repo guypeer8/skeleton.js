@@ -448,6 +448,31 @@ window.toggleFood = function(index) {
 }
 ```
 ---
+###### To hide and show parts of the template, simply use 'data-hide' and 'data-show' attributes.
+###### Don't forget to define the property in the model:
+```js
+// model
+let FruitModel = Skeleton.Model({
+    defaults: {
+        name: '',
+        isYellow: false
+    }
+});
+```
+###### Fruit template:
+```html
+<template id="fruit-template">
+    <div data-id="{{ index }}">
+        <p class="fruit-name">{{ name }}</p>
+        <p data-hide="isYellow">I am not yellow!</p>
+        <p data-show="isYellow">I am yellow and I know it!</p>
+    </div>
+</template>
+```
+###### Please check the TodoMVC example in the examples folder to see a real life
+###### scenario when it is used on editing a todo.
+
+---
 ###### Today in the world of single page applications, a client side router is a must. Skeleton provides
 ###### an efficient and easy-to-use router. Here is how you can use it, pretending we sell products online:
 ```js

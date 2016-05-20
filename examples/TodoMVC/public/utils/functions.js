@@ -11,6 +11,24 @@ window.toggleTodo = (index) => {
 	TodosList.edit(index, { isCompleted }); // Edit todo
 }
 
+// Edit Todo
+window.editTodo = (index) => {
+	let isEditing = !TodosList.get(index).isEditing;
+	TodosList.edit(index, { isEditing });
+}
+
+// Set Edited Todo
+window.setEditedTodo = (event, index) => {
+	if(event.keyCode === 13) { // enter key code
+		let text = event.target.value;
+		if(!text || !text.trim())	{
+			return;
+		}
+		TodosList.edit(index, { text , isEditing: false });
+		event.target.value = '';
+	}
+}
+
 // Filter Todos
 window.filterTodos = (type) => {
 	if(type === 'all') {
