@@ -13,8 +13,7 @@ window.toggleTodo = (index) => {
 
 // Edit Todo
 window.editTodo = (index) => {
-	let isEditing = !TodosList.get(index).isEditing;
-	TodosList.edit(index, { isEditing });
+	TodosList.edit(index, { isEditing: true });
 }
 
 // Set Edited Todo
