@@ -13,6 +13,9 @@ window.toggleTodo = (index) => {
 
 // Edit Todo
 window.editTodo = (index) => {
+	if(TodosList.get(index).isCompleted) {
+		return;
+	}
 	TodosList.edit(index, { isEditing: true });
 }
 
