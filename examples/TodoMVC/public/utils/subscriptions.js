@@ -9,7 +9,7 @@ TodosList.subscribe(['push','edit'], () => {
 TodosList.subscribe(['push','remove','edit','removeAll'], () => {
 	updateSize();
 	Skeleton.storage.save({ 
-		models: TodosList.models() 
+		todos: TodosList.models() 
 	});
 });
 

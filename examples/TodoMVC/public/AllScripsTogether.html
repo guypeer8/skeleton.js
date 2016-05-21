@@ -28,7 +28,7 @@
 	<div data-id="{{ index }}">
 		<input type="checkbox" onChange="toggleTodo({{ index }})" data-checked="isCompleted" />
 		<span onDblclick="editTodo({{ index }})" data-hide="isEditing">{{ text }}</span>
-		<input type="text" onKeyup="setEditedTodo(event, {{ index }})" data-show="isEditing" />
+		<input type="text" onKeyup="setEditedTodo(event, {{ index }})" value="{{ text }}" data-show="isEditing" />
 		<button onClick="removeTodo({{ index }})">x</button>
 	</div>
 </template>
