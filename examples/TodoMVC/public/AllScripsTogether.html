@@ -120,6 +120,9 @@ window.setEditedTodo = (event, index) => {
 		TodosList.edit(index, { text , isEditing: false });
 		event.target.value = '';
 	}
+	else if(event.keyCode === 27) { // escape key code
+		TodosList.edit(index, { isEditing: false });
+	}
 }
 
 // Filter Todos
