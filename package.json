@@ -1,6 +1,6 @@
 {
   "name": "js-skeleton",
-  "version": "3.4.4",
+  "version": "3.4.5",
   "description": "Rendering lists made as easy as pushing to an array",
   "main": "skeleton.js",
   "directories": {
@@ -19,7 +19,7 @@
     "bind"
   ],
   "author": "Guy Peer <guypeer8@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/guypeer8/skeleton.js/issues"
   },
