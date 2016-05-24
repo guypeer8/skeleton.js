@@ -672,10 +672,10 @@ Skeleton.bind('full-name')
 ```
 
 ---
-###### Please check out the examples folder and the source code to see more.
-###### Skeleton on npm: https://www.npmjs.com/package/js-skeleton
-###### If you are using Skeleton.js in production, I'll be glad if you let me
-###### know on guypeer8@gmail.com, with or without a review. Have fun! :)
+###### Skeleton.js resources:
+* [Skeleton on npm](https://www.npmjs.com/package/js-skeleton)
+* [Skeleton on cdnjs](https://cdnjs.com/libraries/js-skeleton)
+* [Skeleton code examples](./examples)
 
 ---
 ![skeleton.js](http://bestanimations.com/Humans/Skeletons/skeleton-animated-gif-3.gif "Skeleton")
