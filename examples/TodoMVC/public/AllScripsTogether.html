@@ -6,6 +6,7 @@
 <html lang="en" data-framework="Skeleton">
 <head>
 	<title>Skeleton • TodoMVC</title>
+	<style>.done {text-decoration: line-through;}</style>
 </head>
 <body>
 	<div class="todos-header">
@@ -27,7 +28,12 @@
 <template id="todo-template">
 	<div data-id="{{ index }}">
 		<input type="checkbox" onChange="toggleTodo({{ index }})" data-checked="isCompleted" />
-		<span onDblclick="editTodo({{ index }})" data-hide="isEditing">{{ text }}</span>
+		<span onDblclick="editTodo({{ index }})" 
+			  data-hide="isEditing" 
+			  data-class='{"done": "isCompleted"}'
+		>
+			{{ text }}
+		</span>
 		<input type="text" onKeyup="setEditedTodo(event, {{ index }})" value="{{ text }}" data-show="isEditing" />
 		<button onClick="removeTodo({{ index }})">x</button>
 	</div>

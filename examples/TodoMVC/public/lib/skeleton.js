@@ -77,7 +77,6 @@ function Model(attributes) {
 	}
 
  	const re = /{{\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g; 
- 	const re_exp = /{{\s*(\w+)*\s*\?\s*\w+\s*:\s*\w+\s*}}/g; 
  	const re_loop = /{{\s*#\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g;
 
  	let _index = 0;
@@ -438,6 +437,8 @@ function Model(attributes) {
  		temp = _evaluateChecked(model, temp);
  		temp = _evaluateHide(model, temp);
  		temp = _evaluateShow(model, temp);
+ 		temp = _evaluateStyle(model, temp);
+ 		temp = _evaluateClass(model, temp);
  		return temp;
  	}
 
@@ -514,6 +515,58 @@ function Model(attributes) {
  		return _elementToHtml(element);
  	}
 
+ 	function _evaluateStyle(model, template) {
+  		let element = _htmlToElement(template);
+ 		let styles = element.querySelectorAll('[data-style]');
+ 		if(!styles || !styles.length) {
+ 			return template;
+ 		}
+ 		Array.prototype.slice.call(styles).forEach(el => {
+ 			let styleString = el.getAttribute('data-style').trim();
+ 			let styleObj;
+ 			try {
+ 				styleObj = JSON.parse(styleString);
+ 			}
+ 			catch(e) {
+ 				throw new Error('data-style attribute must be passed as a stringified json object');
+ 			}
+ 			Object.keys(styleObj).forEach(style => {
+	 			let parts = styleObj[style].split('?');
+	 			if(parts.length !== 2) {
+	 				throw new Error('data-style needs an expression to evluate');
+	 			}
+	 			let expression = parts[0].trim();
+	 			let evals = parts[1].split(':');
+	 			if(evals.length !== 2) {
+	 				throw new Error('Error on data-style attribute');
+	 			}
+	 			let styleToSet = model[expression] ? evals[0] : evals[1];
+	 			el.style[style] = styleToSet;
+	 		});
+ 		});
+ 		return _elementToHtml(element);		
+ 	}
+
+ 	function _evaluateClass(model, template) {
+  		let element = _htmlToElement(template);
+ 		let classes = element.querySelectorAll('[data-class]');
+ 		if(!classes || !classes.length) {
+ 			return template;
+ 		}
+ 		Array.prototype.slice.call(classes).forEach(el => {
+ 			let classString = el.getAttribute('data-class').trim();
+ 			let classObj;
+ 			try {
+ 				classObj = JSON.parse(classString);
+ 			}
+ 			catch(e) {
+ 				throw new Error('data-class attribute must be passed as a stringified json object');
+ 			}
+ 			Object.keys(classObj).forEach(cls => el.className = model[classObj[cls].trim()] ? cls : '');
+ 		});
+ 		return _elementToHtml(element);		
+ 	}
+
  	function _resolveNestedObject(model, input) {
  		if(input === 'this')
  			return model;
@@ -553,9 +606,7 @@ function Model(attributes) {
   *******************/
 function Router() {
 
-	/*************************
-	   Make sure initialized
-	 *************************/
+	// Make sure initialized
 	if(!(this instanceof Router)) {
 		return new Router();
 	}

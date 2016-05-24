@@ -471,6 +471,26 @@ let FruitModel = Skeleton.Model({
 ```
 ###### Please check the TodoMVC example in the examples folder to see a real life
 ###### scenario when it is used on editing a todo.
+---
+###### Now, how do I manipulate css styles as my model updates (usually when edited)?
+###### You can use the 'data-style' or 'data-class' attribute:
+##### CSS:
+```css
+.italic {
+    font-style: italic;
+}
+```
+##### HTML:
+```html
+<p data-class='{"italic": "isChosen"}'>Wowwwwwww!</p>
+<p data-style='{"fontStyle" : "isChosen ? italic : normal"}'>Wowwwwwww!</p>
+<!--
+ ! Please notice that 'isChosen' is a boolean attribute of the model,
+ ! and that in both cases you need to provide a stringified json object,
+ ! since it gets parsed in the evaluation.
+-->
+```
+###### Please check the TodoMVC example in the examples folder to see it in action.
 
 ---
 ###### Today in the world of single page applications, a client side router is a must. Skeleton provides
