@@ -30,7 +30,7 @@
 		<input type="checkbox" onChange="toggleTodo({{ index }})" data-checked="isCompleted" />
 		<span onDblclick="editTodo({{ index }})" 
 			  data-hide="isEditing" 
-			  data-class='{"done": "isCompleted"}'
+			  data-style='{"textDecoration": "isCompleted ? line-through : none"}'
 		>
 			{{ text }}
 		</span>
@@ -39,7 +39,7 @@
 	</div>
 </template>
 <!-- Scripts -->
-<script type="text/javascript" src="/lib/skeleton.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-skeleton/3.4.5/skeleton.js"></script>
 <script type="text/javascript">
 (function() {
 /***************

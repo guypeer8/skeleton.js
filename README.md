@@ -479,11 +479,14 @@ let FruitModel = Skeleton.Model({
 .italic {
     font-style: italic;
 }
+.under {
+    text-decoration: underline;
+}
 ```
 ##### HTML:
 ```html
-<p data-class='{"italic": "isChosen"}'>Wowwwwwww!</p>
-<p data-style='{"fontStyle" : "isChosen ? italic : normal"}'>Wowwwwwww!</p>
+<p data-class='{"italic": "isChosen", "under": "!isChosen"}'>Wowwwwwww!</p>
+<p data-style='{"fontStyle" : "isChosen ? italic : normal", "textDecoration": "isChosen ? none : underline"}'>Wowwwwwww!</p>
 <!--
  ! Please notice that 'isChosen' is a boolean attribute of the model,
  ! and that in both cases you need to provide a stringified json object,
@@ -496,7 +499,7 @@ let FruitModel = Skeleton.Model({
 ###### Today in the world of single page applications, a client side router is a must. Skeleton provides
 ###### an efficient and easy-to-use router. Here is how you can use it, pretending we sell products online:
 ```js
-const router = Skeleton.Router(); // initialized router
+const router = Skeleton.Router(); // initialize router
 // set paths and handler functions
 router.path('/music', () => renderTemplate('music'));
 router.path('/books', () => renderTemplate('books'));
@@ -669,6 +672,81 @@ Skeleton.bind('full-name')
         .exec((firstName, lastName) => {
             return `Your name is ${firstName} ${lastName}!!`;
         });
+```
+---
+###### Skeleton also comes with built in confirm and message popups you can easily create.
+```js
+const popup = Skeleton.Popup(); // initialize popup
+```
+###### When the popup is initialized, it has a defaults object for the overlay and the popup itself:
+```js
+overlay: {
+    bgcolor:'black',
+    opacity:'0.8'
+},
+popup: {
+    width:'400',
+    height:'400',
+    bgcolor:'white'
+}
+```
+###### In order to set your own defaults, use 'popup.setDefaults' function:
+```js
+popup.setDefaults({
+    overlay: {
+        bgcolor:'blue',
+        opacity:'0.6'
+    },
+    popup: {
+        width:'500',
+        height:'400',
+        bgcolor:'green'
+});
+```
+###### To create a message popup:
+```js
+popup.message({
+    title:'I am the message popup!',
+    body:'I am sending out a love message to the world!',
+    closeMessage:'Click me, and I\'ll disappear'
+}); 
+
+// required fields are 'title', 'body'.
+// optional fields are 'closeMessage', 'height', 'width'.
+```
+###### To create a confirm popup:
+```js
+popking.confirm({
+    title:'I am the confirm popup!',
+    body:'Would you like to confirm me?',
+    yesLabel:'Awsome',
+    noLabel:'Go Away!',
+    approve:function() {
+        alert('You clicked Awsome!');
+    },
+    regret:function() {
+        alert('Bye Bye!');
+        popup.close(); // close the popup and the overlay
+    }
+});
+
+// required fields are 'title', 'body', 'approve' and 'regret'. 
+// optional fields are 'yesLabel', 'noLabel', 'height', 'width'.
+```
+###### Here is how a stylesheet should look if you want to style the popup and the overlay, buttons, etc.:
+```css
+/* overlay */
+#skeleton-overlay {}
+
+/* popup */
+#skeleton-popup {}
+
+/* confirm buttons */
+#skeleton-popup #confirm-yes-label {}
+#skeleton-popup #confirm-no-label {}
+
+/* message button */
+#skeleton-popup #close-message-popup {}
 ```
 
 ---

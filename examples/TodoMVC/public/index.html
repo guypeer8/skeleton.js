@@ -1,6 +1,7 @@
 <html lang="en" data-framework="Skeleton">
 <head>
 	<title>Skeleton • TodoMVC</title>
+	<style>.done {text-decoration: line-through;}.bold{font-weight: bold;}</style>
 </head>
 <body>
 	<div class="todos-header">
@@ -24,7 +25,7 @@
 		<input type="checkbox" onChange="toggleTodo({{ index }})" data-checked="isCompleted" />
 		<span onDblclick="editTodo({{ index }})" 
 			  data-hide="isEditing" 
-			  data-style='{"textDecoration": "isCompleted ? line-through : none"}'
+			  data-class='{"done": "isCompleted", "bold": "!isCompleted"}'
 		>
 			{{ text }}
 		</span>
@@ -33,7 +34,7 @@
 	</div>
 </template>
 <!-- Scripts -->
-<script type="text/javascript" src="/lib/skeleton.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-skeleton/3.4.5/skeleton.js"></script>
 <script type="text/javascript" src="router.js"></script>
 <script type="text/javascript" src="/models/TodoModel.js"></script>
 <script type="text/javascript" src="/lists/TodoList.js"></script>

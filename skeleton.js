@@ -908,6 +908,128 @@ function bind(textNodeId) {
 	}
 }
 
+/****************
+  Skeleton Popup
+ ****************/
+function Popup() {
+
+	// Make sure initialized
+	if(!(this instanceof Popup)) {
+		return new Popup();
+	}
+
+	let self = this;
+
+	let defaults = {
+		overlay: {
+			bgcolor:'black',
+			opacity:'0.8'
+		},
+		popup: {
+			width:'400',
+			height:'400',
+			bgcolor:'white'
+		}
+	};
+
+	this.setDefaults = function(overrides) {
+		let { overlay, popup } = overrides;
+		if(overlay) {
+			for(let key in overlay) {
+				defaults.overlay[key] = overlay[key];
+			}
+		}
+		if(popup) {
+			for(let key in popup) {
+				defaults.popup[key] = popup[key];
+			}			
+		}
+	}
+
+	this.open = function(template, model) {
+		if(document.getElementById('skeleton-popup')) {
+			this.close();
+		}
+		this.openOverlay();
+		document.body.innerHTML += template;
+
+		document.getElementById('skeleton-overlay').addEventListener('click', self.close);
+		switch(model.type) {
+			case 'confirm':
+				document.getElementById('confirm-yes-label').addEventListener('click', model.approve);
+				document.getElementById('confirm-no-label').addEventListener('click', model.regret);
+				break;
+			case 'message':	
+				document.getElementById('close-message-popup').addEventListener('click', self.close);		
+				break;
+			default:	
+				throw new Error('Only confirm and message popups are supported');
+		}
+	}
+
+	this.close = function() {
+		let popup = document.getElementById('skeleton-popup');
+		if(!popup) {
+			return;
+		}
+		if(document.getElementById('skeleton-overlay')) {
+			self.closeOverlay();
+		}
+		popup.remove();
+	}
+
+	this.openOverlay = function() {
+		let { bgcolor, opacity } = defaults.overlay;
+		let template = `<div id='skeleton-overlay' style='background-color: ${bgcolor}; opacity: ${opacity}; height: 100%; width: 100%; position: fixed; top: 0; left: 0; bottom: 0; right: 0;'></div>`;
+        document.body.innerHTML += template;
+	}
+
+	this.closeOverlay = function() {
+		let overlay = document.getElementById('skeleton-overlay');
+		if(!overlay) {
+			return;
+		}
+		overlay.remove();
+	}
+
+	this.message = function(model) { // height,width,title,body,closeMessage
+		let height = model.height || defaults.popup.height;
+		let width = model.width || defaults.popup.width;
+		let bgcolor = defaults.popup.bgcolor || 'white';
+		let closeMsg = model.closeMessage || 'Close';
+		let template = [
+			`<div id="skeleton-popup" style="height: ${height}px; width: ${width}px; background-color: ${bgcolor}; z-index: 100; position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto;">`,
+				`<h2>${model.title}</h2>`,
+				`<p>${model.body}</p>`,
+				`<button id="close-message-popup">${closeMsg}</button>`,
+			`</div>`
+		].join('');
+
+		model.type = 'message';
+		this.open(template, model);
+	}
+
+	this.confirm = function(model) { // height,width,hasClose,title,body,yesLabel,noLabel,approve,regret
+		let height = model.height || defaults.popup.height;
+		let width = model.width || defaults.popup.width;
+		let bgcolor = defaults.popup.bgcolor || 'white';
+		let yesLabel = model.yesLabel || 'Yes';
+		let noLabel = model.noLabel || 'No';
+		let template = [
+			`<div id="skeleton-popup" style="height: ${height}px; width: ${width}px; background-color: ${bgcolor}; z-index: 100; position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto;">`,
+				`<h2>${model.title}</h2>`,
+				`<p>${model.body}</p>`,
+				`<button id="confirm-yes-label">${yesLabel}</button>`,
+				`<button id="confirm-no-label">${noLabel}</button>`,
+			`</div>`
+		].join('');
+
+		model.type = 'confirm';
+		this.open(template, model);
+	}
+
+}
+
 /************
     Return
  ************/
@@ -915,6 +1037,7 @@ return {
 	Model,
 	List,
 	Router,
+	Popup,
 	storage,
 	form, 
 	input,
