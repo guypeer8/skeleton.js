@@ -716,7 +716,7 @@ popup.message({
 ```
 ###### To create a confirm popup:
 ```js
-popking.confirm({
+popup.confirm({
     title:'I am the confirm popup!',
     body:'Would you like to confirm me?',
     yesLabel:'Awsome',
