@@ -539,7 +539,7 @@ function Model(attributes) {
  			Object.keys(styleObj).forEach(style => {
 	 			let parts = styleObj[style].split('?');
 	 			if(parts.length !== 2) {
-	 				throw new Error('data-style needs an expression to evluate');
+	 				throw new Error('data-style needs an expression to evaluate');
 	 			}
 	 			let expression = parts[0].trim();
 	 			let evals = parts[1].split(':');
@@ -569,7 +569,14 @@ function Model(attributes) {
  				throw new Error('data-class attribute must be passed as a stringified json object');
  			}
  			Object.keys(classObj).forEach(cls => {
- 				let bool = model[classObj[cls].trim()];
+ 				let key = classObj[cls].trim();
+ 				let bool;
+ 				if(key.charAt(0) === '!') {
+ 					bool = !model[key.substring(1).trim()];
+ 				}
+ 				else {
+ 					bool = model[key];
+ 				}
  				if(bool) {
  					el.className += `cls `;
  				}
