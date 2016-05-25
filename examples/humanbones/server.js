@@ -18,11 +18,6 @@ var server = http.createServer(function(req,res) {
 		res.end(fs.readFileSync(__dirname + '/humanbones.js'), 'utf-8');
 	}
 
-	else if(req.url === '/skeleton.js') {
-		res.writeHead(200, {'Content-Type':'text/javascript'});
-		res.end(fs.readFileSync('../../skeleton.js', 'utf-8'));
-	}
-
 	else
 		res.end();
 
