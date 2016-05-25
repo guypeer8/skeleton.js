@@ -1,5 +1,5 @@
 /*!
- * Skeleton JavaScript library v3.4.6
+ * Skeleton JavaScript library v3.5.0
  * (c) Guy Peer
  * License: MIT (http://www.opensource.org/licenses/mit-license.php)
  */
@@ -568,7 +568,15 @@ function Model(attributes) {
  			catch(e) {
  				throw new Error('data-class attribute must be passed as a stringified json object');
  			}
- 			Object.keys(classObj).forEach(cls => el.className = model[classObj[cls].trim()] ? cls : '');
+ 			Object.keys(classObj).forEach(cls => {
+ 				let bool = model[classObj[cls].trim()];
+ 				if(bool) {
+ 					el.className += `cls `;
+ 				}
+ 				else {
+ 					el.className = el.className.replace(cls, '');
+ 				}
+ 			});
  		});
  		return _elementToHtml(element);		
  	}

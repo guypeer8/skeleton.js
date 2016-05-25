@@ -27,14 +27,14 @@
 			  data-hide="isEditing" 
 			  data-class='{"done": "isCompleted", "bold": "!isCompleted"}'
 		>
-			{{ text }}
+			{{ text | capitalize }}
 		</span>
 		<input type="text" onKeyup="setEditedTodo(event, {{ index }})" value="{{ text }}" data-show="isEditing" />
 		<button onClick="removeTodo({{ index }})">x</button>
 	</div>
 </template>
 <!-- Scripts -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-skeleton/3.4.5/skeleton.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-skeleton/3.4.7/skeleton.js"></script>
 <script type="text/javascript" src="router.js"></script>
 <script type="text/javascript" src="/models/TodoModel.js"></script>
 <script type="text/javascript" src="/lists/TodoList.js"></script>
