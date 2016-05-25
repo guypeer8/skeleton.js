@@ -1030,6 +1030,46 @@ function Popup() {
 
 }
 
+/****************
+  Skeleton Event
+ ***************/
+function Event() {
+
+	// Make sure initialized
+	if(!(this instanceof Event)) {
+		return new Event();
+	}
+
+	let handlers = {};
+
+	this.on = function(evt, handler) {
+		if(handlers[evt]) {
+			handlers[evt].push(handler);
+		}
+		else {
+			handlers[evt] = [handler];
+		}
+	}
+
+	this.dispose = function(evt) {
+		if(!handlers[evt]) {
+			return;
+		}
+		delete handlers[evt];
+	}
+
+	this.emit = function(evt) {
+		if(!handlers[evt])
+			throw new Error(`No handler for '${evt}' event!`);
+		let data = [];
+		if(arguments.length > 1) {
+			data = Array.prototype.slice.call(arguments, 1);
+		}
+		handlers[evt].forEach(handler => handler.apply(null, data));
+	}
+
+}
+
 /************
     Return
  ************/
@@ -1037,6 +1077,7 @@ return {
 	Model,
 	List,
 	Router,
+	Event,
 	Popup,
 	storage,
 	form, 

@@ -748,6 +748,25 @@ popup.confirm({
 /* message button */
 #skeleton-popup #close-message-popup {}
 ```
+---
+###### One more thing shipped with Skeleton is a custom event system you can create:
+```js
+const emitter = Skeleton.Event(); // initialize event emitter
+```
+###### The 3 functions provided are: 'on', 'emit' and 'dispose'.
+```js
+// set events & listeners
+emitter.on('calc', (a,b,c) => alert(a+b+c)); // set listener for 'calc' event
+emitter.on('basketball', () => console.log('I love basketball!')); // set listener for 'basketball' event
+emitter.on('calc', (a,b) => console.log(a*b)); // set another listener for 'calc' event
+
+// emit events
+emitter.emit('calc', 1, 2, 3); // alerts 6, logs 2
+emitter.emit('basketball'); // logs 'I love basketball!'
+
+// dispose event
+emitter.dispose('calc'); // 'calc' event can not be called anymore
+```
 
 ---
 ###### Skeleton.js resources:
