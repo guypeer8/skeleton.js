@@ -1,10 +1,10 @@
-(function() {
+{
 
 // Define 'includes'
 String.prototype.includes = String.prototype.includes || function(str) { return this.indexOf(str) !== -1; }
 
 // Define Post Model
-var PostModel = Skeleton.Model({
+let PostModel = Skeleton.Model({
 	defaults: {
 		title: '',
 		posted_by: '',
@@ -17,7 +17,7 @@ var PostModel = Skeleton.Model({
 });
 
 // Define Post List
-var PostsList = Skeleton.List({
+let PostsList = Skeleton.List({
 	model: PostModel, // Post Model
  	element: 'posts-list', // List container element id
  	template: {templateId: 'post-template'} // Post template id
@@ -59,4 +59,4 @@ const removePost = (index) => PostsList.remove(index) // Remove Post
 
 window.removePost = removePost;
 
-})();
+}

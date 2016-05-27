@@ -680,14 +680,16 @@ const popup = Skeleton.Popup(); // initialize popup
 ```
 ###### When the popup is initialized, it has a defaults object for the overlay and the popup itself:
 ```js
-overlay: {
-    bgcolor:'black',
-    opacity:'0.8'
-},
-popup: {
-    width:'400',
-    height:'400',
-    bgcolor:'white'
+{
+    overlay: {
+        bgcolor:'black',
+        opacity:'0.8'
+    },
+    popup: {
+        width:'400',
+        height:'400',
+        bgcolor:'white'
+    }
 }
 ```
 ###### In order to set your own defaults, use 'popup.setDefaults' function:

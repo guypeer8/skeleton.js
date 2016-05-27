@@ -1,7 +1,7 @@
-(function() {
+{
 
 // Create Bones List
-var BonesList = Skeleton.List({
+let BonesList = Skeleton.List({
 	model: Skeleton.Model({ defaults: {name: '', area: '', count: ''} }), // Bone Model
 	element: 'human-bones-list', // List container element id
 	template: {templateId: 'bone-template'} // Bone template id
@@ -20,9 +20,9 @@ function ajaxGet(url, callback, data) {
 
 ajaxGet('http://mysafeinfo.com/api/data?list=humanbones&format=json', function(data) {
 	let bones = data.map(bone => {
-		let {bn, ar, cnt} = bone;
+		let { bn, ar, cnt } = bone;
 		let [name, area, count] = [bn, ar, cnt];
-		return {name, area, count};
+		return { name, area, count };
 	});
 	BonesList.pushAll(bones); // Push all to list to render
 });
@@ -32,4 +32,4 @@ BonesList.subscribe('pushAll', (models) => {
 	console.log(`Models pushed and saved to localStorage: ${JSON.stringify(models)}`);
 });
 
-})();
+}
