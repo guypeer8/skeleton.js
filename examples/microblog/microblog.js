@@ -4,7 +4,7 @@
 String.prototype.includes = String.prototype.includes || function(str) { return this.indexOf(str) !== -1; }
 
 // Define Post Model
-let PostModel = Skeleton.Model({
+const PostModel = Skeleton.Model({
 	defaults: {
 		title: '',
 		posted_by: '',
@@ -17,7 +17,7 @@ let PostModel = Skeleton.Model({
 });
 
 // Define Post List
-let PostsList = Skeleton.List({
+const PostsList = Skeleton.List({
 	model: PostModel, // Post Model
  	element: 'posts-list', // List container element id
  	template: {templateId: 'post-template'} // Post template id

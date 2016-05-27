@@ -1,13 +1,13 @@
 {
 
 // Create Bones List
-let BonesList = Skeleton.List({
-	model: Skeleton.Model({ defaults: {name: '', area: '', count: ''} }), // Bone Model
+const BonesList = Skeleton.List({
+	model: Skeleton.Model( { defaults: { name: '', area: '', count: '' } } ), // Bone Model
 	element: 'human-bones-list', // List container element id
 	template: {templateId: 'bone-template'} // Bone template id
 });
 
-function ajaxGet(url, callback, data) {
+const ajaxGet = (url, callback, data) => {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if(xhr.status === 200 && xhr.readyState === 4) {

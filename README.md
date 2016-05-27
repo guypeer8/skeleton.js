@@ -5,7 +5,7 @@
 ###### Let's start. First, create a model:
 ```js
 
-let RecordModel = Skeleton.Model({
+const RecordModel = Skeleton.Model({
     defaults: {
       artist: '',
       song: '',
@@ -30,7 +30,7 @@ let RecordModel = Skeleton.Model({
 --- 
 ###### Next, create a list:
 ```js
-let RecordsList = Skeleton.List({
+const RecordsList = Skeleton.List({
     model: RecordModel,
     element: 'records',
     template: {templateId: 'record-template'} 
@@ -327,7 +327,7 @@ let unsub = RecordsList.subscribe('push', () => {
 ###### your array consists of strings, or if you want to stringify json objects and show them to the user.
 ###### Now the records model should look like this:
 ```js
-let RecordModel = Skeleton.Model({
+const RecordModel = Skeleton.Model({
     defaults: {
         artist: '',
         song: '',
@@ -426,19 +426,11 @@ RecordsList.subscribe('sort', (sorted) => {
 ```
 ###### And the list and model:
 ```js
-// model
-let FoodModel = Skeleton.Model({
-    defaults: {
-        food: '',
-        isLiked: false
-    }
-});
-
 // list
-let FoodList = Skeleton.List({
-    model: FoodModel,
+const FoodList = Skeleton.List({
+    model: Skeleton.Model( { defaults: { food: '', isLiked: false } } ),
     element: 'food-list',
-    template: {templateId: 'food-template'} 
+    template: { templateId: 'food-template' } 
 });
 
 // on checkbox change
@@ -452,7 +444,7 @@ window.toggleFood = function(index) {
 ###### Don't forget to define the property in the model:
 ```js
 // model
-let FruitModel = Skeleton.Model({
+const FruitModel = Skeleton.Model({
     defaults: {
         name: '',
         isYellow: false

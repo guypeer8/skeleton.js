@@ -41,7 +41,8 @@
 <!-- Scripts -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-skeleton/3.5.2/skeleton.js"></script>
 <script type="text/javascript">
-(function() {
+{
+
 /***************
   Define Router
  ***************/
@@ -52,7 +53,7 @@ router.path('/completed', () => filterTodos('completed'));
 /***************
   Define Model
  ***************/
-let TodoModel = Skeleton.Model({
+const TodoModel = Skeleton.Model({
 	defaults: {
 		text: '',
 		isCompleted: false,
@@ -62,7 +63,7 @@ let TodoModel = Skeleton.Model({
 /**************
   Define List
  **************/
-let TodosList = Skeleton.List({
+const TodosList = Skeleton.List({
 	model: TodoModel,
 	element: 'todo-list',
 	template: {templateId: 'todo-template'}
@@ -129,16 +130,14 @@ window.setEditedTodo = (event, index) => {
 window.filterTodos = (type) => {
 	if(type === 'all') {
 		TodosList.filter(todo => true);
-		styleFilter('all');
 	}
 	else if(type === 'active') {
 		TodosList.filter(todo => !todo.isCompleted);
-		styleFilter('active');
 	}
 	else { // type = 'completed'
 		TodosList.filter(todo => todo.isCompleted);
-		styleFilter('completed');
 	}
+	_styleFilter(type);
 	Skeleton.storage.save({ filter: type });
 }
 
@@ -163,13 +162,13 @@ window.updateSize = () => {
 } 
 
 // Style on choosing filter
-var filters = {
+const filters = {
 	all: document.getElementById('filter-all'),
 	active: document.getElementById('filter-active'),
 	completed: document.getElementById('filter-completed')
 }
 
-function styleFilter(filter) {
+function _styleFilter(filter) {
 	Object.keys(filters).forEach(fltr => {
 		if(fltr === filter) {
 			return filters[fltr].style.fontStyle = 'italic';
@@ -182,9 +181,7 @@ function styleFilter(filter) {
  **********************/
 TodosList.subscribe(['push','edit'], () => {
 	let filter = Skeleton.storage.fetch('filter') || 'all';
-	if(filter) {
-		window.filterTodos(filter);
-	}
+	window.filterTodos(filter);
 });
 
 TodosList.subscribe(['push','remove','edit','removeAll'], () => {
@@ -201,6 +198,7 @@ TodosList.subscribe('pushAll', updateSize);
 TodosList.pushAll(Skeleton.storage.fetch('models') || []);
 let filter = Skeleton.storage.fetch('filter') || 'all';
 router.visit(`/${filter}`);
-})();
+
+}
 </script>
 </html>

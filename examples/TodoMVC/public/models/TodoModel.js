@@ -1,4 +1,4 @@
-let TodoModel = Skeleton.Model({
+const TodoModel = Skeleton.Model({
 	defaults: {
 		text: '',
 		isCompleted: false,

@@ -1,4 +1,4 @@
-let TodosList = Skeleton.List({
+const TodosList = Skeleton.List({
 	model: TodoModel,
 	element: 'todo-list',
 	template: {templateId: 'todo-template'}
