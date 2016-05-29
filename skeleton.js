@@ -1,5 +1,5 @@
 /*!
- * Skeleton JavaScript library v3.5.3
+ * Skeleton JavaScript library v3.5.5
  * (c) Guy Peer
  * License: MIT (http://www.opensource.org/licenses/mit-license.php)
  */
