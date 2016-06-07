@@ -1,5 +1,5 @@
 /*!
- * Skeleton JavaScript library v3.5.5
+ * Skeleton JavaScript library v3.5.6
  * (c) Guy Peer
  * License: MIT (http://www.opensource.org/licenses/mit-license.php)
  */
@@ -165,6 +165,9 @@ function Model(attributes) {
  	// append array of objects that
  	// represent models to the list
  	this.pushAll = function(models) {
+ 		if(!models || !Array.isArray(models)) {
+ 			throw new Error('pushAll method must receive an array as an argument');
+ 		}
  		models.forEach(model => {
  			model.index = _generateIndex();
  			_collection[model.index] = new _model(model);
@@ -175,11 +178,17 @@ function Model(attributes) {
 
  	// push to end of the list
  	this.push = function(model) {
+ 		if(!model) {
+ 			throw new Error('push method must receive a model as an argument');
+ 		}
 		_addModel(model, 'push');
  	}
 
  	// push to begining of the list
  	this.unshift = function(model) {
+ 		if(!model) {
+ 			throw new Error('unshift method must receive a model as an argument');
+ 		}
  		_addModel(model, 'unshift');
  	}
 
