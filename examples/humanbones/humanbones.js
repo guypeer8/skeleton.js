@@ -1,5 +1,7 @@
 {
 
+const API_URL = 'http://mysafeinfo.com/api/data?list=humanbones&format=json';
+
 // Create Bones List
 const BonesList = Skeleton.List({
 	model: Skeleton.Model( { defaults: { name: '', area: '', count: '' } } ), // Bone Model
@@ -7,19 +9,19 @@ const BonesList = Skeleton.List({
 	template: {templateId: 'bone-template'} // Bone template id
 });
 
-const ajaxGet = (url, callback, data) => {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
+const ajaxGet = (url, callback, data=null) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
         if(xhr.status === 200 && xhr.readyState === 4) {
             callback(JSON.parse(xhr.responseText));
         }
     }
     xhr.open('GET', url, true);
-    xhr.send(data || null);
+    xhr.send(data);
 }
 
-ajaxGet('http://mysafeinfo.com/api/data?list=humanbones&format=json', function(data) {
-	let bones = data.map(bone => {
+ajaxGet(API_URL, (data) => {
+	const bones = data.map(bone => {
 		let { bn, ar, cnt } = bone;
 		let [name, area, count] = [bn, ar, cnt];
 		return { name, area, count };
