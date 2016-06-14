@@ -1,19 +1,17 @@
-var express = require('express');
-var path = require('path');
-var app = express();
+const express = require('express');
+const path = require('path');
 
+const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
+
+const main = (req,res) => res.sendFile(__dirname + '/public/index.html')
 
 app.get('/', main);
 app.get('/all', main);
 app.get('/active', main);
 app.get('/completed', main);
 
-function main(req,res) {
-	res.sendFile(__dirname + '/public/index.html');
-}
-
-app.listen(8000, function(err) {
+app.listen(8000, (err) => {
 	if(err) {
 		return 'An error has occured: ' + err.message;
 	}

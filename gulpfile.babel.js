@@ -1,4 +1,3 @@
-
 import gulp from 'gulp';
 import uglify from 'gulp-uglify';
 import rename from 'gulp-rename';

@@ -1,5 +1,5 @@
 /*!
- * Skeleton JavaScript library v3.5.6
+ * Skeleton JavaScript library v3.5.7
  * (c) Guy Peer
  * License: MIT (http://www.opensource.org/licenses/mit-license.php)
  */
@@ -587,10 +587,10 @@ function Model(attributes) {
  					bool = model[key];
  				}
  				if(bool) {
- 					el.className += `${cls} `;
+ 					el.classList.add(cls);
  				}
  				else {
- 					el.className = el.className.replace(cls, '');
+ 					el.classList.remove(cls);
  				}
  			});
  		});
