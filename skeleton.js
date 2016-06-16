@@ -1,5 +1,5 @@
 /*!
- * Skeleton JavaScript library v3.5.8
+ * Skeleton JavaScript library v3.6.0
  * (c) Guy Peer
  * License: MIT (http://www.opensource.org/licenses/mit-license.php)
  */
@@ -149,7 +149,11 @@ function Model(attributes) {
  	}
 
  	if(attributes.templateId) {
- 		_template = document.getElementById(temp.templateId).innerHTML;
+		let el = document.getElementById(attributes.templateId);
+		if(!el) {
+			throw new Error('Please provide "templateId" attribute');
+		}
+ 		_template = el.innerHTML;
  	}
 
  	if(!_model) {
