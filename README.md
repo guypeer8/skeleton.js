@@ -33,15 +33,15 @@ const RecordModel = Skeleton.Model({
 const RecordsList = Skeleton.List({
     model: RecordModel,
     element: 'records',
-    template: {templateId: 'record-template'} 
+    templateId: 'record-template'
 });
 ```
 
 ##### Required fields:
 ##### **model:** field to specify the model of each element in the list.
 ##### **element:** field that specifies the id of the DOM element that each list item should be rendered into.
-##### **template:** field that is either a string that represents the template or an object with a 
-##### 'templateId' field that specifies the id of the template in the html document.
+##### **template** or **templateId**: field that is either a string that represents the template or an id that 
+##### specifies the id of the template in the html document.
 
 ---
 ###### Now, lets define a template:
@@ -74,6 +74,28 @@ const RecordsList = Skeleton.List({
 ###### Moreover, everytime a new model is rendered, it gets an index parameter generated for free.
 ###### Each model rendered has its unique index, and that is very usefull, especially when you
 ###### want to remove a model from the list, which I show how to do as we continue.
+
+##### You can also pass a "template" attribute instead of the templateId attribute, if you
+##### want to provide the template string directly, for example:
+```js
+const RecordsList = Skeleton.List({
+    model: RecordModel,
+    element: 'records',
+    template:  `<div class="record" data-id="{{ index }}">
+                    <div class="record-head">
+                        <span class="float-left">Album: {{ album }}</span>
+                        <span class="float-right">Year: {{ year }}</span>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="record-body">
+                        '{{ song | upper }}' is a song by {{ artist | capitalize }} from the album {{ album }} that sold {{ sold }} records.
+                    </div>
+                    <div class="record-footer">
+                        <button onClick="remove({{ index }})">x</button>
+                    </div>
+                </div>`
+});
+```
 
 ---
 ###### And what about adding your own filters? Yeah, piece of cake:
@@ -430,7 +452,7 @@ RecordsList.subscribe('sort', (sorted) => {
 const FoodList = Skeleton.List({
     model: Skeleton.Model( { defaults: { food: '', isLiked: false } } ),
     element: 'food-list',
-    template: { templateId: 'food-template' } 
+    templateId: 'food-template' 
 });
 
 // on checkbox change
@@ -715,10 +737,10 @@ popup.confirm({
     body:'Would you like to confirm me?',
     yesLabel:'Awsome',
     noLabel:'Go Away!',
-    approve:function() {
+    approve() {
         alert('You clicked Awsome!');
     },
-    regret:function() {
+    regret() {
         alert('Bye Bye!');
         popup.close(); // close the popup and the overlay
     }

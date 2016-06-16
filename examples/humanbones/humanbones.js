@@ -6,7 +6,11 @@ const API_URL = 'http://mysafeinfo.com/api/data?list=humanbones&format=json';
 const BonesList = Skeleton.List({
 	model: Skeleton.Model( { defaults: { name: '', area: '', count: '' } } ), // Bone Model
 	element: 'human-bones-list', // List container element id
-	template: {templateId: 'bone-template'} // Bone template id
+	template: `<div class="bone" data-id="{{ index }}">
+				  <h4>{{ name }}</h4>
+				  <p>Area in body: <strong>{{ area }}</strong></p>
+				  <p>How many in body: <strong>{{ count }}</strong></p>
+			   </div>`
 });
 
 const ajaxGet = (url, callback, data=null) => {

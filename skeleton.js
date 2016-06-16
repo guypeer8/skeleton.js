@@ -1,5 +1,5 @@
 /*!
- * Skeleton JavaScript library v3.5.7
+ * Skeleton JavaScript library v3.5.8
  * (c) Guy Peer
  * License: MIT (http://www.opensource.org/licenses/mit-license.php)
  */
@@ -125,17 +125,31 @@ function Model(attributes) {
  	let _element = document.getElementById(attributes && attributes.element);
  	let _template;
 
- 	let temp = attributes && attributes.template;
- 	if(typeof(temp) === 'string') {
- 		_template = temp;
+ 	if(attributes && attributes.template && attributes.templateId) {
+ 		throw new Error('Only "template" or "templateId" attribute should be supplied, not both');
  	}
- 	else if(typeof(temp) === 'object') {
- 		if(!temp.templateId) {
- 			throw new Error('Template must be a string, or an object with "templateId" field');
+
+ 	if(!(attributes.template || attributes.templateId)) {
+ 		throw new Error('You must pass a template string, or a templateId of a template element');
+ 	}
+
+ 	if(attributes.template) { // Make it backward compatible
+ 		if(typeof(attributes.template) === 'string') {
+ 			_template = attributes.template;
  		}
  		else {
- 			_template = document.getElementById(temp.templateId).innerHTML;
+ 			if(attributes.template.templateId) {
+ 				let el = document.getElementById(attributes.template.templateId);
+ 				if(!el) {
+ 					throw new Error('Please provide "templateId" attribute');
+ 				}
+ 				_template = el.innerHTML;
+ 			}
  		}
+ 	}
+
+ 	if(attributes.templateId) {
+ 		_template = document.getElementById(temp.templateId).innerHTML;
  	}
 
  	if(!_model) {

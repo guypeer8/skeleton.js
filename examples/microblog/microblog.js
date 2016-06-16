@@ -11,7 +11,7 @@ const PostModel = Skeleton.Model({
 		content: '',
 		date: new Date().toDateString()
 	},
-	init: function() {
+	init() {
 		console.log(`A new post by ${this.get('posted_by')}`);
 	}
 });
@@ -20,7 +20,7 @@ const PostModel = Skeleton.Model({
 const PostsList = Skeleton.List({
 	model: PostModel, // Post Model
  	element: 'posts-list', // List container element id
- 	template: {templateId: 'post-template'} // Post template id
+ 	templateId: 'post-template' // Post template id
  });
 
 // Add custom pipe filter called 'decorate' to use in the template

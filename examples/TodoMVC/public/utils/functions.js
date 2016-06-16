@@ -1,4 +1,4 @@
-(function() {
+{
 
 // Remove Todo
 window.removeTodo = (index) => {
@@ -66,13 +66,13 @@ window.removeAll = () => {
 }
 
 // Update Size
-var todosSize = document.getElementById('todos-size');
+const todosSize = document.getElementById('todos-size');
 window.updateSize = () => {
 	todosSize.textContent = TodosList.models().filter(todo => !todo.isCompleted).length;
 } 
 
 // Style on choosing filter
-var filters = {
+const filters = {
 	all: document.getElementById('filter-all'),
 	active: document.getElementById('filter-active'),
 	completed: document.getElementById('filter-completed')
@@ -87,4 +87,4 @@ function styleFilter(filter) {
 	});
 }
 
-})();
+}

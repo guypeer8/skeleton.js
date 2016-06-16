@@ -1,4 +1,3 @@
-// Subscriptions
 TodosList.subscribe(['push','edit'], () => {
 	let filter = Skeleton.storage.fetch('filter') || 'all';
 	window.filterTodos(filter);
@@ -6,9 +5,8 @@ TodosList.subscribe(['push','edit'], () => {
 
 TodosList.subscribe(['push','remove','edit','removeAll'], () => {
 	updateSize();
-	Skeleton.storage.save({ 
-		todos: TodosList.models() 
-	});
+	let todos = TodosList.models();
+	Skeleton.storage.save({ todos });
 });
 
 TodosList.subscribe('pushAll', updateSize);
