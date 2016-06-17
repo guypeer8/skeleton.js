@@ -42,7 +42,6 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-skeleton/3.6.0/skeleton.js"></script>
 <script type="text/javascript">
 {
-
 /***************
   Define Router
  ***************/
@@ -96,13 +95,11 @@ Skeleton.form({
 window.removeTodo = (index) => {
 	TodosList.remove(index);
 }
-
 // Toggle Todo
 window.toggleTodo = (index) => {
 	let isCompleted = !TodosList.get(index).isCompleted;
 	TodosList.edit(index, { isCompleted }); // Edit todo
 }
-
 // Edit Todo
 window.editTodo = (index) => {
 	if(TodosList.get(index).isCompleted) {
@@ -110,7 +107,6 @@ window.editTodo = (index) => {
 	}
 	TodosList.edit(index, { isEditing: true });
 }
-
 // Set Edited Todo
 window.setEditedTodo = (event, index) => {
 	if(event.keyCode === 13) { // enter key code
@@ -125,7 +121,6 @@ window.setEditedTodo = (event, index) => {
 		TodosList.edit(index, { isEditing: false });
 	}
 }
-
 // Filter Todos
 window.filterTodos = (type) => {
 	if(type === 'all') {
@@ -140,7 +135,6 @@ window.filterTodos = (type) => {
 	_styleFilter(type);
 	Skeleton.storage.save({ filter: type });
 }
-
 // Clear Completed
 window.clearCompleted = () => {
 	TodosList.forEach(todo => {
@@ -149,25 +143,21 @@ window.clearCompleted = () => {
 		}
 	});
 }
-
 // Remove All Todos
 window.removeAll = () => {
 	TodosList.removeAll();
 }
-
 // Update Size
 var todosSize = document.getElementById('todos-size');
 window.updateSize = () => {
 	todosSize.textContent = TodosList.models().filter(todo => !todo.isCompleted).length;
 } 
-
 // Style on choosing filter
 const filters = {
 	all: document.getElementById('filter-all'),
 	active: document.getElementById('filter-active'),
 	completed: document.getElementById('filter-completed')
 }
-
 function _styleFilter(filter) {
 	Object.keys(filters).forEach(fltr => {
 		if(fltr === filter) {
@@ -183,14 +173,12 @@ TodosList.subscribe(['push','edit'], () => {
 	let filter = Skeleton.storage.fetch('filter') || 'all';
 	window.filterTodos(filter);
 });
-
 TodosList.subscribe(['push','remove','edit','removeAll'], () => {
 	updateSize();
 	Skeleton.storage.save({ 
 		models: TodosList.models() 
 	});
 });
-
 TodosList.subscribe('pushAll', updateSize);
 /************************
   Run On First Page Load
@@ -198,7 +186,6 @@ TodosList.subscribe('pushAll', updateSize);
 TodosList.pushAll(Skeleton.storage.fetch('models') || []);
 let filter = Skeleton.storage.fetch('filter') || 'all';
 router.visit(`/${filter}`);
-
 }
 </script>
 </html>
