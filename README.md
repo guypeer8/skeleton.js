@@ -792,11 +792,13 @@ emitter.dispose('calc'); // 'calc' event can not be called anymore
 ##### The online message fades away when the connection is stable. Now, this is the default view and messages,
 ##### but you can customize it:
 ```js
-// All style properties are optional, in case you
+// All properties are optional, in case you
 // do not provide one, the default is set
 Skeleton.network({
     // customized online message properties
     online: {
+            message,
+            position,
             width,
             height,
             color,
@@ -809,6 +811,8 @@ Skeleton.network({
     },
     // customized offline message properties
     offline: {
+            message,
+            position,
             width,
             height,
             color,
@@ -821,6 +825,9 @@ Skeleton.network({
     } 
 });
 ```
+##### All style properties are regular css properties except 'position', which can be set to
+##### 'top', 'bottom', or 'middle', according to where on the screen you want the message to pop.
+##### The 'message' property is the message you want to show.
 
 ---
 ###### Skeleton.js resources:

@@ -1133,15 +1133,15 @@ function network(onoff) {
 			left: 0,
 			right: 0,
 			opacity: 1,
-			width: online.width || '100%',
-			height: online.height || '60px',
-			color: online.color || 'black',
-			textAlign: online.textAlign || 'center',
-			backgroundColor: online.backgroundColor || '#c61313',
-			fontSize: online.fontSize || '20px',
-			fontWeight: online.fontWeight || '700',
-			fontFamily: online.fontFamily || 'Verdana, sans-serif',
-			border: online.border || 'none'
+			width: offline.width || '100%',
+			height: offline.height || '60px',
+			color: offline.color || 'black',
+			textAlign: offline.textAlign || 'center',
+			backgroundColor: offline.backgroundColor || '#c61313',
+			fontSize: offline.fontSize || '20px',
+			fontWeight: offline.fontWeight || '700',
+			fontFamily: offline.fontFamily || 'Verdana, sans-serif',
+			border: offline.border || 'none'
 		});
 		if(!offline.position || (offline.position && offline.position.trim() === 'top')) {
 			offLineElement.style.top = 0;
