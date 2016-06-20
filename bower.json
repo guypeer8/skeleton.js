@@ -5,14 +5,19 @@
   "authors": [
     "Guy Peer <guypeer8@gmail.com>"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "keywords": [
     "list",
     "render",
     "static",
     "template",
     "loop",
-    "bind"
+    "bind",
+    "form",
+    "popup",
+    "router",
+    "online",
+    "offline"
   ],
   "homepage": "https://github.com/guypeer8/skeleton.js",
   "ignore": [
