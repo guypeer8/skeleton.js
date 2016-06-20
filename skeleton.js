@@ -232,9 +232,10 @@ function Model(attributes) {
 
  	// get min index
  	this.firstIndex = function() {
- 		let indexes = Object.keys(_collection);
- 		if(!indexes.length)
+ 		const indexes = Object.keys(_collection);
+ 		if(!indexes.length) {
  			return -1;
+ 		}
  		return Math.min.apply(null, indexes);
  	}
 
@@ -1112,6 +1113,110 @@ function Event() {
 
 }
 
+/*************************
+  Skeleton Online/Offline
+ *************************/
+function network(onoff) {
+	if(typeof(onoff) !== 'object') {
+		throw new Error('The parameter provided to "Skeleton.network" must be an object');
+	}
+	const { online, offline } = onoff;
+	if(online) {
+		const onLineElement = document.createElement('div');
+		const messageText = document.createTextNode(online.message || 'Lost Internet Connection...');
+		onLineElement.appendChild(messageText);
+		onLineElement.id = "skeleton-online-popup";
+		Object.assign(onLineElement.style, {
+			position: 'fixed',
+			zIndex: 1000,
+			padding: '15px',
+			left: 0,
+			right: 0,
+			width: online.width || '100%',
+			height: online.height || '60px',
+			color: online.color || 'black',
+			textAlign: online.textAlign || 'center',
+			backgroundColor: online.backgroundColor || '#c61313',
+			fontSize: online.fontSize || '20px',
+			fontWeight: online.fontWeight || '700',
+			fontFamily: online.fontFamily || 'serif, sans-serif',
+			border: online.border || 'none'
+		});
+		if(!online.position || (online.position && online.position.trim() === 'middle')) {
+			Object.assign(onLineElement.style, {
+				top: 0,
+				bottom: 0,
+				margin: 'auto'
+			});
+		}
+		else {
+			if(online.position === 'top') {
+				onLineElement.style.top = 0;				
+			}
+			else if(online.position === 'bottom') {
+				onLineElement.style.bottom = 0;					
+			}
+			else {
+				throw new Error('position can be "top", "bottom" or "middle"');
+			}
+		}
+		window.addEventListener('offline', () => {
+			const offlinePopup = document.getElementById('skeleton-offline-popup');
+			if(offlinePopup) {
+				offlinePopup.remove();
+			}
+			document.body.insertBefore(onLineElement, document.body.childNodes[0]);
+		});
+	}
+	if(offline) {
+		const offLineElement = document.createElement('div');
+		const messageText = document.createTextNode(online.message || 'Internet Connection is back');
+		offLineElement.appendChild(messageText);
+		offLineElement.id = "skeleton-offline-popup";
+		Object.assign(offLineElement.style, {
+			position: 'fixed',
+			zIndex: 1000,
+			padding: '15px',
+			left: 0,
+			right: 0,
+			width: offline.width || '100%',
+			height: offline.height || '60px',
+			color: offline.color || 'white',
+			textAlign: offline.textAlign || 'center',
+			backgroundColor: offline.backgroundColor || '#328134',
+			fontSize: offline.fontSize || '20px',
+			fontWeight: offline.fontWeight || '700',
+			fontFamily: offline.fontFamily || 'serif, sans-serif',
+			border: offline.border || 'none'
+		});
+		if(!offline.position || (offline.position && offline.position.trim() === 'middle')) {
+			Object.assign(offLineElement.style, {
+				top: 0,
+				bottom: 0,
+				margin: 'auto'
+			});
+		}
+		else {
+			if(offline.position === 'top') {
+				offLineElement.style.top = 0;				
+			}
+			else if(offline.position === 'bottom') {
+				offLineElement.style.bottom = 0;;					
+			}
+			else {
+				throw new Error('position can be "top", "bottom" or "middle"');
+			}
+		}
+		window.addEventListener('online', () => {
+			const onlinePopup = document.getElementById('skeleton-online-popup');
+			if(onlinePopup) {
+				onlinePopup.remove();
+			}
+			document.body.insertBefore(offLineElement, document.body.childNodes[0]);
+		});
+	}
+}
+
 /************
     Return
  ************/
@@ -1121,6 +1226,7 @@ return {
 	Router,
 	Event,
 	Popup,
+	network,
 	storage,
 	form, 
 	input,
@@ -1128,4 +1234,3 @@ return {
 }
 
 })();
-
