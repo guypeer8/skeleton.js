@@ -617,15 +617,16 @@ function Model(attributes) {
  	}
 
  	function _resolveNestedObject(model, input) {
- 		if(input === 'this')
+ 		if(input === 'this') {
  			return model;
+ 		}
 		let nestedObjectArray = input.split('.');
 		if(nestedObjectArray.length === 1) {
 			return model[input];
 		}
 		else {
 			let txtToRender = model[nestedObjectArray[0].trim()];
-			for(var i=1; i<nestedObjectArray.length; i++) {
+			for(let i=1; i<nestedObjectArray.length; i++) {
 				txtToRender = txtToRender[nestedObjectArray[i].trim()];
 			}
 			return txtToRender;
@@ -635,24 +636,23 @@ function Model(attributes) {
  	function _generateIndex() {
  		return _index++;
  	}
+}
 
- 	function _elementToHtml(el) {
- 		let div = document.createElement('div');
- 		div.appendChild(el);
- 		return div.innerHTML;
- 	}
+function _elementToHtml(el) {
+	let div = document.createElement('div');
+	div.appendChild(el);
+	return div.innerHTML;
+}
 
- 	function _htmlToElement(html) {
-		let div = document.createElement('div');
-		div.innerHTML = html;
-		return div.firstElementChild;
-	}
+function _htmlToElement(html) {
+	let div = document.createElement('div');
+	div.innerHTML = html;
+	return div.firstElementChild;
+}
 
- }
-
- /*******************
- 	Skeleton Router
-  *******************/
+/*******************
+   Skeleton Router
+ *******************/
 function Router() {
 
 	// Make sure initialized
@@ -1120,115 +1120,195 @@ function network(onoff) {
 	if(typeof(onoff) !== 'object') {
 		throw new Error('The parameter provided to "Skeleton.network" must be an object');
 	}
-	const { online, offline } = onoff;
-	if(offline) {
-		const offLineElement = document.createElement('div');
-		const messageText = document.createTextNode(offline.message || 'Lost Internet Connection...');
-		offLineElement.appendChild(messageText);
-		offLineElement.id = "skeleton-offline-popup";
-		Object.assign(offLineElement.style, {
-			position: 'fixed',
-			zIndex: 1000,
-			padding: '15px',
-			left: 0,
-			right: 0,
-			opacity: 1,
-			width: offline.width || '100%',
-			height: offline.height || '60px',
-			color: offline.color || 'black',
-			textAlign: offline.textAlign || 'center',
-			backgroundColor: offline.backgroundColor || '#c61313',
-			fontSize: offline.fontSize || '20px',
-			fontWeight: offline.fontWeight || '700',
-			fontFamily: offline.fontFamily || 'Verdana, sans-serif',
-			border: offline.border || 'none'
-		});
-		if(!offline.position || (offline.position && offline.position.trim() === 'top')) {
-			offLineElement.style.top = 0;
+	let { online, offline } = onoff;
+	if(!online) {
+		online = {};
+	}
+	if(!offline) {
+		offline = {};
+	}
+
+	const offLineElement = document.createElement('div');
+	const messageOffline = document.createTextNode(offline.message || 'Lost Internet Connection...');
+	offLineElement.appendChild(messageOffline);
+	offLineElement.id = "skeleton-offline-popup";
+	Object.assign(offLineElement.style, {
+		position: 'fixed',
+		zIndex: 1000,
+		padding: '15px',
+		left: 0,
+		right: 0,
+		opacity: 1,
+		width: offline.width || '100%',
+		height: offline.height || '60px',
+		color: offline.color || 'black',
+		textAlign: offline.textAlign || 'center',
+		backgroundColor: offline.backgroundColor || '#c61313',
+		fontSize: offline.fontSize || '20px',
+		fontWeight: offline.fontWeight || '700',
+		fontFamily: offline.fontFamily || 'Verdana, sans-serif',
+		border: offline.border || 'none'
+	});
+	if(!offline.position || (offline.position && offline.position.trim() === 'top')) {
+		offLineElement.style.top = 0;
+	}
+	else {
+		if(offline.position === 'middle') {		
+			Object.assign(offLineElement.style, {
+				top: 0,
+				bottom: 0,
+				margin: 'auto'
+			});		
+		}
+		else if(offline.position === 'bottom') {
+			offLineElement.style.bottom = 0;					
 		}
 		else {
-			if(offline.position === 'middle') {		
-				Object.assign(offLineElement.style, {
-					top: 0,
-					bottom: 0,
-					margin: 'auto'
-				});		
-			}
-			else if(offline.position === 'bottom') {
-				offLineElement.style.bottom = 0;					
-			}
-			else {
-				throw new Error('position can be "top", "bottom" or "middle"');
-			}
+			throw new Error('position can be "top", "bottom" or "middle"');
 		}
-		window.addEventListener('offline', () => {
-			const onlinePopup = document.getElementById('skeleton-online-popup');
-			if(onlinePopup) {
-				onlinePopup.remove();
-			}
-			document.body.insertBefore(offLineElement, document.body.childNodes[0]);
-		});
 	}
-	if(online) {
-		const onLineElement = document.createElement('div');
-		const messageText = document.createTextNode(online.message || 'Internet Connection is back');
-		onLineElement.appendChild(messageText);
-		onLineElement.id = "skeleton-online-popup";
-		Object.assign(onLineElement.style, {
-			position: 'fixed',
-			zIndex: 1000,
-			padding: '15px',
-			left: 0,
-			right: 0,
-			opacity: 1,
-			width: online.width || '100%',
-			height: online.height || '60px',
-			color: online.color || 'white',
-			textAlign: online.textAlign || 'center',
-			backgroundColor: online.backgroundColor || '#328134',
-			fontSize: online.fontSize || '20px',
-			fontWeight: online.fontWeight || '700',
-			fontFamily: online.fontFamily || 'Verdana, sans-serif',
-			border: online.border || 'none'
-		});
-		if(!online.position || (online.position && online.position.trim() === 'top')) {
-			onLineElement.style.top = 0;
+	window.addEventListener('offline', () => {
+		const onlinePopup = document.getElementById('skeleton-online-popup');
+		if(onlinePopup) {
+			onlinePopup.remove();
+		}
+		document.body.insertBefore(offLineElement, document.body.childNodes[0]);
+	});
+
+	const onLineElement = document.createElement('div');
+	const messageOnline = document.createTextNode(online.message || 'Internet Connection is back');
+	onLineElement.appendChild(messageOnline);
+	onLineElement.id = "skeleton-online-popup";
+	Object.assign(onLineElement.style, {
+		position: 'fixed',
+		zIndex: 1000,
+		padding: '15px',
+		left: 0,
+		right: 0,
+		opacity: 1,
+		width: online.width || '100%',
+		height: online.height || '60px',
+		color: online.color || 'white',
+		textAlign: online.textAlign || 'center',
+		backgroundColor: online.backgroundColor || '#328134',
+		fontSize: online.fontSize || '20px',
+		fontWeight: online.fontWeight || '700',
+		fontFamily: online.fontFamily || 'Verdana, sans-serif',
+		border: online.border || 'none'
+	});
+	if(!online.position || (online.position && online.position.trim() === 'top')) {
+		onLineElement.style.top = 0;
+	}
+	else {
+		if(online.position === 'middle') {
+			Object.assign(onLineElement.style, {
+				top: 0,
+				bottom: 0,
+				margin: 'auto'
+			});			
+		}
+		else if(online.position === 'bottom') {
+			onLineElement.style.bottom = 0;;					
 		}
 		else {
-			if(online.position === 'middle') {
-				Object.assign(onLineElement.style, {
-					top: 0,
-					bottom: 0,
-					margin: 'auto'
-				});			
-			}
-			else if(online.position === 'bottom') {
-				onLineElement.style.bottom = 0;;					
-			}
-			else {
-				throw new Error('position can be "top", "bottom" or "middle"');
-			}
+			throw new Error('position can be "top", "bottom" or "middle"');
 		}
-		window.addEventListener('online', () => {
-			const offlinePopup = document.getElementById('skeleton-offline-popup');
-			if(offlinePopup) {
-				offlinePopup.remove();
-			}
-			let element = onLineElement.cloneNode(true);
-			document.body.insertBefore(element, document.body.childNodes[0]);
-			const el = document.getElementById('skeleton-online-popup');
-			window.setTimeout(() => {
-				const interval = window.setInterval(() => {
-					if(el.style.opacity <= 0) {
-						window.clearInterval(interval);
-						el.remove();
-					}
-					el.style.opacity -= 0.15;
-				}, 120);
-			}, 2000);
-		});
 	}
+	window.addEventListener('online', () => {
+		const offlinePopup = document.getElementById('skeleton-offline-popup');
+		if(offlinePopup) {
+			offlinePopup.remove();
+		}
+		let element = onLineElement.cloneNode(true);
+		document.body.insertBefore(element, document.body.childNodes[0]);
+		const el = document.getElementById('skeleton-online-popup');
+		window.setTimeout(() => {
+			const interval = window.setInterval(() => {
+				if(el.style.opacity <= 0) {
+					window.clearInterval(interval);
+					el.remove();
+				}
+				el.style.opacity -= 0.15;
+			}, 120);
+		}, 2000);
+	});
 }
+
+/******************
+  Skeleton Cookies
+ ******************/
+function cookies() {
+	const cookies = document.cookie;
+	const keyValueArray = cookies.split(';');
+	let cookiesObject = {};
+	keyValueArray.forEach(pair => {
+		let splited = pair.split('=');
+		if(splited.length === 2) {
+			cookiesObject[splited[0].trim()] = splited[1].trim();
+		}
+	});
+	return cookiesObject;
+}
+
+cookies.get = function(cookieName) {
+	let cookieObj = cookies();
+	if(cookieObj[cookieName]) {
+		return cookieObj[cookieName];
+	}
+	return null;
+}
+
+cookies.set = function(cookieName, cookieValue, expirationDays) {
+	const d = new Date();
+    d.setTime(d.getTime() + (expirationDays*24*60*60*1000));
+    const expires = "expires="+ d.toUTCString();
+    document.cookie = `${cookieName}=${cookieValue};${expires}`;
+}
+
+cookies.delete = function(cookieName) {
+	document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC`;
+}
+
+/********************
+  Skeleton Component
+ ********************/
+const re = /{{\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g; 
+const re_event = /(\w+="\w+")/g;
+function Component(selector, { template, methods }) {
+	if(!selector) {
+		throw new Error('A component tag name must be provided as first parameter');
+	}
+	if(!template || typeof(template) !== 'string') {
+		throw new Error('A template string must be provided');
+	}
+	const elements = document.querySelectorAll(selector);
+	if(!elements) {
+		return;
+	}
+	let componentObject = {};
+	elements.forEach(el => {
+		let _template = template;
+		_template = _template.replace(re, (str, match) => {
+			let propNtype = el.getAttribute(match);
+			if(!prop) {
+				return str;
+			}
+			componentObject[match] = prop;
+			return prop;
+		});
+		// _template = _template.replace(re_event, (str, match) => {
+		// 	let parts = match.split('=');
+		// 	let method = parts[1].replace(/"/g, '');
+		// 	el.addEventListener(method, (e) => methods[method].call(componentObject));
+		// });
+		// el.innerHTML = _template;
+	});
+}
+
+// Skeleton.Component('person', {
+// 	template: `<div>{{ name }}</div>
+// 			   <div onClick="log">{{ age }}</div>`,
+// });
 
 /************
     Return
@@ -1239,8 +1319,10 @@ return {
 	Router,
 	Event,
 	Popup,
+	Component,
 	network,
 	storage,
+	cookies,
 	form, 
 	input,
 	bind

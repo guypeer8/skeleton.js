@@ -7,17 +7,21 @@
   ],
   "license": "MIT",
   "keywords": [
+    "model",
     "list",
     "render",
-    "static",
     "template",
     "loop",
     "bind",
     "form",
     "popup",
+    "event",
     "router",
     "online",
-    "offline"
+    "offline",
+    "localstorage",
+    "network",
+    "cookies"
   ],
   "homepage": "https://github.com/guypeer8/skeleton.js",
   "ignore": [

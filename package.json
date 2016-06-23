@@ -2,7 +2,7 @@
   "name": "js-skeleton",
   "version": "3.6.2",
   "description": "Rendering lists made as easy as pushing to an array",
-  "main": "skeleton.js",
+  "main": "skeleton.min.js",
   "directories": {
     "example": "examples"
   },
@@ -11,17 +11,21 @@
     "url": "git+https://github.com/guypeer8/skeleton.js.git"
   },
   "keywords": [
+    "model",
     "list",
     "render",
-    "static",
     "template",
     "loop",
     "bind",
     "form",
     "popup",
+    "event",
     "router",
     "online",
-    "offline"
+    "offline",
+    "localstorage",
+    "network",
+    "cookies"
   ],
   "author": "Guy Peer <guypeer8@gmail.com>",
   "license": "MIT",

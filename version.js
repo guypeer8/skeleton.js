@@ -14,8 +14,8 @@ const setVersion = () => {
 	files.forEach(file => {
 		let content = fs.readFileSync(file, 'utf-8');
 		let reWrittenContent = content
-								.replace(scriptRE, (str, match) => str.replace(match, version))
-								.replace(titleRE, (str, match) => str.replace(match, version));
+			.replace(scriptRE, (str, match) => str.replace(match, version))
+			.replace(titleRE, (str, match) => str.replace(match, version));
 		fs.writeFileSync(file, reWrittenContent, 'utf-8');
 	});
 }

@@ -784,13 +784,21 @@ emitter.emit('basketball'); // logs 'I love basketball!'
 emitter.dispose('calc'); // 'calc' event can not be called anymore
 ```
 ---
-##### Online and Offline messages support is built into Skeleton. You should use it, to let your user know
-##### when the application can not perform network tasks because of poor internet connection. It looks like
-##### this by default:
+###### Online and Offline messages support is built into Skeleton. You should use it, to let your user know
+###### when the application can not perform network tasks because of poor internet connection. It looks like
+###### this by default:
+
 <img src="https://cloud.githubusercontent.com/assets/13187428/16193039/825d5c28-36f5-11e6-95b0-82468c0ebddf.png" title="offline" />
 <img src="https://cloud.githubusercontent.com/assets/13187428/16193063/964a57b8-36f5-11e6-9460-5c17160c342d.png" title="online" />
-##### The online message fades away when the connection is stable. Now, this is the default view and messages,
-##### but you can customize it:
+
+###### To apply the default behavior of the online/offline messages just type:
+
+```js
+Skeleton.network(); // Automatically invokes message when connection losts and stablizes
+```
+###### The online message fades away when the connection is stable. Now, this is the default view and messages,
+###### but you can customize it:
+
 ```js
 // All properties are optional, in case you
 // do not provide one, the default is set
