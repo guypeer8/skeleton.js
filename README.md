@@ -833,6 +833,9 @@ Skeleton.network({
     } 
 });
 ```
+##### All style properties are regular css properties except 'position', which can be set to
+##### 'top', 'bottom', or 'middle', according to where on the screen you want the message to pop.
+##### The 'message' property is the message you want to show.
 
 ---
 ###### Cookie handling is also very easy with Skeleton:
@@ -875,11 +878,6 @@ is.rgb('rgb(10, 45, 63)') // true
 is.rgba('rgba(52, 26, 158)') // true
 is.color('#af4523') // true- if hex, rgb or rgba
 ```
-
----
-##### All style properties are regular css properties except 'position', which can be set to
-##### 'top', 'bottom', or 'middle', according to where on the screen you want the message to pop.
-##### The 'message' property is the message you want to show.
 
 ---
 ###### Skeleton.js resources:
