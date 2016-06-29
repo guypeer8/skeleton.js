@@ -951,6 +951,69 @@ function bind(textNodeId) {
 	}
 }
 
+/***************
+  Skeleton Type
+ ***************/
+function Type() {
+
+	// Make sure initialized
+	if(!(this instanceof Type)) {
+		return new Type();
+	}
+
+	this.arr = function(param) {
+		return Array.isArray(param);
+	}
+
+	this.str = function(param) {
+		return typeof(param) === 'string';
+	}
+
+	this.func = function(param) {
+		return typeof(param) === 'function';
+	}
+
+	this.num = function(param) {
+		return typeof(param) === 'number';
+	}
+
+	this.obj = function(param) {
+		return Object.prototype.toString.call(param).indexOf('object') !== -1;
+	}
+
+	this.null = function(param) {
+		return param === null;
+	}
+
+	this.undef = function(param) {
+		return param === undefined;
+	}
+
+	this.none = function(param) {
+		return is.null(param) || is.undef(param);
+	}
+
+	this.hex = function(param) {
+		return /^#([0-9A-Z]{6}$|[0-9A-Z]{3}$)/i.test(param);
+	}
+
+	this.rgb = function(param) {
+		return /^rgb\(\s*\w\s*\,\s*\w\s*\,\s*\w\s*\)/i.test(param);
+	}
+
+	this.rgba = function(param) {
+		return /^rgba\(\s*\w\s*\,\s*\w\s*\,\s*\w\s*\)/i.test(param);
+	}
+
+	this.color = function(param) {
+		return this.hex(param) || this.rgb(param) || this.rgba(param);
+	}
+
+	this.html = function(param) {
+		return (param instanceof HTMLCollection) || (param instanceof NodeList);
+	}
+}
+
 /****************
   Skeleton Popup
  ****************/
@@ -961,7 +1024,7 @@ function Popup() {
 		return new Popup();
 	}
 
-	let self = this;
+	const self = this;
 
 	let defaults = {
 		overlay: {
@@ -1102,8 +1165,12 @@ function Event() {
 	}
 
 	this.emit = function(evt) {
-		if(!handlers[evt])
+		if(!evt) {
+			throw new Error('First argument must be an event');
+		}
+		if(!handlers[evt]) {
 			throw new Error(`No handler for '${evt}' event!`);
+		}
 		let data = [];
 		if(arguments.length > 1) {
 			data = Array.prototype.slice.call(arguments, 1);
@@ -1258,7 +1325,7 @@ cookies.get = function(cookieName) {
 	return null;
 }
 
-cookies.set = function(cookieName, cookieValue, expirationDays) {
+cookies.set = function(cookieName, cookieValue, expirationDays=1) {
 	const d = new Date();
     d.setTime(d.getTime() + (expirationDays*24*60*60*1000));
     const expires = "expires="+ d.toUTCString();
@@ -1289,25 +1356,20 @@ function Component(selector, { template, methods }) {
 	elements.forEach(el => {
 		let _template = template;
 		_template = _template.replace(re, (str, match) => {
-			let propNtype = el.getAttribute(match);
+			let prop = el.getAttribute(match);
 			if(!prop) {
 				return str;
 			}
 			componentObject[match] = prop;
 			return prop;
 		});
-		// _template = _template.replace(re_event, (str, match) => {
-		// 	let parts = match.split('=');
-		// 	let method = parts[1].replace(/"/g, '');
-		// 	el.addEventListener(method, (e) => methods[method].call(componentObject));
-		// });
-		// el.innerHTML = _template;
+		el.innerHTML = _template;
 	});
 }
 
 // Skeleton.Component('person', {
 // 	template: `<div>{{ name }}</div>
-// 			   <div onClick="log">{{ age }}</div>`,
+// 			   <div @click="log">{{ age }}</div>`,
 // });
 
 /************
@@ -1319,6 +1381,7 @@ return {
 	Router,
 	Event,
 	Popup,
+	Type,
 	Component,
 	network,
 	storage,

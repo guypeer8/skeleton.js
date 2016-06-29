@@ -833,6 +833,50 @@ Skeleton.network({
     } 
 });
 ```
+
+---
+###### Cookie handling is also very easy with Skeleton:
+
+```js
+// get cookies as object of cookie name and its value
+let cookiesObject = Skeleton.cookies();
+
+// get a specific cookie value
+let specificCookieValue = Skeleton.cookies.get('name');
+
+// set a cookie, with (name, value, expiration days).
+// If you do not specify it, expiration days default value is 1
+Skeleton.cookies.set('cookieName', 'cookieValue', 3);
+
+// delete a cookie by its name
+Skeleton.cookies.delete('cookieName');
+```
+
+---
+###### Checking types with Skeleton is much easier than it is with plain javascript:
+```js
+const typeChecker = Skeleton.Type(); // initialize type checker
+
+typeChecker.arr([]) // true
+typeChecker.str('hello!') // true
+typeChecker.num(3) // true
+typeChecker.func(() => alert('function!')) // true
+typeChecker.obj({ a: 1, b: 2 }) // true
+
+var a;
+typeChecker.undef(a) // true
+a = null;
+typeChecker.null(a) // true
+typeChecker.none(a) // true- if a variable is null or undefined
+
+typeChecker.html(document.getElementById('dom-element')) // true
+typeChecker.hex('#452A55') // true
+typeChecker.rgb('rgb(10, 45, 63)') // true
+typeChecker.rgba('rgba(52, 26, 158)') // true
+typeChecker.color('#af4523') // true- if hex, rgb or rgba
+```
+
+---
 ##### All style properties are regular css properties except 'position', which can be set to
 ##### 'top', 'bottom', or 'middle', according to where on the screen you want the message to pop.
 ##### The 'message' property is the message you want to show.

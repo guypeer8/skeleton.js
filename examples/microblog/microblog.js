@@ -36,9 +36,11 @@ Skeleton.form({
 	},
 	submit: 'post-button',
 	onSubmit(e) {
-		let [title, posted_by, content] = [this.title.value, this.posted_by.value, this.content.value];
-		if(!title || !posted_by || !content)
+		let { title, posted_by, content } = this;
+		[title, posted_by, content].forEach(data => data = data.value);
+		if(!title || !posted_by || !content) {
 			return;
+		}
 		PostsList.push({ title, posted_by, content }); // Push a new post to render
 		Skeleton.form.clear(this.name); // built in function
 		Skeleton.input.clear('filter-posts');
