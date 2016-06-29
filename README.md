@@ -855,25 +855,25 @@ Skeleton.cookies.delete('cookieName');
 ---
 ###### Checking types with Skeleton is much easier than it is with plain javascript:
 ```js
-const typeChecker = Skeleton.Type(); // initialize type checker
+const is = Skeleton.Type(); // initialize type checker
 
-typeChecker.arr([]) // true
-typeChecker.str('hello!') // true
-typeChecker.num(3) // true
-typeChecker.func(() => alert('function!')) // true
-typeChecker.obj({ a: 1, b: 2 }) // true
+is.arr([1, 2, 3]) // true
+is.str('hello!') // true
+is.num(3) // true
+is.func(() => alert('function!')) // true
+is.obj({ a: 1, b: 2 }) // true
 
 var a;
-typeChecker.undef(a) // true
+is.undef(a) // true
 a = null;
-typeChecker.null(a) // true
-typeChecker.none(a) // true- if a variable is null or undefined
+is.null(a) // true
+is.none(a) // true- if a variable is null or undefined
 
-typeChecker.html(document.getElementById('dom-element')) // true
-typeChecker.hex('#452A55') // true
-typeChecker.rgb('rgb(10, 45, 63)') // true
-typeChecker.rgba('rgba(52, 26, 158)') // true
-typeChecker.color('#af4523') // true- if hex, rgb or rgba
+is.html(document.getElementById('dom-element')) // true
+is.hex('#452A55') // true
+is.rgb('rgb(10, 45, 63)') // true
+is.rgba('rgba(52, 26, 158)') // true
+is.color('#af4523') // true- if hex, rgb or rgba
 ```
 
 ---
