@@ -990,7 +990,7 @@ function Type() {
 	}
 
 	this.none = function(param) {
-		return is.null(param) || is.undef(param);
+		return this.null(param) || this.undef(param);
 	}
 
 	this.hex = function(param) {
