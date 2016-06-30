@@ -1,6 +1,6 @@
 {
   "name": "skeleton",
-  "description": "Rendering static lists made as easy as pushing to an array",
+  "description": "Skeleton is a small library that lets you create models, lists, templates, client-side router, popups, events and bindings. It also provides utilities for painless online/offline network support, cookies, local storage, type checking, form handling and input caching",
   "main": "skeleton.min.js",
   "authors": [
     "Guy Peer <guypeer8@gmail.com>"

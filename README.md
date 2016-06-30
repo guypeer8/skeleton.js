@@ -668,10 +668,18 @@ Skeleton.input('search-artist', (evt) => console.log('I log on change!'), 'chang
 ```
 ###### Now let's use the 'Skeleton.bind' function:
 ```js
-Skeleton.bind('my-text').to('my-input').exec(value => `My text is updated whenever ${value} updates!`);
+Skeleton.bind('my-text')
+        .to('my-input')
+        .exec(value => {
+            return `My text is updated whenever ${value} updates!`
+        });
 
 // By default, the event is 'keyup'. You can change it by passing your desired event to 'exec':
-Skeleton.bind('my-text').to('my-input').exec((value => `My text is updated whenever ${value} changes!`), 'change');
+Skeleton.bind('my-text')
+        .to('my-input')
+        .exec(value => {
+            return `My text is updated whenever ${value} changes!`;
+        }, 'change');
 ```
 ###### And you can also bind a node to several input elements:
 ```html
