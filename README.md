@@ -284,9 +284,10 @@ RecordsList.subscribe('edit', (model) => {
 });
 
 // An example of many events subscribing to the same function
-RecordsList.subscribe(['push','pushAll','remove','filter','sort','edit'], () => {
-    console.log('I work hard since many events are subscribed to me!');
-});
+RecordsList.subscribe(
+    ['push', 'pushAll', 'remove', 'filter', 'sort', 'edit'], 
+    () => console.log('I work hard since many events are subscribed to me!')
+);
 ```
 
 ---
