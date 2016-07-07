@@ -254,6 +254,14 @@ function Model(attributes) {
   		return _collection[index].toJSON();
  	}
 
+ 	// get model
+ 	this.getModel = function(index) {
+  		if(!_collection[index]) {
+  			return null;
+  		}
+  		return _collection[index];		
+ 	}
+
  	// get number of models in the list
  	this.size = function() {
  		return Object.keys(_collection).length;
@@ -1138,7 +1146,7 @@ function Popup() {
 
 /****************
   Skeleton Event
- ***************/
+ ****************/
 function Event() {
 
 	// Make sure initialized
@@ -1339,33 +1347,33 @@ cookies.delete = function(cookieName) {
 /********************
   Skeleton Component
  ********************/
-const re = /{{\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g; 
-const re_event = /(\w+="\w+")/g;
-function Component(selector, { template, methods }) {
-	if(!selector) {
-		throw new Error('A component tag name must be provided as first parameter');
-	}
-	if(!template || typeof(template) !== 'string') {
-		throw new Error('A template string must be provided');
-	}
-	const elements = document.querySelectorAll(selector);
-	if(!elements) {
-		return;
-	}
-	let componentObject = {};
-	elements.forEach(el => {
-		let _template = template;
-		_template = _template.replace(re, (str, match) => {
-			let prop = el.getAttribute(match);
-			if(!prop) {
-				return str;
-			}
-			componentObject[match] = prop;
-			return prop;
-		});
-		el.innerHTML = _template;
-	});
-}
+// const re = /{{\s*((\w+\.?\w+?)*\s*\|?\s*\w+)\s*}}/g; 
+// const re_event = /(\w+="\w+")/g;
+// function Component(selector, { template, methods }) {
+// 	if(!selector) {
+// 		throw new Error('A component tag name must be provided as first parameter');
+// 	}
+// 	if(!template || typeof(template) !== 'string') {
+// 		throw new Error('A template string must be provided');
+// 	}
+// 	const elements = document.querySelectorAll(selector);
+// 	if(!elements) {
+// 		return;
+// 	}
+// 	let componentObject = {};
+// 	elements.forEach(el => {
+// 		let _template = template;
+// 		_template = _template.replace(re, (str, match) => {
+// 			let prop = el.getAttribute(match);
+// 			if(!prop) {
+// 				return str;
+// 			}
+// 			componentObject[match] = prop;
+// 			return prop;
+// 		});
+// 		el.innerHTML = _template;
+// 	});
+// }
 
 // Skeleton.Component('person', {
 // 	template: `<div>{{ name }}</div>
@@ -1382,7 +1390,7 @@ return {
 	Event,
 	Popup,
 	Type,
-	Component,
+	// Component,
 	network,
 	storage,
 	cookies,
