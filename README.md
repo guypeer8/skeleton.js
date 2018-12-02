@@ -1,4 +1,7 @@
 ![skeleton](https://cloud.githubusercontent.com/assets/13187428/15070947/ab961d1a-1390-11e6-93ae-36b56482e673.png)
+##### If skeleton.js made an effect on your projects, you are more than welcome to show support by buying me a coffee ;)
+<a href="https://www.buymeacoffee.com/2Npon79" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
+
 #### Skeleton makes rendering lists (add/remove/edit model) very easy.
 
 ---
